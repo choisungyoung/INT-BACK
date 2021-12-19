@@ -1,1 +1,1 @@
-rootProject.name = "int"
+rootProject.name = "INT-API"

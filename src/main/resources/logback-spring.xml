@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <property name="CONSOLE_LOG_PATTERN"
+              value="${CONSOLE_LOG_PATTERN:-%clr(%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}" />
+    <property name="FILE_LOG_PATTERN"
+              value="${FILE_LOG_PATTERN:-%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } --- [%t] %-40.40logger{39} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}" />
+
+
+    <springProfile name="L">
+        <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern><![CDATA[%d{yyyy-MM-dd HH:mm:ss} | %white(%thread) | %highlight(%-5level) | %magenta(%X{X-Gbl-Id}) | %boldGreen(%X{X-User-Id}) | %cyan(%-48logger{48}) | %boldYellow(%line) | %msg%n]]></pattern>
+            </encoder>
+        </appender>
+
+        <logger name="com.notworking.int" level="debug" />
+
+        <logger name="org.springframework" level="info" />
+        <logger name="org.springframework.remoting" level="error" />
+        <logger name="org.springframework.web.servlet" level="debug" />
+        <logger name="org.springframework.web.servlet.DispatcherServlet" level="debug" />
+        <logger name="org.springframework.security" level="trace" />
+        <logger name="org.springframework.data" additivity="false" level="error" />
+        <logger name="org.springframework.jdbc.datasource.DataSourceTransactionManager" level="error" />
+        <logger name="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" level="trace" />
+
+        <!-- 데이터베이스 -->
+        <logger name="jdbc.sqlonly" level="debug" />
+        <logger name="jdbc.resultsettable" level="debug" />
+        <logger name="org.mybatis.spring" level="debug" />
+
+        <logger name="jdbc.sqltiming" level="error" />
+        <logger name="jdbc.audit" level="error" />
+        <logger name="jdbc.resultset" level="error" />
+        <logger name="jdbc.connection" level="error" />
+
+        <logger name="redis.clients" level="error" />
+        <logger name="org.springframework.data" level="error" />
+
+        <logger name="org.hibernate" level="error" />
+        <logger name="com.querydsl" level="error" />
+        <logger name="javax.persistence" level="error" />
+        <logger name="com.zaxxer" level="error" />
+
+        <root level="info">
+            <appender-ref ref="STDOUT" />
+        </root>
+    </springProfile>
+</configuration>

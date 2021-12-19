@@ -1,10 +1,11 @@
-package com.example.demo
+
+package com.notworking.int.service.impl
 
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
-class IntApplicationTests {
+class IntApplicationTest {
 
 	@Test
 	fun contextLoads() {
