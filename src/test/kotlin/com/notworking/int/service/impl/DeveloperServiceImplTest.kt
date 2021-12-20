@@ -24,16 +24,16 @@ class DeveloperServiceImplTest(@Autowired var developerService: DeveloperService
             Developer(
                 id = null,
                 email = "tjddud117@naver.com",
+                pwd = "aa12345^",
                 name = "sungyoung",
                 pictureUrl = "testUrl",
-                role = Role.USER
             ),
             Developer(
                 id = null,
                 email = "test@nave.com",
+                pwd = "aa12345^",
                 name = "test",
                 pictureUrl = "testUrl",
-                role = Role.USER
             )
         )
         findDeveloperEmail = "tjddud117@naver.com"
