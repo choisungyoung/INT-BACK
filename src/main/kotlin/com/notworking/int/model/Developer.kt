@@ -30,15 +30,15 @@ data class Developer(
         this.email = developer.email
         this.pwd =developer.pwd
         this.name = developer.name
-        this.pictureUrl = pictureUrl
+        this.pictureUrl = developer.pictureUrl
         this.role = developer.role
         return this
     }
 
 
     /** Spring Security */
-    override fun getPassword(): String = pwd!!
-    override fun getUsername(): String = email!!
+    override fun getPassword(): String = pwd
+    override fun getUsername(): String = email
     override fun isAccountNonExpired(): Boolean = true
     override fun isAccountNonLocked(): Boolean = true
     override fun isCredentialsNonExpired(): Boolean = true

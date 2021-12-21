@@ -1,6 +1,9 @@
 package com.notworking.int.support.config
 
+import com.notworking.*
 import com.notworking.int.service.UserCustomService
+import com.notworking.int.support.handler.CustomAuthenticationFailureHandler
+import com.notworking.int.support.handler.CustomAuthenticationSuccessHandler
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Configurable
 import org.springframework.context.annotation.Bean
@@ -12,12 +15,19 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 
+
 @Configurable
 @EnableWebSecurity
 class SecurityConfig : WebSecurityConfigurerAdapter() {
 
     @Autowired
     lateinit var userCustomService: UserCustomService
+
+    @Autowired
+    lateinit var customAuthenticationSuccessHandler: CustomAuthenticationSuccessHandler
+
+    @Autowired
+    lateinit var customAuthenticationFailureHandler: CustomAuthenticationFailureHandler
 
     @Bean
     fun encoder(): PasswordEncoder = BCryptPasswordEncoder(11)
@@ -35,12 +45,20 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
     override fun configure(http: HttpSecurity?) {
         http
             ?.csrf()?.disable()
+            ?.headers()?.frameOptions()?.disable()
+            ?.and()
             ?.authorizeRequests()
             ?.antMatchers("/resources/**")?.permitAll()
             ?.anyRequest()?.permitAll()
             ?.and()
             ?.formLogin()
+            ?.usernameParameter("username")
+            ?.passwordParameter("password")
+            ?.loginPage("/login")
             ?.loginProcessingUrl("/api/auth/login")
-            ?.and()
+            ?.successHandler(customAuthenticationSuccessHandler)
+            ?.failureHandler(customAuthenticationFailureHandler)
     }
+
+
 }

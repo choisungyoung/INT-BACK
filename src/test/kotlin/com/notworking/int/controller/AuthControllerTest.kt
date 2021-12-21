@@ -1,74 +1,78 @@
 package com.notworking.int.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.notworking.int.controller.dto.LoginDTO
 import com.notworking.int.model.Developer
 import com.notworking.int.service.DeveloperService
-import com.notworking.int.support.type.Role
 import mu.KotlinLogging
 import org.junit.jupiter.api.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.http.MediaType
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders
+import org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers
-import org.springframework.util.LinkedMultiValueMap
 
 private val logger = KotlinLogging.logger {}
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 @SpringBootTest
 @AutoConfigureMockMvc
-class AuthControllerTest {
+class AuthControllerTest() {
     @Autowired
     private lateinit var mockMvc: MockMvc
 
-    @Autowired
-    private lateinit var developerService: DeveloperService
+    companion object {
 
-    @Autowired
-    private lateinit var objectMapper : ObjectMapper
+        lateinit var loginUsername: String
+        lateinit var loginPassword: String
 
-    lateinit var username: String
-    lateinit var password: String
+        lateinit var failLoginUsername: String
+        lateinit var failLoginPassword: String
 
-    @BeforeEach
-    fun setupFeild() {
-        username = "tjddud117@naver.com"
-        password = "aa12345^"
+        @BeforeAll
+        @JvmStatic
+        fun beforeAll(@Autowired developerService: DeveloperService) {
+            loginUsername = "test@naver.com"
+            loginPassword = "aa12345^"
 
-        // 사용자 추가
-        developerService.saveDeveloper(
-            Developer(
-                id = null,
-                email = "tjddud117@naver.com",
-                pwd = "aa12345^",
-                name = "sungyoung",
-                pictureUrl = "testUrl",
+            failLoginUsername = "test@naver.com"
+            failLoginPassword = "aa12345^^"
+
+            // 사용자 추가
+            developerService.saveDeveloper(
+                Developer(
+                    id = null,
+                    email = "test@naver.com",
+                    pwd = "aa12345^",
+                    name = "tester",
+                    pictureUrl = "testUrl",
+                )
             )
-        )
 
+        }
     }
-
     @Order(1)
     @Test
-    fun testLogin() {
+    fun testLoginSuccess() {
         val uri: String = "/api/auth/login"
 
-        val requestBody = LinkedMultiValueMap<String, String>()
-        requestBody.add("username", username)
-        requestBody.add("password", password)
+        mockMvc.perform(
+            SecurityMockMvcRequestBuilders.formLogin(uri).user(loginUsername).password(loginPassword)
+        )
+            .andExpect(SecurityMockMvcResultMatchers.authenticated())
+            .andDo(MockMvcResultHandlers.print())
+    }
 
+    @Order(2)
+    @Test
+    fun testLoginFailure() {
+        val uri: String = "/api/auth/login"
 
         mockMvc.perform(
-            MockMvcRequestBuilders.post(uri)
-                .content(objectMapper.writeValueAsString(LoginDTO(username, password)))
-                .contentType(MediaType.APPLICATION_JSON)
+            SecurityMockMvcRequestBuilders.formLogin(uri).user(failLoginUsername).password(failLoginPassword)
         )
-            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(SecurityMockMvcResultMatchers.unauthenticated())
             .andDo(MockMvcResultHandlers.print())
     }
 }

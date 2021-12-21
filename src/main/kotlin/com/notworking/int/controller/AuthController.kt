@@ -16,7 +16,13 @@ class AuthController {
 
     // POST로 유저 추가
     @GetMapping("/login")
-    fun put(): ResponseEntity<LoginDTO> {
+    fun login(): ResponseEntity<LoginDTO> {
+        logger.debug(">>> Login")
+
+        return ResponseEntity<LoginDTO>(HttpStatus.OK)
+    }
+    @RequestMapping("/loginSuccess")
+    fun loginSuccess(): ResponseEntity<LoginDTO> {
         logger.debug(">>> Login")
 
         return ResponseEntity<LoginDTO>(HttpStatus.OK)
