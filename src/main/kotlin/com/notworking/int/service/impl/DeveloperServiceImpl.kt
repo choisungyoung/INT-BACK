@@ -4,20 +4,24 @@ import com.notworking.int.model.Developer
 import com.notworking.int.repository.DeveloperRepository
 import com.notworking.int.service.DeveloperService
 import lombok.RequiredArgsConstructor
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
 
 @Service
-class DeveloperServiceImpl(private val developerRepository: DeveloperRepository) : DeveloperService {
+class DeveloperServiceImpl(val developerRepository: DeveloperRepository, val passwordEncoder: PasswordEncoder) : DeveloperService {
 
     @Transactional
     override fun saveDeveloper(developer: Developer) {
-        developerRepository.save(developer)
+        developer.let {
+            it.pwd = passwordEncoder.encode(it.pwd)
+            developerRepository.save(it)
+        }
     }
 
     override fun findAllDeveloper(): List<Developer> = developerRepository.findAll().toList()
 
-    override fun findDeveloperByEmail(email: String): Developer? = developerRepository.findByEmail(email).orElse(null)
+    override fun findDeveloperByEmail(email: String): Developer? = developerRepository.findByEmail(email)
 
     @Transactional
     override fun updateDeveloper(newDeveloper: Developer) {
