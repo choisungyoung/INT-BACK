@@ -12,7 +12,7 @@ import org.springframework.security.test.web.servlet.response.SecurityMockMvcRes
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 
-private val logger = KotlinLogging.logger {}
+private val log = KotlinLogging.logger {}
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 @SpringBootTest
@@ -54,6 +54,7 @@ class AuthControllerTest() {
 
         }
     }
+
     @Order(1)
     @Test
     fun testLoginSuccess() {

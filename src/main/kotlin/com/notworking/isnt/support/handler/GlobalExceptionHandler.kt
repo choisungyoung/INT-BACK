@@ -1,6 +1,7 @@
 package com.notworking.isnt.support.handler
 
 import com.notworking.isnt.controller.dto.ErrorResponse
+import com.notworking.isnt.support.exception.BusinessException
 import lombok.extern.slf4j.Slf4j
 import mu.KotlinLogging
 import org.springframework.http.ResponseEntity
@@ -77,9 +78,20 @@ class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(response)
     }
 
+    /**
+     * 업무처리 중 에러를 발생한 경우
+     */
+    @ExceptionHandler(BusinessException::class)
+    protected fun businessException(e: BusinessException): ResponseEntity<ErrorResponse> {
+        log.error("businessException", e)
+        val response: ErrorResponse =
+            ErrorResponse(code = e.error.code, title = "업무처리 에러", message = e.error.message)
+        return ResponseEntity.badRequest().body(response)
+    }
+
     @ExceptionHandler(Exception::class)
     protected fun handleException(e: Exception): ResponseEntity<ErrorResponse> {
-        log.error("handleEntityNotFoundException", e)
+        log.error("Exception", e)
         val response: ErrorResponse = ErrorResponse(code = "E0001", title = "Error", message = "에러가 발생하였습니다.")
         return ResponseEntity.badRequest().body(response)
     }

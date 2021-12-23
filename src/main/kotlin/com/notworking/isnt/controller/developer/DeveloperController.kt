@@ -4,6 +4,8 @@ import com.notworking.isnt.controller.developer.dto.DeveloperFindResponseDTO
 import com.notworking.isnt.controller.developer.dto.DeveloperSaveRequestDTO
 import com.notworking.isnt.controller.developer.dto.DeveloperUpdateRequestDTO
 import com.notworking.isnt.service.DeveloperService
+import com.notworking.isnt.support.exception.BusinessException
+import com.notworking.isnt.support.type.Error
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -17,7 +19,6 @@ class DeveloperController(var developerService: DeveloperService) {
         var dto: DeveloperFindResponseDTO? = developerService.findDeveloperByEmail(email)?.let {
             DeveloperFindResponseDTO(
                 it.email,
-                it.password,
                 it.name,
                 it.introduction,
                 it.pictureUrl,
@@ -25,6 +26,8 @@ class DeveloperController(var developerService: DeveloperService) {
                 it.popularity
             )
         }
+        //존재하지 않을 경우 에러처리
+        dto ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
         return ResponseEntity.ok().body(dto)
 
     }
