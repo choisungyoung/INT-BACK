@@ -14,7 +14,7 @@
             </encoder>
         </appender>
 
-        <logger name="com.notworking.int" level="debug" />
+        <logger name="com.notworking.isnt" level="debug" />
 
         <logger name="org.springframework" level="info" />
         <logger name="org.springframework.remoting" level="error" />

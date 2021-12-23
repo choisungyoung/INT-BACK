@@ -1,7 +1,7 @@
 # Read Me First
 The following was discovered as part of building this project:
 
-* The original package name 'com.notworking.int' is invalid and this project uses 'com.example.demo' instead.
+* The original package name 'com.notworking.isnt' is invalid and this project uses 'com.example.demo' instead.
 
 # Getting Started
 
