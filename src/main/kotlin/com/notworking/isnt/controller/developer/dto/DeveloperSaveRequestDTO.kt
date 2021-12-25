@@ -7,9 +7,6 @@ data class DeveloperSaveRequestDTO(
     var password: String,
     var name: String?,
     var introduction: String,
-    var pictureUrl: String?,
-    var point: Int? = 0,
-    var popularity: Int? = 0
 ) {
     fun toModel(): Developer = Developer(
         id = null,
@@ -17,8 +14,8 @@ data class DeveloperSaveRequestDTO(
         pwd = this.password,
         name = this.name,
         introduction = this.introduction,
-        pictureUrl = this.pictureUrl,
-        point = this.point,
-        popularity = this.popularity
+        pictureUrl = "",    // TODO : 따로 넣기
+        point = 0,
+        popularity = 0
     )
 }

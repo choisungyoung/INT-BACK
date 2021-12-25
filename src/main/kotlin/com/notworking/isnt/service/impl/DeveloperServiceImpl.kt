@@ -21,9 +21,13 @@ class DeveloperServiceImpl(val developerRepository: DeveloperRepository, val pas
         }
     }
 
-    override fun findAllDeveloper(): List<Developer> = developerRepository.findAll().toList()
+    override fun findAllDeveloper(): List<Developer> {
+        return developerRepository.findAll().toList()
+    }
 
-    override fun findDeveloperByEmail(email: String): Developer? = developerRepository.findByEmail(email)
+    override fun findDeveloperByEmail(email: String): Developer? {
+        return developerRepository.findByEmail(email)
+    }
 
     @Transactional
     override fun updateDeveloper(newDeveloper: Developer) {

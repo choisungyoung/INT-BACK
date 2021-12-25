@@ -42,7 +42,7 @@ class AuthControllerTest() {
             developerService.saveDeveloper(
                 Developer(
                     id = null,
-                    email = "tjddud117@naver.com",
+                    email = "test@naver.com",
                     pwd = "aa12345^",
                     name = "sungyoung",
                     introduction = "안녕하세요",
