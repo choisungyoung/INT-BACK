@@ -94,6 +94,22 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
 
     @Order(2)
     @Test
+    fun testFindList() {
+
+        mockMvc.perform(
+            RestDocumentationRequestBuilders.get("$uri/list")
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andDo(MockMvcResultHandlers.print())
+            .andDo(
+                document(
+                    "find-developer-list",
+                )
+            )
+    }
+
+    @Order(3)
+    @Test
     fun testFind() {
 
         mockMvc.perform(
@@ -119,7 +135,7 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
             )
     }
 
-    @Order(3)
+    @Order(4)
     @Test
     fun testNotFind() {
         mockMvc.perform(
@@ -129,7 +145,7 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
             .andDo(MockMvcResultHandlers.print())
     }
 
-    @Order(4)
+    @Order(5)
     @Test
     fun testUpdate() {
         mockMvc.perform(
@@ -155,7 +171,7 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
             )
     }
 
-    @Order(5)
+    @Order(6)
     @Test
     fun testDelete() {
 

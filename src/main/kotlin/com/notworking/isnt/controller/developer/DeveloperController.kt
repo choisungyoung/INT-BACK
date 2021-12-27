@@ -8,6 +8,7 @@ import com.notworking.isnt.support.exception.BusinessException
 import com.notworking.isnt.support.type.Error
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import kotlin.streams.toList
 
 @RequestMapping("/api/developer")
 @RestController
@@ -29,7 +30,26 @@ class DeveloperController(var developerService: DeveloperService) {
         //존재하지 않을 경우 에러처리
         dto ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
         return ResponseEntity.ok().body(dto)
+    }
 
+    /** 사용자 목록 */
+    @GetMapping("/list")
+    fun findDeveloperList(): ResponseEntity<List<DeveloperFindResponseDTO>> {
+        var list: List<DeveloperFindResponseDTO>? = developerService.findAllDeveloper()?.stream()
+            .map { dev ->
+                DeveloperFindResponseDTO(
+                    dev.email,
+                    dev.name,
+                    dev.introduction,
+                    dev.pictureUrl,
+                    dev.point,
+                    dev.popularity
+                )
+            }.toList()
+
+        //존재하지 않을 경우 에러처리
+        list ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
+        return ResponseEntity.ok().body(list)
     }
 
     /** 사용자 추가 */

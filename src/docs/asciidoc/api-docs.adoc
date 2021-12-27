@@ -19,6 +19,18 @@ include::{snippets}/save-developer/http-request.adoc[]
 ==== HTTP response
 include::{snippets}/save-developer/http-response.adoc[]
 
+[[resources-developer-list-find]]
+=== developer 전체조회
+==== HTTP request
+include::{snippets}/find-developer-list/http-request.adoc[]
+
+==== HTTP response
+include::{snippets}/find-developer-list/response-fields.adoc[]
+include::{snippets}/find-developer-list/response-body.adoc[]
+include::{snippets}/find-developer-list/http-response.adoc[]
+
+
+
 [[resources-developer-find]]
 === developer 조회
 
@@ -33,6 +45,15 @@ include::{snippets}/find-developer/http-response.adoc[]
 
 [[resources-developer-update]]
 === developer 수정
+
+==== HTTP request
+include::{snippets}/update-developer/request-fields.adoc[]
+include::{snippets}/update-developer/request-body.adoc[]
+include::{snippets}/update-developer/http-request.adoc[]
+
+==== HTTP response
+include::{snippets}/update-developer/http-response.adoc[]
+
 
 [[resources-developer-delete]]
 === developer 삭제
