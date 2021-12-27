@@ -2,7 +2,6 @@ package com.notworking.isnt.support.handler
 
 import com.notworking.isnt.controller.dto.ErrorResponse
 import com.notworking.isnt.support.exception.BusinessException
-import lombok.extern.slf4j.Slf4j
 import mu.KotlinLogging
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.BindException
@@ -15,7 +14,6 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 private val log = KotlinLogging.logger {}
 
-@Slf4j
 @RestControllerAdvice
 class GlobalExceptionHandler {
     /**

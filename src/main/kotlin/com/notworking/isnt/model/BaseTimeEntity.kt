@@ -1,6 +1,5 @@
 package com.notworking.isnt.model
 
-import lombok.Getter
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
@@ -11,7 +10,6 @@ import javax.persistence.MappedSuperclass
 /**
  * 자동으로 생성시간, 수정시간 생성을 위한 Entity 클래스
  */
-@Getter
 @MappedSuperclass // 필드들을 컬럼으로 인식되도록 함
 @EntityListeners(AuditingEntityListener::class) // Auditing기능 포함
 abstract class BaseTimeEntity {

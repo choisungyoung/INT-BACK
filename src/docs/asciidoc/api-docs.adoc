@@ -1,17 +1,17 @@
 ifndef::snippets[]
 :snippets: ../../../build/generated-snippets
 endif::[]
-= Spring REST Docs
+= Is Not Working
 :toc: left
 :toclevels: 2
 :sectlinks:
+
 
 [[resources-developer]]
 == Developer
 
 [[resources-developer-create]]
 === developer 생성
-
 ==== HTTP request
 include::{snippets}/save-developer/request-fields.adoc[]
 include::{snippets}/save-developer/http-request.adoc[]
@@ -33,14 +33,6 @@ include::{snippets}/find-developer/http-response.adoc[]
 
 [[resources-developer-update]]
 === developer 수정
-
-==== HTTP request
-include::{snippets}/update-developer/request-fields.adoc[]
-include::{snippets}/update-developer/request-body.adoc[]
-include::{snippets}/update-developer/http-request.adoc[]
-
-==== HTTP response
-include::{snippets}/update-developer/http-response.adoc[]
 
 [[resources-developer-delete]]
 === developer 삭제
