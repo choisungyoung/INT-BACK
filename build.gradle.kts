@@ -49,7 +49,7 @@ dependencies {
 
 tasks.withType<KotlinCompile> {
 	kotlinOptions {
-		freeCompilerArgs = listOf("-Xjsr305=strict")
+		freeCompilerArgs = listOf("-Xjsr305=strict", "-Xskip-prerelease-check")
 		jvmTarget = "1.8"
 	}
 }
