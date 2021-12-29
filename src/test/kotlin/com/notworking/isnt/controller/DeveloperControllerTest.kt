@@ -38,14 +38,14 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
     private var uri: String = "/api/developer";
     private val saveDeveloperDTO: DeveloperSaveRequestDTO =
         DeveloperSaveRequestDTO(
-            email = "tjddud117@naver.com",
+            email = "test@naver.com",
             password = "aa12345^",
-            name = "sungyoung",
+            name = "테스터01",
             introduction = "안녕하세요",
         )
     private val updateDeveloperDTO: DeveloperUpdateRequestDTO =
         DeveloperUpdateRequestDTO(
-            email = "tjddud117@naver.com",
+            email = "test@naver.com",
             password = "aa12345^",
             name = "sungyoung",
             introduction = "반갑습니다.",
@@ -53,9 +53,9 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
             point = 0,
             popularity = 0,
         )
-    private val findDeveloperEmail: String = "tjddud117@naver.com"
-    private val notFindDeveloperEmail: String = "tjddud118@naver.com"
-    private val deleteDeveloperEmail: String = "tjddud117@naver.com"
+    private val findDeveloperEmail: String = "test@naver.com"
+    private val notFindDeveloperEmail: String = "faildTest@naver.com"
+    private val deleteDeveloperEmail: String = "test@naver.com"
 
     @AfterEach
     fun printDevelopers() {
@@ -70,6 +70,7 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
 
     @Order(1)
     @Test
+    //@Rollback(value = false)
     fun testSave() {
         mockMvc.perform(
             RestDocumentationRequestBuilders.post(uri)
@@ -104,6 +105,14 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
             .andDo(
                 document(
                     "find-developer-list",
+                    responseFields(
+                        fieldWithPath("[].email").description("이메일"),
+                        fieldWithPath("[].name").description("이름"),
+                        fieldWithPath("[].introduction").description("소개"),
+                        fieldWithPath("[].pictureUrl").description("사진경로"),
+                        fieldWithPath("[].point").description("점수"),
+                        fieldWithPath("[].popularity").description("인기도"),
+                    )
                 )
             )
     }
