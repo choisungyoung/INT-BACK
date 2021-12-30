@@ -6,10 +6,12 @@ import mu.KotlinLogging
 import org.junit.jupiter.api.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import javax.transaction.Transactional
 
 private val log = KotlinLogging.logger {}
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
+@Transactional
 @SpringBootTest
 class DeveloperServiceImplTest(@Autowired var developerService: DeveloperService) {
 
@@ -27,9 +29,9 @@ class DeveloperServiceImplTest(@Autowired var developerService: DeveloperService
             saveDeveloperList = listOf(
                 Developer(
                     id = null,
-                    email = "tjddud117@naver.com",
+                    email = "testService01@naver.com",
                     pwd = "aa12345^",
-                    name = "sungyoung",
+                    name = "test",
                     introduction = "안녕하세요",
                     pictureUrl = "testUrl",
                     point = 0,
@@ -37,7 +39,7 @@ class DeveloperServiceImplTest(@Autowired var developerService: DeveloperService
                 ),
                 Developer(
                     id = null,
-                    email = "test@nave.com",
+                    email = "testService02@nave.com",
                     pwd = "aa12345^",
                     name = "test",
                     introduction = "안녕하세요",
@@ -46,9 +48,9 @@ class DeveloperServiceImplTest(@Autowired var developerService: DeveloperService
                     popularity = 0,
                 )
             )
-            findDeveloperEmail = "tjddud117@naver.com"
-            updateDeveloperName = "choisungyoung"
-            notFindDeveloperEmail = "tjddud118@naver.com"
+            findDeveloperEmail = "testService01@naver.com"
+            updateDeveloperName = "updatetest"
+            notFindDeveloperEmail = "testService03@naver.com"
         }
     }
 

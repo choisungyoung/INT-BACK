@@ -11,48 +11,43 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
+import org.springframework.transaction.annotation.Transactional
 
 private val log = KotlinLogging.logger {}
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
+@Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
 class AuthControllerTest() {
     @Autowired
     private lateinit var mockMvc: MockMvc
 
-    companion object {
+    @Autowired
+    private lateinit var developerService: DeveloperService
 
-        lateinit var loginUsername: String
-        lateinit var loginPassword: String
+    private var loginUsername: String = "testLogin@naver.com"
+    private var loginPassword: String = "aa12345^"
 
-        lateinit var failLoginUsername: String
-        lateinit var failLoginPassword: String
+    private var failLoginUsername: String = "testLogin@naver.com"
+    private var failLoginPassword: String = "aa12345^^"
 
-        @BeforeAll
-        @JvmStatic
-        fun beforeAll(@Autowired developerService: DeveloperService) {
-            loginUsername = "test@naver.com"
-            loginPassword = "aa12345^"
+    @BeforeEach
+    fun beforeEach() {
 
-            failLoginUsername = "test@naver.com"
-            failLoginPassword = "aa12345^^"
-
-            // 사용자 추가
-            developerService.saveDeveloper(
-                Developer(
-                    id = null,
-                    email = "test@naver.com",
-                    pwd = "aa12345^",
-                    name = "sungyoung",
-                    introduction = "안녕하세요",
-                    pictureUrl = "testUrl",
-                    point = 0,
-                    popularity = 0,
-                )
+        // 사용자 추가
+        developerService.saveDeveloper(
+            Developer(
+                id = null,
+                email = loginUsername,
+                pwd = loginPassword,
+                name = "sungyoung",
+                introduction = "안녕하세요",
+                pictureUrl = "testUrl",
+                point = 0,
+                popularity = 0,
             )
-
-        }
+        )
     }
 
     @Order(1)

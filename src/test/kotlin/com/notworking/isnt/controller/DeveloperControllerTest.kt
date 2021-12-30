@@ -21,10 +21,12 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
+import org.springframework.transaction.annotation.Transactional
 
 private val log = KotlinLogging.logger {}
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
+@Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs(uriScheme = "https", uriHost = "localhost")
@@ -36,16 +38,23 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
     private lateinit var mapper: ObjectMapper
 
     private var uri: String = "/api/developer";
+
+    private val beforeEachDeveloperEmail: String = "test@naver.com"
+    private val findDeveloperEmail: String = "test@naver.com"
+    private val notFindDeveloperEmail: String = "failedTest@naver.com"
+    private val saveDeveloperEmail: String = "testSave@naver.com"
+    private val deleteDeveloperEmail: String = "test@naver.com"
+
     private val saveDeveloperDTO: DeveloperSaveRequestDTO =
         DeveloperSaveRequestDTO(
-            email = "test@naver.com",
+            email = saveDeveloperEmail,
             password = "aa12345^",
             name = "테스터01",
             introduction = "안녕하세요",
         )
     private val updateDeveloperDTO: DeveloperUpdateRequestDTO =
         DeveloperUpdateRequestDTO(
-            email = "test@naver.com",
+            email = findDeveloperEmail,
             password = "aa12345^",
             name = "sungyoung",
             introduction = "반갑습니다.",
@@ -53,9 +62,24 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
             point = 0,
             popularity = 0,
         )
-    private val findDeveloperEmail: String = "test@naver.com"
-    private val notFindDeveloperEmail: String = "faildTest@naver.com"
-    private val deleteDeveloperEmail: String = "test@naver.com"
+
+    @BeforeEach
+    fun beforeEach() {
+
+        // 사용자 추가
+        developerService.saveDeveloper(
+            Developer(
+                id = null,
+                email = beforeEachDeveloperEmail,
+                pwd = "aa12345^",
+                name = "test",
+                introduction = "안녕하세요",
+                pictureUrl = "testUrl",
+                point = 0,
+                popularity = 0,
+            )
+        )
+    }
 
     @AfterEach
     fun printDevelopers() {
@@ -181,7 +205,7 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
     }
 
     @Order(6)
-    @Test
+    //@Test
     fun testDelete() {
 
         mockMvc.perform(
