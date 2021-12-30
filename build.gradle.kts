@@ -99,7 +99,7 @@ tasks {
 
 	bootJar {
 		dependsOn(asciidoctor)
-
+		duplicatesStrategy = DuplicatesStrategy.INCLUDE
 		from(asciidoctor.get().outputDir) {
 			into("BOOT-INF/classes/static/docs")
 		}
