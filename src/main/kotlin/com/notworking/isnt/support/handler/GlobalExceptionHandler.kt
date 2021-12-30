@@ -3,6 +3,7 @@ package com.notworking.isnt.support.handler
 import com.notworking.isnt.controller.dto.ErrorResponse
 import com.notworking.isnt.support.exception.BusinessException
 import mu.KotlinLogging
+import org.hibernate.exception.ConstraintViolationException
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.BindException
 import org.springframework.web.HttpRequestMethodNotSupportedException
@@ -27,7 +28,10 @@ class GlobalExceptionHandler {
     ): ResponseEntity<ErrorResponse> {
         log.error("handleMethodArgumentNotValidException", e)
         val response: ErrorResponse =
-            ErrorResponse(code = "E0001", title = "MethodArgumentNotValid", message = e.message)
+            ErrorResponse(
+                code = "E0001", title = "MethodArgumentNotValid", message = "MethodArgumentNotValidException이 발생하였습니다.",
+                detailMessage = e.message
+            )
         return ResponseEntity.badRequest().body(response)
     }
 
@@ -38,7 +42,10 @@ class GlobalExceptionHandler {
     @ExceptionHandler(BindException::class)
     protected fun handleBindException(e: BindException): ResponseEntity<ErrorResponse> {
         log.error("handleBindException", e)
-        val response: ErrorResponse = ErrorResponse(code = "E0001", title = "BindException", message = e.message)
+        val response: ErrorResponse = ErrorResponse(
+            code = "E0001", title = "BindException", message = "BindException이 발생하였습니다.",
+            detailMessage = e.message
+        )
         return ResponseEntity.badRequest().body(response)
     }
 
@@ -50,7 +57,12 @@ class GlobalExceptionHandler {
     protected fun handleMethodArgumentTypeMismatchException(e: MethodArgumentTypeMismatchException): ResponseEntity<ErrorResponse> {
         log.error("handleMethodArgumentTypeMismatchException", e)
         val response: ErrorResponse =
-            ErrorResponse(code = "E0001", title = "MethodArgumentTypeMismatch", message = e.message.orEmpty())
+            ErrorResponse(
+                code = "E0001",
+                title = "MethodArgumentTypeMismatch",
+                message = "MethodArgumentTypeMismatchException이 발생하였습니다.",
+                detailMessage = e.message.orEmpty()
+            )
         return ResponseEntity.badRequest().body(response)
     }
 
@@ -61,7 +73,12 @@ class GlobalExceptionHandler {
     protected fun handleHttpRequestMethodNotSupportedException(e: HttpRequestMethodNotSupportedException): ResponseEntity<ErrorResponse> {
         log.error("handleHttpRequestMethodNotSupportedException", e)
         val response: ErrorResponse =
-            ErrorResponse(code = "E0001", title = "HttpRequestMethodNotSupport", message = "호출한 메소드를 확인해주세요.")
+            ErrorResponse(
+                code = "E0001",
+                title = "HttpRequestMethodNotSupport",
+                message = "호출한 메소드를 확인해주세요.",
+                detailMessage = e.message.orEmpty()
+            )
         return ResponseEntity.badRequest().body(response)
     }
 
@@ -72,7 +89,28 @@ class GlobalExceptionHandler {
     protected fun handleAccessDeniedException(e: AccessDeniedException): ResponseEntity<ErrorResponse> {
         log.error("handleAccessDeniedException", e)
         val response: ErrorResponse =
-            ErrorResponse(code = "E0001", title = "AccessDenied", message = "권한이 없습니다.")
+            ErrorResponse(
+                code = "E0001",
+                title = "AccessDenied",
+                message = "권한이 없습니다.",
+                detailMessage = e.message.orEmpty()
+            )
+        return ResponseEntity.badRequest().body(response)
+    }
+
+    /**
+     * Authentication 객체가 필요한 권한을 보유하지 않은 경우 발생합
+     */
+    @ExceptionHandler(ConstraintViolationException::class)
+    protected fun constraintViolationException(e: ConstraintViolationException): ResponseEntity<ErrorResponse> {
+        log.error("constraintViolationException", e)
+        val response: ErrorResponse =
+            ErrorResponse(
+                code = "E0001",
+                title = "ConstraintViolationException",
+                message = "ConstraintViolationException이 발생하였습니다.",
+                detailMessage = e.message.orEmpty()
+            )
         return ResponseEntity.badRequest().body(response)
     }
 
@@ -83,14 +121,21 @@ class GlobalExceptionHandler {
     protected fun businessException(e: BusinessException): ResponseEntity<ErrorResponse> {
         log.error("businessException", e)
         val response: ErrorResponse =
-            ErrorResponse(code = e.error.code, title = "업무처리 에러", message = e.error.message)
+            ErrorResponse(
+                code = e.error.code, title = "업무처리 에러", message = e.error.message, detailMessage = e.message.orEmpty()
+            )
         return ResponseEntity.badRequest().body(response)
     }
 
     @ExceptionHandler(Exception::class)
     protected fun handleException(e: Exception): ResponseEntity<ErrorResponse> {
         log.error("Exception", e)
-        val response: ErrorResponse = ErrorResponse(code = "E0001", title = "Error", message = "에러가 발생하였습니다.")
+        val response: ErrorResponse = ErrorResponse(
+            code = "E0001",
+            title = "Error",
+            message = "에러가 발생하였습니다.",
+            detailMessage = e.message.orEmpty()
+        )
         return ResponseEntity.badRequest().body(response)
     }
 }
