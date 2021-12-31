@@ -1,5 +1,4 @@
 server:
-  address: localhost
   port: 8080
 
 spring:
@@ -11,11 +10,11 @@ spring:
     generate-ddl: true
     hibernate:
       #ddl-auto: create-drop
-      ddl-auto: create
+      ddl-auto: update
     database: mysql
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
   datasource:
-    url: jdbc:mysql://localhost:3306/INT_DB?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC&&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://18.217.155.120:3306/INT_DB?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC&&allowPublicKeyRetrieval=true&&validationQuery="select 1"
     username: INT_ADMIN
     password: aa12345^
     driver-class-name: com.mysql.cj.jdbc.Driver
