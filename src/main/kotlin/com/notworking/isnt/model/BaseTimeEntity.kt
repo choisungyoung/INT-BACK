@@ -12,10 +12,10 @@ import javax.persistence.MappedSuperclass
  */
 @MappedSuperclass // 필드들을 컬럼으로 인식되도록 함
 @EntityListeners(AuditingEntityListener::class) // Auditing기능 포함
-abstract class BaseTimeEntity {
+open abstract class BaseTimeEntity {
     @CreatedDate // entity가 생성되어 저장될 때 시간이 자동 저장됨
-    private var createDate: LocalDateTime = LocalDateTime.now()
+    protected var createDate: LocalDateTime = LocalDateTime.now()
 
     @LastModifiedDate // 조회한 entity 값을 변경할 때 시간이 자동 저장됨
-    private var modifiedDate: LocalDateTime = LocalDateTime.now()
+    protected var modifiedDate: LocalDateTime = LocalDateTime.now()
 }
