@@ -26,9 +26,11 @@
         <logger name="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" level="trace" />
 
         <!-- 데이터베이스 -->
-        <logger name="jdbc.sqlonly" level="debug" />
-        <logger name="jdbc.resultsettable" level="debug" />
-        <logger name="org.mybatis.spring" level="debug" />
+        <logger name="org.hibernate.SQL" level="debug" />
+        <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="trace" />
+        <logger name="jdbc.sqlonly" level="error" />
+        <logger name="jdbc.resultsettable" level="error" />
+        <logger name="org.mybatis.spring" level="error" />
 
         <logger name="jdbc.sqltiming" level="error" />
         <logger name="jdbc.audit" level="error" />
