@@ -1,18 +1,38 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+buildscript {
+	repositories {
+		maven("https://plugins.gradle.org/m2/")
+		mavenCentral()
+	}
+
+	dependencies {
+		classpath("gradle.plugin.com.ewerk.gradle.plugins:querydsl-plugin:1.0.10")
+		classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.61")
+	}
+}
+
+
 plugins {
 	id("org.springframework.boot") version "2.6.1"
 	id("io.spring.dependency-management") version "1.0.11.RELEASE"
 	id("org.asciidoctor.jvm.convert") version "3.3.2"
 
-	kotlin("jvm") version "1.6.0"
-	kotlin("plugin.spring") version "1.6.0"
-	kotlin("plugin.jpa") version "1.6.0"
+	val kotlinVersion = "1.6.0"
+
+	kotlin("jvm") version kotlinVersion
+	kotlin("plugin.spring") version kotlinVersion
+	kotlin("plugin.jpa") version kotlinVersion
+	kotlin("kapt") version kotlinVersion
+	kotlin("plugin.allopen") version kotlinVersion
+
+	idea
 }
 
 group = "com.notworking"
 version = "1.0.0"
 java.sourceCompatibility = JavaVersion.VERSION_1_8
+val qeurydslVersion = "4.4.0" // <= 추가 설정
 
 configurations {
 	compileOnly {
@@ -38,6 +58,14 @@ dependencies {
 	runtimeOnly("mysql:mysql-connector-java")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.security:spring-security-test")
+
+	implementation("com.querydsl:querydsl-jpa")
+	kapt(group = "com.querydsl", name = "querydsl-apt", classifier = "jpa")
+	sourceSets.main {
+		withConvention(org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet::class) {
+			kotlin.srcDir("$buildDir/generated/source/kapt/main")
+		}
+	}
 
 	testImplementation("org.springframework.restdocs:spring-restdocs-asciidoctor")
 	testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
