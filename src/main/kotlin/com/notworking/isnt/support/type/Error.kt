@@ -19,4 +19,7 @@ enum class Error(
     DEVELOPER_EMAIL_DUPLICATION(400, "M001", "이미 존재하는 이메일입니다."),
     DEVELOPER_NOT_FOUND(400, "M002", "존재하지 않는 사용자입니다."),
 
+    // Issue
+    ISSUE_NOT_FOUND(400, "M002", "존재하지 않는 이슈입니다."),
+
 }
