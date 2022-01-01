@@ -11,6 +11,7 @@ import com.notworking.isnt.support.type.DocType
 import mu.KotlinLogging
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
@@ -20,8 +21,7 @@ import org.springframework.http.MediaType
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders
 import org.springframework.restdocs.payload.PayloadDocumentation.*
-import org.springframework.restdocs.request.RequestDocumentation.parameterWithName
-import org.springframework.restdocs.request.RequestDocumentation.pathParameters
+import org.springframework.restdocs.request.RequestDocumentation.*
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
@@ -144,20 +144,100 @@ class IssueControllerTest(
     fun testFindList() {
 
         mockMvc.perform(
-            RestDocumentationRequestBuilders.get("$uri/list/latest")
+            RestDocumentationRequestBuilders
+                .get("$uri/list/latest")
+                .param("page", "0")
+                .param("size", "10")
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andDo(MockMvcResultHandlers.print())
             .andDo(
                 document(
                     "find-issue-list-latest",
+                    requestParameters(
+                        parameterWithName("page").description("조회 페이지"),
+                        parameterWithName("size").description("조회 페이지 사이즈")
+                    ),
                     responseFields(
-                        fieldWithPath("[].id").description("고유번호"),
-                        fieldWithPath("[].title").description("제목"),
-                        fieldWithPath("[].content").description("내용"),
-                        fieldWithPath("[].docType").description("문서유형 ('TEXT', 'MARK_DOWN')"),
-                        fieldWithPath("[].hits").description("조회수"),
-                        fieldWithPath("[].recommendationCount").description("추천수"),
+                        fieldWithPath("content.[].id").description("고유번호"),
+                        fieldWithPath("content.[].title").description("제목"),
+                        fieldWithPath("content.[].content").description("내용"),
+                        fieldWithPath("content.[].docType").description("문서유형 ('TEXT', 'MARK_DOWN')"),
+                        fieldWithPath("content.[].hits").description("조회수"),
+                        fieldWithPath("content.[].recommendationCount").description("추천수"),
+                        fieldWithPath("content.[].developer.email").description("작성자 이메일"),
+                        fieldWithPath("content.[].developer.name").description("작성자 이름"),
+                        fieldWithPath("content.[].developer.introduction").description("작성자 소개"),
+                        fieldWithPath("content.[].developer.pictureUrl").description("작성자 사진경로"),
+                        fieldWithPath("content.[].developer.point").description("작성자 점수"),
+                        fieldWithPath("content.[].developer.popularity").description("작성자 인기도"),
+                        fieldWithPath("pageable").description("pageable"),
+                        fieldWithPath("totalPages").description("총 페이지 수"),
+                        fieldWithPath("totalElements").description("총 요소 수"),
+                        fieldWithPath("last").description("마지막 여부"),
+                        fieldWithPath("numberOfElements").description("요소 수"),
+                        fieldWithPath("first").description("첫 여부"),
+                        fieldWithPath("sort.unsorted").description("정렬여부"),
+                        fieldWithPath("sort.sorted").description("정렬여부"),
+                        fieldWithPath("sort.empty").description("정렬존재여부"),
+                        fieldWithPath("size").description("크기"),
+                        fieldWithPath("number").description("번째"),
+                        fieldWithPath("empty").description("존재여부"),
+                    )
+                )
+            )
+    }
+
+    @Disabled
+    @Test
+    fun testPagenationFindList() {
+
+        for (i: Int in 1..20)
+            issueService.saveIssue(
+                Issue(
+                    id = null,
+                    title = "Pagenation Test Title" + i,
+                    content = "Pagenation Test content" + i,
+                    docType = DocType.TEXT
+                ),
+                beforeSaveIssueEmail
+            )
+        mockMvc.perform(
+            RestDocumentationRequestBuilders
+                .get("$uri/list/latest")
+                .param("page", "2")
+                .param("size", "5")
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andDo(MockMvcResultHandlers.print())
+            .andDo(
+                document(
+                    "find-issue-list-latest-pagenation",
+                    responseFields(
+                        fieldWithPath("content.[].id").description("고유번호"),
+                        fieldWithPath("content.[].title").description("제목"),
+                        fieldWithPath("content.[].content").description("내용"),
+                        fieldWithPath("content.[].docType").description("문서유형 ('TEXT', 'MARK_DOWN')"),
+                        fieldWithPath("content.[].hits").description("조회수"),
+                        fieldWithPath("content.[].recommendationCount").description("추천수"),
+                        fieldWithPath("content.[].developer.email").description("작성자 이메일"),
+                        fieldWithPath("content.[].developer.name").description("작성자 이름"),
+                        fieldWithPath("content.[].developer.introduction").description("작성자 소개"),
+                        fieldWithPath("content.[].developer.pictureUrl").description("작성자 사진경로"),
+                        fieldWithPath("content.[].developer.point").description("작성자 점수"),
+                        fieldWithPath("content.[].developer.popularity").description("작성자 인기도"),
+                        fieldWithPath("pageable").description("pageable"),
+                        fieldWithPath("totalPages").description("총 페이지 수"),
+                        fieldWithPath("totalElements").description("총 요소 수"),
+                        fieldWithPath("last").description("마지막 여부"),
+                        fieldWithPath("numberOfElements").description("요소 수"),
+                        fieldWithPath("first").description("첫 여부"),
+                        fieldWithPath("sort.unsorted").description("정렬여부"),
+                        fieldWithPath("sort.sorted").description("정렬여부"),
+                        fieldWithPath("sort.empty").description("정렬존재여부"),
+                        fieldWithPath("size").description("크기"),
+                        fieldWithPath("number").description("번째"),
+                        fieldWithPath("empty").description("존재여부"),
                     )
                 )
             )
@@ -184,6 +264,12 @@ class IssueControllerTest(
                         fieldWithPath("docType").description("문서유형 ('TEXT', 'MARK_DOWN')"),
                         fieldWithPath("hits").description("조회수"),
                         fieldWithPath("recommendationCount").description("추천수"),
+                        fieldWithPath("developer.email").description("작성자 이메일"),
+                        fieldWithPath("developer.name").description("작성자 이름"),
+                        fieldWithPath("developer.introduction").description("작성자 소개"),
+                        fieldWithPath("developer.pictureUrl").description("작성자 사진경로"),
+                        fieldWithPath("developer.point").description("작성자 점수"),
+                        fieldWithPath("developer.popularity").description("작성자 인기도"),
                     )
                 )
             )

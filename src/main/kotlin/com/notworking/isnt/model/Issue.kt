@@ -19,7 +19,7 @@ data class Issue(
     var hits: Long = 0
     var recommendationCount: Long = 0
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "DEVELOPER_ID")
     lateinit var developer: Developer
 

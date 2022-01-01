@@ -1,11 +1,16 @@
 package com.notworking.isnt.controller.issue
 
+import com.notworking.isnt.controller.developer.dto.DeveloperFindResponseDTO
 import com.notworking.isnt.controller.issue.dto.IssueFindResponseDTO
 import com.notworking.isnt.controller.issue.dto.IssueSaveRequestDTO
 import com.notworking.isnt.controller.issue.dto.IssueUpdateRequestDTO
 import com.notworking.isnt.service.IssueService
 import com.notworking.isnt.support.exception.BusinessException
 import com.notworking.isnt.support.type.Error
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.Pageable
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import kotlin.streams.toList
@@ -26,7 +31,15 @@ class IssueController(var issueService: IssueService) {
                 it.content,
                 it.docType.code,
                 it.hits,
-                it.recommendationCount
+                it.recommendationCount,
+                DeveloperFindResponseDTO(
+                    it.developer.email,
+                    it.developer.name,
+                    it.developer.introduction,
+                    it.developer.pictureUrl,
+                    it.developer.point,
+                    it.developer.popularity
+                )
             )
         }
 
@@ -37,8 +50,8 @@ class IssueController(var issueService: IssueService) {
 
     /** 이슈 최신순 목록 조회 */
     @GetMapping("/list/latest")
-    fun findList(): ResponseEntity<List<IssueFindResponseDTO>> {
-        var list: List<IssueFindResponseDTO>? = issueService.findAllLatestOrder()?.stream()
+    fun findList(@PageableDefault(size = 20, page = 0) pageable: Pageable): ResponseEntity<Page<IssueFindResponseDTO>> {
+        var page: List<IssueFindResponseDTO> = issueService.findAllIssue(pageable)?.stream()
             .map { issue ->
                 IssueFindResponseDTO(
                     issue.id!!,
@@ -46,11 +59,19 @@ class IssueController(var issueService: IssueService) {
                     issue.content,
                     issue.docType.code,
                     issue.hits,
-                    issue.recommendationCount
+                    issue.recommendationCount,
+                    DeveloperFindResponseDTO(
+                        issue.developer.email,
+                        issue.developer.name,
+                        issue.developer.introduction,
+                        issue.developer.pictureUrl,
+                        issue.developer.point,
+                        issue.developer.popularity
+                    )
                 )
             }.toList()
 
-        return ResponseEntity.ok().body(list)
+        return ResponseEntity.ok().body(PageImpl<IssueFindResponseDTO>(page))
     }
 
     /** 이슈 저장 */

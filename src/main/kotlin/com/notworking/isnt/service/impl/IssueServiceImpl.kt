@@ -7,6 +7,8 @@ import com.notworking.isnt.service.DeveloperService
 import com.notworking.isnt.service.IssueService
 import com.notworking.isnt.support.exception.BusinessException
 import com.notworking.isnt.support.type.Error
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -24,8 +26,12 @@ class IssueServiceImpl(
         return issueRepository.findAll()
     }
 
+    override fun findAllIssue(pageable: Pageable): Page<Issue> {
+        return issueRepository.findAll(pageable)
+    }
+
     override fun findAllLatestOrder(): List<Issue> {
-        return issueRepository.findAll()
+        return issueRepositorySupport.findWithDeveloper();
     }
 
     override fun findIssue(id: Long): Issue {

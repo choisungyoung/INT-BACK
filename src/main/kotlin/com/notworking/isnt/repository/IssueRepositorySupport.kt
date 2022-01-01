@@ -14,7 +14,8 @@ class IssueRepositorySupport(
 ) : QuerydslRepositorySupport(IssueRepository::class.java) {
 
     fun findWithDeveloper(): List<Issue> {
-        return query.selectFrom(QIssue.issue).fetchAll().fetch()
+        var issue = QIssue.issue;
+        return query.selectFrom(issue).fetchAll().fetch()
     }
 
 }
