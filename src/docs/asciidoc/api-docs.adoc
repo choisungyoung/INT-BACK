@@ -29,8 +29,6 @@ include::{snippets}/find-developer-list/response-fields.adoc[]
 include::{snippets}/find-developer-list/response-body.adoc[]
 include::{snippets}/find-developer-list/http-response.adoc[]
 
-
-
 [[resources-developer-find]]
 === developer 조회
 
@@ -64,3 +62,62 @@ include::{snippets}/delete-developer/http-request.adoc[]
 
 ==== HTTP response
 include::{snippets}/delete-developer/http-response.adoc[]
+
+
+
+[[resources-issue]]
+== Issue
+
+[[resources-issue-create]]
+=== issue 생성
+==== HTTP request
+include::{snippets}/save-issue/request-fields.adoc[]
+include::{snippets}/save-issue/http-request.adoc[]
+
+==== HTTP response
+include::{snippets}/save-issue/http-response.adoc[]
+
+[[resources-issue-list-find-latest]]
+=== issue 목록조회 (최신순)
+==== HTTP request
+include::{snippets}/find-issue-list-latest/http-request.adoc[]
+include::{snippets}/find-issue-list-latest/request-parameters.adoc[]
+
+==== HTTP response
+include::{snippets}/find-issue-list-latest/response-fields.adoc[]
+include::{snippets}/find-issue-list-latest/response-body.adoc[]
+include::{snippets}/find-issue-list-latest/http-response.adoc[]
+
+[[resources-issue-find]]
+=== issue 조회
+
+==== HTTP request
+include::{snippets}/find-issue/path-parameters.adoc[]
+include::{snippets}/find-issue/http-request.adoc[]
+
+==== HTTP response
+include::{snippets}/find-issue/response-fields.adoc[]
+include::{snippets}/find-issue/response-body.adoc[]
+include::{snippets}/find-issue/http-response.adoc[]
+
+[[resources-issue-update]]
+=== issue 수정
+
+==== HTTP request
+include::{snippets}/update-issue/request-fields.adoc[]
+include::{snippets}/update-issue/request-body.adoc[]
+include::{snippets}/update-issue/http-request.adoc[]
+
+==== HTTP response
+include::{snippets}/update-issue/http-response.adoc[]
+
+
+[[resources-issue-delete]]
+=== issue 삭제
+
+==== HTTP request
+include::{snippets}/delete-issue/path-parameters.adoc[]
+include::{snippets}/delete-issue/http-request.adoc[]
+
+==== HTTP response
+include::{snippets}/delete-issue/http-response.adoc[]
