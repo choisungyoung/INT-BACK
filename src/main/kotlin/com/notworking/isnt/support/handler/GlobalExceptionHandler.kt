@@ -5,6 +5,7 @@ import com.notworking.isnt.support.exception.BusinessException
 import mu.KotlinLogging
 import org.hibernate.exception.ConstraintViolationException
 import org.springframework.http.ResponseEntity
+import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.validation.BindException
 import org.springframework.web.HttpRequestMethodNotSupportedException
 import org.springframework.web.bind.MethodArgumentNotValidException
@@ -111,6 +112,23 @@ class GlobalExceptionHandler {
                 message = "ConstraintViolationException이 발생하였습니다.",
                 detailMessage = e.message.orEmpty()
             )
+        return ResponseEntity.badRequest().body(response)
+    }
+
+    /**
+     * 업무처리 중 에러를 발생한 경우
+     */
+    @ExceptionHandler(HttpMessageNotReadableException::class)
+    protected fun businessException(e: HttpMessageNotReadableException): ResponseEntity<ErrorResponse> {
+        log.error("HttpMessageNotReadableException", e)
+
+        val response: ErrorResponse = ErrorResponse(
+            code = "E0001",
+            title = "HttpMessageNotReadableException",
+            message = "유효하지 않은 입력입니다.",
+            detailMessage = e.message.orEmpty()
+        )
+
         return ResponseEntity.badRequest().body(response)
     }
 

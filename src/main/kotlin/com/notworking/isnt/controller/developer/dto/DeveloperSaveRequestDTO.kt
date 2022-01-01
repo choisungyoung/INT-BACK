@@ -1,10 +1,14 @@
 package com.notworking.isnt.controller.developer.dto
 
 import com.notworking.isnt.model.Developer
+import javax.validation.constraints.NotNull
 
 data class DeveloperSaveRequestDTO(
+    @NotNull
     var email: String,
+    @NotNull
     var password: String,
+    @NotNull
     var name: String?,
     var introduction: String,
 ) {
