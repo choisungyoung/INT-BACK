@@ -4,15 +4,18 @@ import com.notworking.isnt.controller.developer.dto.DeveloperFindResponseDTO
 import com.notworking.isnt.controller.issue.dto.IssueFindResponseDTO
 import com.notworking.isnt.controller.issue.dto.IssueSaveRequestDTO
 import com.notworking.isnt.controller.issue.dto.IssueUpdateRequestDTO
+import com.notworking.isnt.model.Issue
 import com.notworking.isnt.service.IssueService
 import com.notworking.isnt.support.exception.BusinessException
 import com.notworking.isnt.support.type.Error
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import javax.validation.Valid
 import kotlin.streams.toList
 
 @RequestMapping("/api/issue")
@@ -50,8 +53,16 @@ class IssueController(var issueService: IssueService) {
 
     /** 이슈 최신순 목록 조회 */
     @GetMapping("/list/latest")
-    fun findList(@PageableDefault(size = 20, page = 0) pageable: Pageable): ResponseEntity<Page<IssueFindResponseDTO>> {
-        var page: List<IssueFindResponseDTO> = issueService.findAllIssue(pageable)?.stream()
+    fun findList(
+        @PageableDefault(
+            size = 10,
+            page = 0,
+            sort = ["createDate"],
+            direction = Sort.Direction.DESC
+        ) pageable: Pageable
+    ): ResponseEntity<Page<IssueFindResponseDTO>> {
+        var page: Page<Issue> = issueService.findAllIssue(pageable)
+        var list: List<IssueFindResponseDTO> = page.stream()
             .map { issue ->
                 IssueFindResponseDTO(
                     issue.id!!,
@@ -71,12 +82,12 @@ class IssueController(var issueService: IssueService) {
                 )
             }.toList()
 
-        return ResponseEntity.ok().body(PageImpl<IssueFindResponseDTO>(page))
+        return ResponseEntity.ok().body(PageImpl<IssueFindResponseDTO>(list, pageable, page.totalElements))
     }
 
     /** 이슈 저장 */
     @PostMapping
-    fun save(@RequestBody dto: IssueSaveRequestDTO): ResponseEntity<Void> {
+    fun save(@Valid @RequestBody dto: IssueSaveRequestDTO): ResponseEntity<Void> {
         issueService.saveIssue(dto.toModel(), email)
 
         return ResponseEntity.ok().build()

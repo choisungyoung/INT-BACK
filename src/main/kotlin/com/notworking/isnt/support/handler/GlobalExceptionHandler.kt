@@ -5,7 +5,6 @@ import com.notworking.isnt.support.exception.BusinessException
 import mu.KotlinLogging
 import org.hibernate.exception.ConstraintViolationException
 import org.springframework.http.ResponseEntity
-import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.validation.BindException
 import org.springframework.web.HttpRequestMethodNotSupportedException
 import org.springframework.web.bind.MethodArgumentNotValidException
@@ -18,23 +17,6 @@ private val log = KotlinLogging.logger {}
 
 @RestControllerAdvice
 class GlobalExceptionHandler {
-    /**
-     * javax.validation.Valid or @Validated 으로 binding error 발생시 발생한다.
-     * HttpMessageConverter 에서 등록한 HttpMessageConverter binding 못할경우 발생
-     * 주로 @RequestBody, @RequestPart 어노테이션에서 발생
-     */
-    @ExceptionHandler(MethodArgumentNotValidException::class)
-    protected fun handleMethodArgumentNotValidException(
-        e: MethodArgumentNotValidException
-    ): ResponseEntity<ErrorResponse> {
-        log.error("handleMethodArgumentNotValidException", e)
-        val response: ErrorResponse =
-            ErrorResponse(
-                code = "E0001", title = "MethodArgumentNotValid", message = "MethodArgumentNotValidException이 발생하였습니다.",
-                detailMessage = e.message
-            )
-        return ResponseEntity.badRequest().body(response)
-    }
 
     /**
      * @ModelAttribut 으로 binding error 발생시 BindException 발생한다.
@@ -116,19 +98,24 @@ class GlobalExceptionHandler {
     }
 
     /**
-     * 업무처리 중 에러를 발생한 경우
+     * validation 예외처리
      */
-    @ExceptionHandler(HttpMessageNotReadableException::class)
-    protected fun businessException(e: HttpMessageNotReadableException): ResponseEntity<ErrorResponse> {
-        log.error("HttpMessageNotReadableException", e)
+    @ExceptionHandler(MethodArgumentNotValidException::class)
+    protected fun methodArgumentNotValidException(e: MethodArgumentNotValidException): ResponseEntity<ErrorResponse> {
+        log.error("MethodArgumentNotValidException", e)
+        var defaultDetailMessage: String? = "검증에러 처리시 문제가 발생하였습니다."
 
-        val response: ErrorResponse = ErrorResponse(
-            code = "E0001",
-            title = "HttpMessageNotReadableException",
-            message = "유효하지 않은 입력입니다.",
-            detailMessage = e.message.orEmpty()
-        )
+        if (e.bindingResult.hasErrors()) {
+            defaultDetailMessage = e.bindingResult.allErrors[0].codes?.get(0)
+        }
 
+        val response: ErrorResponse =
+            ErrorResponse(
+                code = "E0001",
+                title = "ValidException",
+                message = "유효성 검증시 에러가 발생하였습니다.",
+                detailMessage = defaultDetailMessage.orEmpty()
+            )
         return ResponseEntity.badRequest().body(response)
     }
 

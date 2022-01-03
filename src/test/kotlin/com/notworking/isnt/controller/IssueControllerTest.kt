@@ -46,12 +46,18 @@ class IssueControllerTest(
 
     private var uri: String = "/api/issue"
 
-    private val beforeSaveIssueEmail = "saveIssueTester@naver.com"
+    private val beforeSaveIssueEmail = "saveIssueTester1@naver.com"
     private var beforeSaveIssueId: Long = 0
     private val notFindIssueId: Long = -999
 
     private val saveDto = IssueSaveRequestDTO(
         title = "Test Title",
+        content = "test content",
+        docType = DocType.TEXT.code,
+    )
+
+    private val saveValidationDto = IssueSaveRequestDTO(
+        title = "",
         content = "test content",
         docType = DocType.TEXT.code,
     )
@@ -141,13 +147,24 @@ class IssueControllerTest(
     }
 
     @Test
+    fun testSaveValidation() {
+        mockMvc.perform(
+            MockMvcRequestBuilders.post(uri)
+                .content("{\"title\":\"\",\"content\":\"test content\",\"docType\":\"TEXT\"}")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(MockMvcResultMatchers.status().isBadRequest)
+            .andDo(MockMvcResultHandlers.print())
+    }
+
+    @Test
     fun testFindList() {
 
         mockMvc.perform(
             RestDocumentationRequestBuilders
                 .get("$uri/list/latest")
-                .param("page", "0")
-                .param("size", "10")
+                .param("page", "1")
+                .param("size", "5")
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andDo(MockMvcResultHandlers.print())
@@ -171,7 +188,14 @@ class IssueControllerTest(
                         fieldWithPath("content.[].developer.pictureUrl").description("작성자 사진경로"),
                         fieldWithPath("content.[].developer.point").description("작성자 점수"),
                         fieldWithPath("content.[].developer.popularity").description("작성자 인기도"),
-                        fieldWithPath("pageable").description("pageable"),
+                        fieldWithPath("pageable.sort.unsorted").description("정렬종류"),
+                        fieldWithPath("pageable.sort.sorted").description("정렬종류"),
+                        fieldWithPath("pageable.sort.empty").description("정렬종류"),
+                        fieldWithPath("pageable.pageNumber").description("페이지수"),
+                        fieldWithPath("pageable.pageSize").description("페이지크기"),
+                        fieldWithPath("pageable.offset").description("오프셋"),
+                        fieldWithPath("pageable.unpaged").description("페이지정보 불포함여부"),
+                        fieldWithPath("pageable.paged").description("페이지정보 포함여부"),
                         fieldWithPath("totalPages").description("총 페이지 수"),
                         fieldWithPath("totalElements").description("총 요소 수"),
                         fieldWithPath("last").description("마지막 여부"),
@@ -192,7 +216,7 @@ class IssueControllerTest(
     @Test
     fun testPagenationFindList() {
 
-        for (i: Int in 1..20)
+        for (i: Int in 1..24)
             issueService.saveIssue(
                 Issue(
                     id = null,

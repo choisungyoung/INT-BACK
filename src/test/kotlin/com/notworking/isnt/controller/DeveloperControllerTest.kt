@@ -120,7 +120,7 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
     fun testSaveValidation() {
         mockMvc.perform(
             MockMvcRequestBuilders.post(uri)
-                .content("{\"password\":\"aa12345^\",\"name\":\"테스터01\",\"introduction\":\"안녕하세요\"}")
+                .content("{\"email\":\"\",\"password\":\"aa12345^\",\"name\":\"테스터01\",\"introduction\":\"안녕하세요\"}")
                 .contentType(MediaType.APPLICATION_JSON)
         )
             .andExpect(MockMvcResultMatchers.status().isBadRequest)
