@@ -14,8 +14,16 @@ import javax.persistence.MappedSuperclass
 @EntityListeners(AuditingEntityListener::class) // Auditing기능 포함
 open abstract class BaseTimeEntity {
     @CreatedDate // entity가 생성되어 저장될 때 시간이 자동 저장됨
-    protected var createDate: LocalDateTime = LocalDateTime.now()
+    protected var createdDate: LocalDateTime = LocalDateTime.now()
 
     @LastModifiedDate // 조회한 entity 값을 변경할 때 시간이 자동 저장됨
     protected var modifiedDate: LocalDateTime = LocalDateTime.now()
+
+    fun getCreatedDate(): String {
+        return createdDate.toString()
+    }
+
+    fun getModifiedDate(): String {
+        return modifiedDate.toString()
+    }
 }

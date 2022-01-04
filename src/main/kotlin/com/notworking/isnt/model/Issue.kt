@@ -23,6 +23,14 @@ data class Issue(
     @JoinColumn(name = "DEVELOPER_ID")
     lateinit var developer: Developer
 
+    @OneToMany
+    @JoinTable(
+        name = "ISSUE_COMMENT",
+        joinColumns = [JoinColumn(name = "ID")],
+        inverseJoinColumns = [JoinColumn(name = "ID")]
+    )
+    var comments: MutableList<Comment> = mutableListOf()
+
     fun update(issue: Issue): Issue? {
         this.title = issue.title
         this.content = issue.content
