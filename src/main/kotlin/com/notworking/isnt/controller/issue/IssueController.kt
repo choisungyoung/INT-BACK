@@ -42,8 +42,9 @@ class IssueController(var issueService: IssueService) {
                     it.developer.pictureUrl,
                     it.developer.point,
                     it.developer.popularity
+                ),
+            
                 )
-            )
         }
 
         //존재하지 않을 경우 에러처리

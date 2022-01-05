@@ -1,53 +1,44 @@
 package com.notworking.isnt.model
 
 import com.notworking.isnt.support.type.DocType
+import java.time.LocalDateTime
 import javax.persistence.*
 
-
 @Entity
-@Table(name = "INT_ISSUE")
-data class Issue(
+@Table(name = "INT_SOLUTION")
+data class Solution(
     @Id
     @GeneratedValue
     var id: Long?,
-    var title: String,
     @Lob
     var content: String,
     var docType: DocType,
 
     ) : BaseTimeEntity() {
 
-    var hits: Long = 0
     var recommendationCount: Long = 0
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "DEVELOPER_ID")
     lateinit var developer: Developer
 
-    @OneToMany(mappedBy = "issue")
-    var solutions: MutableList<Solution> = mutableListOf()
+    @ManyToOne
+    @JoinColumn(name = "ISSUE_ID")
+    lateinit var issue: Issue
 
-    fun addSolution(solution: Solution) {
-        this.solutions.add(solution)
-
-        // 무한루프에 빠지지 않도록 체크
-        if (solution.issue != this) {
-            solution.issue = this
-        }
-    }
-
-    fun update(issue: Issue): Issue? {
-        this.title = issue.title
+    fun update(issue: Solution): Solution? {
         this.content = issue.content
         this.docType = issue.docType
         return this
     }
 
-    fun varyHits(isIncrease: Boolean) {
-        if (isIncrease)
-            hits++
-        else
-            hits--
+    fun updateIssue(issue: Issue) {
+        this.issue = issue
+
+        // 무한루프에 빠지지 않도록 체크
+        if (!issue.solutions.contains(this)) {
+            issue.solutions.add(this)
+        }
     }
 
     fun varyRecommendationCount(isIncrease: Boolean) {
@@ -55,6 +46,7 @@ data class Issue(
             recommendationCount++
         else
             recommendationCount--
+        this.modifiedDate = LocalDateTime.now()
     }
 }
 

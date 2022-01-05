@@ -24,6 +24,9 @@ enum class Error(
     // Issue
     ISSUE_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "ISU001", "존재하지 않는 이슈입니다."),
 
+    // Solution
+    SOLUTION_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "SLT001", "존재하지 않는 솔루션입니다."),
+
     // Comment
     COMMENT_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "CMT001", "존재하지 않는 이슈입니다."),
 

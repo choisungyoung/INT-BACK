@@ -2,8 +2,10 @@ package com.notworking.isnt
 
 import com.notworking.isnt.model.Developer
 import com.notworking.isnt.model.Issue
+import com.notworking.isnt.model.Solution
 import com.notworking.isnt.service.DeveloperService
 import com.notworking.isnt.service.IssueService
+import com.notworking.isnt.service.SolutionService
 import com.notworking.isnt.support.type.DocType
 import mu.KotlinLogging
 import org.junit.jupiter.api.Disabled
@@ -17,14 +19,16 @@ private val log = KotlinLogging.logger {}
 
 @Transactional
 @SpringBootTest
-class IssueControllerTest(
+class TestData(
+    @Autowired var developerService: DeveloperService,
     @Autowired var issueService: IssueService,
-    @Autowired var developerService: DeveloperService
+    @Autowired var solutionService: SolutionService,
 ) {
     @Disabled
     @Test
     @Rollback(value = false)
     fun saveTestData() {
+        var issueId: Long = 0
         developerService.saveDeveloper(
             Developer(
                 id = null,
@@ -39,7 +43,7 @@ class IssueControllerTest(
         )
 
         for (i: Int in 1..24)
-            issueService.saveIssue(
+            issueId = issueService.saveIssue(
                 Issue(
                     id = null,
                     title = "Test Title" + i,
@@ -47,6 +51,17 @@ class IssueControllerTest(
                     docType = DocType.TEXT
                 ),
                 "test@naver.com"
+            ).id!!
+
+        for (i: Int in 1..24)
+            solutionService.saveSolution(
+                Solution(
+                    id = null,
+                    content = "Test content" + i,
+                    docType = DocType.TEXT,
+                ),
+                "test@naver.com",
+                issueId = issueId
             )
     }
 
