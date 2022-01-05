@@ -3,8 +3,8 @@ package com.notworking.isnt.model
 import java.time.LocalDateTime
 import javax.persistence.*
 
-@Entity
-@Table(name = "INT_COMMENT")
+//@Entity
+//@Table(name = "INT_COMMENT")
 data class Comment(
     @Id
     @GeneratedValue

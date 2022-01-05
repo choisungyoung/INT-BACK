@@ -46,18 +46,12 @@ class IssueControllerTest(
 
     private var uri: String = "/api/issue"
 
-    private val beforeSaveIssueEmail = "saveIssueTester1@naver.com"
+    private val beforeSaveIssueEmail = "issueTester@naver.com"
     private var beforeSaveIssueId: Long = 0
     private val notFindIssueId: Long = -999
 
     private val saveDto = IssueSaveRequestDTO(
         title = "Test Title",
-        content = "test content",
-        docType = DocType.TEXT.code,
-    )
-
-    private val saveValidationDto = IssueSaveRequestDTO(
-        title = "",
         content = "test content",
         docType = DocType.TEXT.code,
     )

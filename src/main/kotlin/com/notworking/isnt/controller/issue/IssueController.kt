@@ -22,7 +22,7 @@ import kotlin.streams.toList
 @RestController
 class IssueController(var issueService: IssueService) {
 
-    var email = "saveIssueTester@naver.com" // TODO: Authentication 시큐리티 객체에서 받아오는 것으로 수정
+    var email = "test@naver.com" // TODO: Authentication 시큐리티 객체에서 받아오는 것으로 수정
 
     /** 이슈 조회 */
     @GetMapping("/{id}")
@@ -57,7 +57,7 @@ class IssueController(var issueService: IssueService) {
         @PageableDefault(
             size = 10,
             page = 0,
-            sort = ["createDate"],
+            sort = ["createdDate"],
             direction = Sort.Direction.DESC
         ) pageable: Pageable
     ): ResponseEntity<Page<IssueFindResponseDTO>> {

@@ -41,11 +41,11 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
 
     private var uri: String = "/api/developer";
 
-    private val beforeEachDeveloperEmail: String = "test@naver.com"
-    private val findDeveloperEmail: String = "test@naver.com"
+    private val beforeEachDeveloperEmail: String = "developerTest@naver.com"
+    private val findDeveloperEmail: String = "developerTest@naver.com"
     private val notFindDeveloperEmail: String = "failedTest@naver.com"
-    private val saveDeveloperEmail: String = "testSave@naver.com"
-    private val deleteDeveloperEmail: String = "test@naver.com"
+    private val saveDeveloperEmail: String = "developerSaveTest@naver.com"
+    private val deleteDeveloperEmail: String = "developerTest@naver.com"
 
     private val saveDTO: DeveloperSaveRequestDTO =
         DeveloperSaveRequestDTO(

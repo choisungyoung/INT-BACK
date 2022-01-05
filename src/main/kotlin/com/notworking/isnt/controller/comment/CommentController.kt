@@ -20,7 +20,7 @@ import javax.validation.Valid
 import kotlin.streams.toList
 
 @RequestMapping("/api/comment")
-@RestController
+//@RestController
 class CommentController(var commentService: CommentService) {
 
     var email = "commentTester@naver.com" // TODO: Authentication 시큐리티 객체에서 받아오는 것으로 수정

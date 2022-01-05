@@ -1,7 +1,6 @@
 package com.notworking.isnt.model
 
 import com.notworking.isnt.support.type.DocType
-import java.time.LocalDateTime
 import javax.persistence.*
 
 @Entity
@@ -11,6 +10,7 @@ data class Issue(
     @GeneratedValue
     var id: Long?,
     var title: String,
+    @Lob
     var content: String,
     var docType: DocType,
 
@@ -23,19 +23,10 @@ data class Issue(
     @JoinColumn(name = "DEVELOPER_ID")
     lateinit var developer: Developer
 
-    @OneToMany
-    @JoinTable(
-        name = "ISSUE_COMMENT",
-        joinColumns = [JoinColumn(name = "ID")],
-        inverseJoinColumns = [JoinColumn(name = "ID")]
-    )
-    var comments: MutableList<Comment> = mutableListOf()
-
     fun update(issue: Issue): Issue? {
         this.title = issue.title
         this.content = issue.content
         this.docType = issue.docType
-        this.modifiedDate = LocalDateTime.now()
         return this
     }
 
@@ -44,7 +35,6 @@ data class Issue(
             hits++
         else
             hits--
-        this.modifiedDate = LocalDateTime.now()
     }
 
     fun varyRecommendationCount(isIncrease: Boolean) {
@@ -52,7 +42,6 @@ data class Issue(
             recommendationCount++
         else
             recommendationCount--
-        this.modifiedDate = LocalDateTime.now()
     }
 }
 
