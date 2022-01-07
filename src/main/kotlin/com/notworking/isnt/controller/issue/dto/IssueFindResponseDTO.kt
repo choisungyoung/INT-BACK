@@ -10,5 +10,6 @@ data class IssueFindResponseDTO(
     var hits: Long,
     var recommendationCount: Long,
 
-    var developer: DeveloperFindResponseDTO
+    var developer: DeveloperFindResponseDTO,
+    var modifiedDate: String
 )

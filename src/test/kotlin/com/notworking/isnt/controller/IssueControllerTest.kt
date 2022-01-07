@@ -182,6 +182,7 @@ class IssueControllerTest(
                         fieldWithPath("content.[].developer.pictureUrl").description("작성자 사진경로"),
                         fieldWithPath("content.[].developer.point").description("작성자 점수"),
                         fieldWithPath("content.[].developer.popularity").description("작성자 인기도"),
+                        fieldWithPath("content.[].modifiedDate").description("최종수정일시"),
                         fieldWithPath("pageable.sort.unsorted").description("정렬종류"),
                         fieldWithPath("pageable.sort.sorted").description("정렬종류"),
                         fieldWithPath("pageable.sort.empty").description("정렬종류"),
@@ -244,6 +245,7 @@ class IssueControllerTest(
                         fieldWithPath("content.[].developer.pictureUrl").description("작성자 사진경로"),
                         fieldWithPath("content.[].developer.point").description("작성자 점수"),
                         fieldWithPath("content.[].developer.popularity").description("작성자 인기도"),
+                        fieldWithPath("content.[].modifiedDate").description("최종수정일시"),
                         fieldWithPath("pageable").description("pageable"),
                         fieldWithPath("totalPages").description("총 페이지 수"),
                         fieldWithPath("totalElements").description("총 요소 수"),
@@ -288,6 +290,7 @@ class IssueControllerTest(
                         fieldWithPath("developer.pictureUrl").description("작성자 사진경로"),
                         fieldWithPath("developer.point").description("작성자 점수"),
                         fieldWithPath("developer.popularity").description("작성자 인기도"),
+                        fieldWithPath("modifiedDate").description("최종수정일시"),
                     )
                 )
             )

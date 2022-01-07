@@ -43,8 +43,8 @@ class IssueController(var issueService: IssueService) {
                     it.developer.point,
                     it.developer.popularity
                 ),
-            
-                )
+                it.getModifiedDate()
+            )
         }
 
         //존재하지 않을 경우 에러처리
@@ -79,7 +79,8 @@ class IssueController(var issueService: IssueService) {
                         issue.developer.pictureUrl,
                         issue.developer.point,
                         issue.developer.popularity
-                    )
+                    ),
+                    issue.getModifiedDate()
                 )
             }.toList()
 
