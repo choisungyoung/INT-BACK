@@ -26,7 +26,7 @@
         <logger name="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" level="error" />
 
         <!-- 데이터베이스 -->
-        <logger name="org.hibernate.SQL" level="error" />
+        <logger name="org.hibernate.SQL" level="debug" />
         <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="error" />
         <logger name="jdbc.sqlonly" level="error" />
         <logger name="jdbc.resultsettable" level="error" />

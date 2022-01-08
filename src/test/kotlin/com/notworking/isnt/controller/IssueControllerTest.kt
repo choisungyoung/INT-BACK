@@ -5,8 +5,10 @@ import com.notworking.isnt.controller.issue.dto.IssueSaveRequestDTO
 import com.notworking.isnt.controller.issue.dto.IssueUpdateRequestDTO
 import com.notworking.isnt.model.Developer
 import com.notworking.isnt.model.Issue
+import com.notworking.isnt.model.Solution
 import com.notworking.isnt.service.DeveloperService
 import com.notworking.isnt.service.IssueService
+import com.notworking.isnt.service.SolutionService
 import com.notworking.isnt.support.type.DocType
 import mu.KotlinLogging
 import org.junit.jupiter.api.AfterEach
@@ -35,8 +37,9 @@ private val log = KotlinLogging.logger {}
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs(uriScheme = "https", uriHost = "localhost")
 class IssueControllerTest(
+    @Autowired var developerService: DeveloperService,
     @Autowired var issueService: IssueService,
-    @Autowired var developerService: DeveloperService
+    @Autowired var solutionService: SolutionService,
 ) {
     @Autowired
     private lateinit var mockMvc: MockMvc
@@ -89,6 +92,16 @@ class IssueControllerTest(
             ),
             beforeSaveIssueEmail
         ).id!!
+
+        solutionService.saveSolution(
+            Solution(
+                id = null,
+                content = "test solution",
+                docType = DocType.TEXT
+            ),
+            beforeSaveIssueEmail,
+            beforeSaveIssueId
+        )
 
         // 수정 테스트케이스 id 설정
         updateDto.id = beforeSaveIssueId;
@@ -291,6 +304,17 @@ class IssueControllerTest(
                         fieldWithPath("developer.point").description("작성자 점수"),
                         fieldWithPath("developer.popularity").description("작성자 인기도"),
                         fieldWithPath("modifiedDate").description("최종수정일시"),
+                        fieldWithPath("solutions.[].id").description("고유번호"),
+                        fieldWithPath("solutions.[].content").description("내용"),
+                        fieldWithPath("solutions.[].docType").description("문서유형 ('TEXT', 'MARK_DOWN')"),
+                        fieldWithPath("solutions.[].recommendationCount").description("추천수"),
+                        fieldWithPath("solutions.[].developer.email").description("작성자 이메일"),
+                        fieldWithPath("solutions.[].developer.name").description("작성자 이름"),
+                        fieldWithPath("solutions.[].developer.introduction").description("작성자 소개"),
+                        fieldWithPath("solutions.[].developer.pictureUrl").description("작성자 사진경로"),
+                        fieldWithPath("solutions.[].developer.point").description("작성자 점수"),
+                        fieldWithPath("solutions.[].developer.popularity").description("작성자 인기도"),
+                        fieldWithPath("solutions.[].modifiedDate").description("최종수정일시"),
                     )
                 )
             )

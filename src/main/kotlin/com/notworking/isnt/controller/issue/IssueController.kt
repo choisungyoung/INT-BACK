@@ -1,9 +1,7 @@
 package com.notworking.isnt.controller.issue
 
 import com.notworking.isnt.controller.developer.dto.DeveloperFindResponseDTO
-import com.notworking.isnt.controller.issue.dto.IssueFindResponseDTO
-import com.notworking.isnt.controller.issue.dto.IssueSaveRequestDTO
-import com.notworking.isnt.controller.issue.dto.IssueUpdateRequestDTO
+import com.notworking.isnt.controller.issue.dto.*
 import com.notworking.isnt.model.Issue
 import com.notworking.isnt.service.IssueService
 import com.notworking.isnt.support.exception.BusinessException
@@ -26,9 +24,9 @@ class IssueController(var issueService: IssueService) {
 
     /** 이슈 조회 */
     @GetMapping("/{id}")
-    fun find(@PathVariable id: Long): ResponseEntity<IssueFindResponseDTO> {
-        var dto: IssueFindResponseDTO? = issueService.findIssue(id)?.let {
-            IssueFindResponseDTO(
+    fun find(@PathVariable id: Long): ResponseEntity<IssueDetailFindResponseDTO> {
+        var dto: IssueDetailFindResponseDTO? = issueService.findIssue(id)?.let {
+            IssueDetailFindResponseDTO(
                 it.id!!,
                 it.title,
                 it.content,
@@ -43,6 +41,23 @@ class IssueController(var issueService: IssueService) {
                     it.developer.point,
                     it.developer.popularity
                 ),
+                it.solutions.stream().map {
+                    SolutionFindResponseDTO(
+                        it.id!!,
+                        it.content,
+                        it.docType.code,
+                        it.recommendationCount,
+                        DeveloperFindResponseDTO(
+                            it.developer.email,
+                            it.developer.name,
+                            it.developer.introduction,
+                            it.developer.pictureUrl,
+                            it.developer.point,
+                            it.developer.popularity
+                        ),
+                        it.getModifiedDate()
+                    )
+                }.toList(),
                 it.getModifiedDate()
             )
         }

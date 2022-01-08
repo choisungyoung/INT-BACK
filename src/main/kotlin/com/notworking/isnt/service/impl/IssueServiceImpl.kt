@@ -35,7 +35,9 @@ class IssueServiceImpl(
     }
 
     override fun findIssue(id: Long): Issue {
-        return issueRepository.findById(id).orElseThrow { BusinessException(Error.ISSUE_NOT_FOUND) }
+        var issue = issueRepository.findById(id).orElseThrow { BusinessException(Error.ISSUE_NOT_FOUND) }
+        issue.solutions = issueRepositorySupport.findSolutionByIssueId(id)
+        return issue
     }
 
     @Transactional

@@ -10,8 +10,14 @@ internal class IssueRepositorySupportTest(
 ) {
 
     @Test
+    fun findSolutionJoinIssue() {
+        var solution = issueRepositorySupport.findSolutionByIssueId(25)
+        System.out.println(solution)
+    }
+
+    @Test
     fun findIssueJoinSolution() {
-        var issue = issueRepositorySupport.findIssueJoinSolution()
+        var issue = issueRepositorySupport.findIssueByIdOtoM(25)
         System.out.println(issue)
     }
 }
