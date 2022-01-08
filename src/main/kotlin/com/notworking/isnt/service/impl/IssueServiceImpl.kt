@@ -33,10 +33,18 @@ class IssueServiceImpl(
     override fun findAllLatestOrder(): List<Issue> {
         return issueRepositorySupport.findWithDeveloper();
     }
-
+    
+    @Transactional
     override fun findIssue(id: Long): Issue {
+        //이슈 조회
         var issue = issueRepository.findById(id).orElseThrow { BusinessException(Error.ISSUE_NOT_FOUND) }
+
+        // 솔루션 조회
         issue.solutions = issueRepositorySupport.findSolutionByIssueId(id)
+
+        // 조회수 증가
+        // TODO: 방문기록 확인하기
+        issue.increaseHit()
         return issue
     }
 

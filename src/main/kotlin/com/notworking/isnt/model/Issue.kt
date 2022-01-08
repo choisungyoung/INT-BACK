@@ -24,7 +24,7 @@ data class Issue(
     @JoinColumn(name = "DEVELOPER_ID")
     lateinit var developer: Developer
 
-    @OneToMany(mappedBy = "issue")
+    @OneToMany(mappedBy = "issue", cascade = [CascadeType.REMOVE])
     var solutions: MutableList<Solution> = mutableListOf()
 
     fun addSolution(solution: Solution) {
@@ -43,11 +43,8 @@ data class Issue(
         return this
     }
 
-    fun varyHits(isIncrease: Boolean) {
-        if (isIncrease)
-            hits++
-        else
-            hits--
+    fun increaseHit() {
+        this.hits++
     }
 
     fun varyRecommendationCount(isIncrease: Boolean) {
