@@ -7,6 +7,9 @@ import com.notworking.isnt.model.QIssue.issue
 import com.notworking.isnt.model.QSolution.solution
 import com.notworking.isnt.repository.IssueRepository
 import com.querydsl.jpa.impl.JPAQueryFactory
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 import org.springframework.stereotype.Repository
 import javax.annotation.Resource
@@ -34,5 +37,20 @@ class IssueRepositorySupport(
             .limit(10)
             .orderBy(solution.createdDate.asc())
             .fetchOne()
+    }
+
+    /**
+     * 이슈 검색(제목 + 내용)
+     * */
+    fun findAllIssueByTitleContentContains(pageable: Pageable, searchQuery: String): Page<Issue> {
+        
+        var result = query.selectFrom(issue)
+            .where(issue.title.contains(searchQuery).or(issue.content.contains(searchQuery)))
+            .orderBy(issue.createdDate.asc())
+            .offset(pageable.offset)
+            .limit(pageable.pageSize.toLong())
+            .fetchResults()
+
+        return PageImpl(result.results, pageable, result.total)
     }
 }

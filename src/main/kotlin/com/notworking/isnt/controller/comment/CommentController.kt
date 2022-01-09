@@ -17,7 +17,7 @@ import javax.validation.Valid
 import kotlin.streams.toList
 
 @RequestMapping("/api/comment")
-//@RestController
+@RestController
 class CommentController(var commentService: CommentService) {
 
     var email = "test@naver.com" // TODO: Authentication 시큐리티 객체에서 받아오는 것으로 수정
@@ -28,7 +28,7 @@ class CommentController(var commentService: CommentService) {
         @PageableDefault(
             size = 10,
             page = 0,
-            sort = ["createDate"],
+            sort = ["createdDate"],
             direction = Sort.Direction.ASC
         ) pageable: Pageable,
         @PathVariable solutionId: Long
@@ -57,7 +57,7 @@ class CommentController(var commentService: CommentService) {
     /** 이슈 저장 */
     @PostMapping
     fun save(@Valid @RequestBody dto: CommentSaveRequestDTO): ResponseEntity<Void> {
-        commentService.saveComment(dto.toModel(), email, dto.postId)
+        commentService.saveComment(dto.toModel(), email, dto.solutionId)
 
         return ResponseEntity.ok().build()
     }

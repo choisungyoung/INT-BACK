@@ -15,5 +15,5 @@ fun main(args: Array<String>) {
 
 @PostConstruct
 fun started() {
-    TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"))
+    TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
 }

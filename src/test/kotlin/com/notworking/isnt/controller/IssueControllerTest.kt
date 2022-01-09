@@ -183,8 +183,9 @@ class IssueControllerTest(
         mockMvc.perform(
             RestDocumentationRequestBuilders
                 .get("$uri/list/latest")
-                .param("page", "1")
+                .param("page", "0")
                 .param("size", "5")
+                .param("query", "test")
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andDo(MockMvcResultHandlers.print())
@@ -193,7 +194,8 @@ class IssueControllerTest(
                     "find-issue-list-latest",
                     requestParameters(
                         parameterWithName("page").description("조회 페이지"),
-                        parameterWithName("size").description("조회 페이지 사이즈")
+                        parameterWithName("size").description("조회 페이지 사이즈"),
+                        parameterWithName("query").description("검색어")
                     ),
                     responseFields(
                         fieldWithPath("content.[].id").description("고유번호"),
@@ -252,6 +254,7 @@ class IssueControllerTest(
                 .get("$uri/list/latest")
                 .param("page", "2")
                 .param("size", "5")
+                .param("query", "test")
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andDo(MockMvcResultHandlers.print())

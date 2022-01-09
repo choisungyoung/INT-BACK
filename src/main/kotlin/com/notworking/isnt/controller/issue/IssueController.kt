@@ -91,9 +91,10 @@ class IssueController(var issueService: IssueService) {
             page = 0,
             sort = ["createdDate"],
             direction = Sort.Direction.DESC
-        ) pageable: Pageable
+        ) pageable: Pageable,
+        @RequestParam(required = false) query: String?
     ): ResponseEntity<Page<IssueFindResponseDTO>> {
-        var page: Page<Issue> = issueService.findAllIssue(pageable)
+        var page: Page<Issue> = issueService.findAllIssueByTitleContent(pageable, query)
         var list: List<IssueFindResponseDTO> = page.stream()
             .map { issue ->
                 IssueFindResponseDTO(
@@ -115,7 +116,7 @@ class IssueController(var issueService: IssueService) {
                 )
             }.toList()
 
-        return ResponseEntity.ok().body(PageImpl<IssueFindResponseDTO>(list, pageable, page.totalElements))
+        return ResponseEntity.ok().body(PageImpl(list, pageable, page.totalElements))
     }
 
     /** 이슈 저장 */

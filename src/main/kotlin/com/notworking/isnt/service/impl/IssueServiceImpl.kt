@@ -32,6 +32,15 @@ class IssueServiceImpl(
         return issueRepository.findAll(pageable)
     }
 
+
+    override fun findAllIssueByTitleContent(pageable: Pageable, query: String?): Page<Issue> {
+        if (query == null) {
+            return issueRepository.findAll(pageable)
+        }
+        return issueRepositorySupport.findAllIssueByTitleContentContains(pageable, query)
+    }
+
+
     override fun findAllLatestOrder(): List<Issue> {
         return issueRepositorySupport.findWithDeveloper();
     }
