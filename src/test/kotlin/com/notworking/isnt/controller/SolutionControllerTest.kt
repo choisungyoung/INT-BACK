@@ -3,9 +3,11 @@ package com.notworking.isnt.controller
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.notworking.isnt.controller.issue.dto.SolutionSaveRequestDTO
 import com.notworking.isnt.controller.issue.dto.SolutionUpdateRequestDTO
+import com.notworking.isnt.model.Comment
 import com.notworking.isnt.model.Developer
 import com.notworking.isnt.model.Issue
 import com.notworking.isnt.model.Solution
+import com.notworking.isnt.service.CommentService
 import com.notworking.isnt.service.DeveloperService
 import com.notworking.isnt.service.IssueService
 import com.notworking.isnt.service.SolutionService
@@ -39,6 +41,7 @@ class SolutionControllerTest(
     @Autowired var developerService: DeveloperService,
     @Autowired var issueService: IssueService,
     @Autowired var solutionService: SolutionService,
+    @Autowired var commentService: CommentService,
 ) {
     @Autowired
     private lateinit var mockMvc: MockMvc
@@ -100,6 +103,15 @@ class SolutionControllerTest(
             beforeSaveSolutionEmail,
             beforeSaveIssueId
         ).id!!
+
+        commentService.saveComment(
+            Comment(
+                id = null,
+                content = "test comment",
+            ),
+            beforeSaveSolutionEmail,
+            beforeSaveSolutionId
+        )
 
         // 수정 테스트케이스 id 설정
         updateDto.id = beforeSaveSolutionId;
@@ -179,6 +191,15 @@ class SolutionControllerTest(
                         fieldWithPath("content.[].developer.pictureUrl").description("작성자 사진경로"),
                         fieldWithPath("content.[].developer.point").description("작성자 점수"),
                         fieldWithPath("content.[].developer.popularity").description("작성자 인기도"),
+                        fieldWithPath("content.[].comment.[].id").description("코멘트 고유 아이디"),
+                        fieldWithPath("content.[].comment.[].content").description("코멘트 내용"),
+                        fieldWithPath("content.[].comment.[].modifiedDate").description("코멘트 최종수정일시"),
+                        fieldWithPath("content.[].comment.[].developer.email").description("코멘트 작성자 이메일"),
+                        fieldWithPath("content.[].comment.[].developer.name").description("코멘트 작성자 이름"),
+                        fieldWithPath("content.[].comment.[].developer.introduction").description("코멘트 작성자 소개"),
+                        fieldWithPath("content.[].comment.[].developer.pictureUrl").description("코멘트 작성자 사진경로"),
+                        fieldWithPath("content.[].comment.[].developer.point").description("코멘트 작성자 포인트"),
+                        fieldWithPath("content.[].comment.[].developer.popularity").description("코멘트 작성자 인기도"),
                         fieldWithPath("content.[].modifiedDate").description("최종수정일시"),
                         fieldWithPath("pageable.sort.unsorted").description("정렬종류"),
                         fieldWithPath("pageable.sort.sorted").description("정렬종류"),

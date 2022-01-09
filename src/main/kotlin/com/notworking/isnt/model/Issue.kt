@@ -24,8 +24,8 @@ data class Issue(
     @JoinColumn(name = "DEVELOPER_ID")
     lateinit var developer: Developer
 
-    @OneToMany(mappedBy = "issue", cascade = [CascadeType.REMOVE])
-    var solutions: MutableList<Solution> = mutableListOf()
+    @OneToMany(mappedBy = "issue", cascade = [CascadeType.ALL])
+    var solutions: MutableList<Solution> = mutableListOf<Solution>()
 
     fun addSolution(solution: Solution) {
         this.solutions.add(solution)

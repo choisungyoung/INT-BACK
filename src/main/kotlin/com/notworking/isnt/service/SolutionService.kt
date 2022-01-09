@@ -6,9 +6,15 @@ import org.springframework.data.domain.Pageable
 
 interface SolutionService {
 
+    fun findSolution(id: Long): Solution?
+
     fun findAllSolution(): List<Solution>
 
+    fun findAllSolutionWithComment(pageable: Pageable, issueId: Long): Page<Solution>
+
     fun findAllSolution(pageable: Pageable, issueId: Long): Page<Solution>
+
+    fun findAllSolution(issueId: Long): List<Solution>
 
     fun saveSolution(solution: Solution, email: String, issueId: Long): Solution
 

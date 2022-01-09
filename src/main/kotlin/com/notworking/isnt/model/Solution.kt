@@ -26,6 +26,9 @@ data class Solution(
     @JoinColumn(name = "ISSUE_ID")
     lateinit var issue: Issue
 
+    @OneToMany(mappedBy = "solution", cascade = [CascadeType.ALL])
+    var comments: MutableList<Comment> = mutableListOf<Comment>()
+
     fun update(issue: Solution): Solution? {
         this.content = issue.content
         this.docType = issue.docType
@@ -37,7 +40,16 @@ data class Solution(
 
         // 무한루프에 빠지지 않도록 체크
         if (!issue.solutions.contains(this)) {
-            issue.solutions.add(this)
+            // issue.solutions.add(this)
+        }
+    }
+
+    fun addComment(comment: Comment) {
+        this.comments.add(comment)
+
+        // 무한루프에 빠지지 않도록 체크
+        if (comment.solution != this) {
+            comment.solution = this
         }
     }
 

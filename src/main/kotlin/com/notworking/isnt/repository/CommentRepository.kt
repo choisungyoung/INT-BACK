@@ -1,5 +1,11 @@
 package com.notworking.isnt.repository
 
-//@Repository
-interface CommentRepository/* : JpaRepository<Comment, Long> */ {
+import com.notworking.isnt.model.Comment
+import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.stereotype.Repository
+
+@Repository
+interface CommentRepository : JpaRepository<Comment, Long> {
+
+    fun findAllBySolutionId(solutionId: Long): MutableList<Comment>
 }

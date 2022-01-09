@@ -8,5 +8,6 @@ data class SolutionFindResponseDTO(
     var docType: String,
     var recommendationCount: Long,
     var developer: DeveloperFindResponseDTO,
+    var comment: List<CommentFindResponseDTO>,
     var modifiedDate: String
 )

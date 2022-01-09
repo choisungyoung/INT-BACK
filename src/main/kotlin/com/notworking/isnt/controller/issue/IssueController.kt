@@ -55,6 +55,22 @@ class IssueController(var issueService: IssueService) {
                             it.developer.point,
                             it.developer.popularity
                         ),
+                        it.comments.stream().map {
+                            CommentFindResponseDTO(
+                                id = it.id!!,
+                                content = it.content,
+                                modifiedDate = it.getModifiedDate(),
+                                developer = DeveloperFindResponseDTO(
+                                    it.developer.email,
+                                    it.developer.name,
+                                    it.developer.introduction,
+                                    it.developer.pictureUrl,
+                                    it.developer.point,
+                                    it.developer.popularity
+                                ),
+
+                                )
+                        }.toList(),
                         it.getModifiedDate()
                     )
                 }.toList(),

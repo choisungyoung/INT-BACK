@@ -1,13 +1,16 @@
 package com.notworking.isnt.service.impl
 
 import com.notworking.isnt.model.Solution
+import com.notworking.isnt.repository.CommentRepository
+import com.notworking.isnt.repository.IssueRepository
 import com.notworking.isnt.repository.SolutionRepository
+import com.notworking.isnt.repository.support.SolutionRepositorySupport
 import com.notworking.isnt.service.DeveloperService
-import com.notworking.isnt.service.IssueService
 import com.notworking.isnt.service.SolutionService
 import com.notworking.isnt.support.exception.BusinessException
 import com.notworking.isnt.support.type.Error
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -16,18 +19,44 @@ import org.springframework.transaction.annotation.Transactional
 class SolutionServiceImpl(
 
     val developerService: DeveloperService,
-    val issueService: IssueService,
+    val issueRepository: IssueRepository,
     val solutionRepository: SolutionRepository,
+    val solutionRepositorySupport: SolutionRepositorySupport,
+    val commentRepository: CommentRepository,
 
     ) :
     SolutionService {
+
+    override fun findSolution(id: Long): Solution {
+        //솔루션 조회
+        var solution = solutionRepository.findById(id).orElseThrow { BusinessException(Error.ISSUE_NOT_FOUND) }
+
+        // 댓글 조회
+        solution.comments = solutionRepositorySupport.findCommentBySolutionId(id)
+
+        return solution
+    }
 
     override fun findAllSolution(): List<Solution> {
         return solutionRepository.findAll()
     }
 
     override fun findAllSolution(pageable: Pageable, issueId: Long): Page<Solution> {
-        return solutionRepository.findAll(pageable)
+        return solutionRepositorySupport.findSolutionByIssueId(pageable, issueId)
+    }
+
+    override fun findAllSolutionWithComment(pageable: Pageable, issueId: Long): Page<Solution> {
+        var page: Page<Solution> = solutionRepositorySupport.findSolutionByIssueId(pageable, issueId);
+
+        for (solution in page.content) {
+            solution.comments = commentRepository.findAllBySolutionId(solutionId = solution.id!!)
+        }
+
+        return PageImpl<Solution>(page.content, pageable, page.totalElements)
+    }
+
+    override fun findAllSolution(issueId: Long): List<Solution> {
+        return solutionRepositorySupport.findSolutionByIssueId(issueId)
     }
 
     @Transactional
@@ -37,10 +66,9 @@ class SolutionServiceImpl(
         // 없는 작성자일 경우
         developer ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
 
+
         // 이슈 조회
-        var issue = issueService.findIssue(issueId)
-        // 없는 이슈일 경우
-        issue ?: throw BusinessException(Error.ISSUE_NOT_FOUND)
+        var issue = issueRepository.findById(issueId).get()
 
         solution.developer = developer
         solution.updateIssue(issue)
@@ -61,6 +89,12 @@ class SolutionServiceImpl(
 
     @Transactional
     override fun deleteSolution(id: Long) {
+        //코멘트 조회
+        commentRepository.findAllBySolutionId(id).forEach {
+            // 코멘트 삭제 TODO : cascade로 자동 삭제되도록 수정
+            commentRepository.deleteById(it.id!!)
+        }
+
         solutionRepository.deleteById(id)
     }
 }

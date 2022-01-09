@@ -3,8 +3,8 @@ package com.notworking.isnt.model
 import java.time.LocalDateTime
 import javax.persistence.*
 
-//@Entity
-//@Table(name = "INT_COMMENT")
+@Entity
+@Table(name = "INT_COMMENT")
 data class Comment(
     @Id
     @GeneratedValue
@@ -17,13 +17,9 @@ data class Comment(
     @JoinColumn(name = "DEVELOPER_ID")
     lateinit var developer: Developer
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "ISSUE_COMMENT",
-        joinColumns = [JoinColumn(name = "ID")],
-        inverseJoinColumns = [JoinColumn(name = "ID")]
-    )
-    lateinit var issue: Issue
+    @ManyToOne
+    @JoinColumn(name = "SOLUTION_ID")
+    lateinit var solution: Solution
 
     fun update(issue: Comment): Comment? {
         this.content = issue.content
@@ -31,6 +27,14 @@ data class Comment(
         return this
     }
 
+    fun updateSolution(solution: Solution) {
+        this.solution = solution
+
+        // 무한루프에 빠지지 않도록 체크
+        if (!solution.comments.contains(this)) {
+            //solution.comments.add(this)
+        }
+    }
 }
 
 

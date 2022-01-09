@@ -3,9 +3,11 @@ package com.notworking.isnt.controller
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.notworking.isnt.controller.issue.dto.IssueSaveRequestDTO
 import com.notworking.isnt.controller.issue.dto.IssueUpdateRequestDTO
+import com.notworking.isnt.model.Comment
 import com.notworking.isnt.model.Developer
 import com.notworking.isnt.model.Issue
 import com.notworking.isnt.model.Solution
+import com.notworking.isnt.service.CommentService
 import com.notworking.isnt.service.DeveloperService
 import com.notworking.isnt.service.IssueService
 import com.notworking.isnt.service.SolutionService
@@ -40,6 +42,7 @@ class IssueControllerTest(
     @Autowired var developerService: DeveloperService,
     @Autowired var issueService: IssueService,
     @Autowired var solutionService: SolutionService,
+    @Autowired var commentService: CommentService,
 ) {
     @Autowired
     private lateinit var mockMvc: MockMvc
@@ -51,6 +54,7 @@ class IssueControllerTest(
 
     private val beforeSaveIssueEmail = "issueTester@naver.com"
     private var beforeSaveIssueId: Long = 0
+    private var beforeSaveSolutionId: Long = 0
     private val notFindIssueId: Long = -999
 
     private val saveDto = IssueSaveRequestDTO(
@@ -93,7 +97,7 @@ class IssueControllerTest(
             beforeSaveIssueEmail
         ).id!!
 
-        solutionService.saveSolution(
+        beforeSaveSolutionId = solutionService.saveSolution(
             Solution(
                 id = null,
                 content = "test solution",
@@ -101,6 +105,15 @@ class IssueControllerTest(
             ),
             beforeSaveIssueEmail,
             beforeSaveIssueId
+        ).id!!
+
+        commentService.saveComment(
+            Comment(
+                id = null,
+                content = "test comment"
+            ),
+            beforeSaveIssueEmail,
+            beforeSaveSolutionId
         )
 
         // 수정 테스트케이스 id 설정
@@ -314,6 +327,15 @@ class IssueControllerTest(
                         fieldWithPath("solutions.[].developer.pictureUrl").description("작성자 사진경로"),
                         fieldWithPath("solutions.[].developer.point").description("작성자 점수"),
                         fieldWithPath("solutions.[].developer.popularity").description("작성자 인기도"),
+                        fieldWithPath("solutions.[].comment.[].id").description("코멘트 고유 아이디"),
+                        fieldWithPath("solutions.[].comment.[].content").description("코멘트 내용"),
+                        fieldWithPath("solutions.[].comment.[].modifiedDate").description("코멘트 최종수정일시"),
+                        fieldWithPath("solutions.[].comment.[].developer.email").description("코멘트 작성자 이메일"),
+                        fieldWithPath("solutions.[].comment.[].developer.name").description("코멘트 작성자 이름"),
+                        fieldWithPath("solutions.[].comment.[].developer.introduction").description("코멘트 작성자 소개"),
+                        fieldWithPath("solutions.[].comment.[].developer.pictureUrl").description("코멘트 작성자 사진경로"),
+                        fieldWithPath("solutions.[].comment.[].developer.point").description("코멘트 작성자 포인트"),
+                        fieldWithPath("solutions.[].comment.[].developer.popularity").description("코멘트 작성자 인기도"),
                         fieldWithPath("solutions.[].modifiedDate").description("최종수정일시"),
                     )
                 )

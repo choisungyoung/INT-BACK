@@ -1,6 +1,7 @@
 package com.notworking.isnt.controller.issue
 
 import com.notworking.isnt.controller.developer.dto.DeveloperFindResponseDTO
+import com.notworking.isnt.controller.issue.dto.CommentFindResponseDTO
 import com.notworking.isnt.controller.issue.dto.SolutionFindResponseDTO
 import com.notworking.isnt.controller.issue.dto.SolutionSaveRequestDTO
 import com.notworking.isnt.controller.issue.dto.SolutionUpdateRequestDTO
@@ -22,7 +23,7 @@ class SolutionController(var solutionService: SolutionService) {
 
     var email = "test@naver.com" // TODO: Authentication 시큐리티 객체에서 받아오는 것으로 수정
 
-    /** 이슈 최신순 목록 조회 */
+    /** 솔루션 최신순 목록 조회 */
     @GetMapping("/list/{issueId}")
     fun findList(
         @PageableDefault(
@@ -33,7 +34,7 @@ class SolutionController(var solutionService: SolutionService) {
         ) pageable: Pageable,
         @PathVariable issueId: Long
     ): ResponseEntity<Page<SolutionFindResponseDTO>> {
-        var page: Page<Solution> = solutionService.findAllSolution(pageable, issueId)
+        var page: Page<Solution> = solutionService.findAllSolutionWithComment(pageable, issueId)
         var list: List<SolutionFindResponseDTO> = page.stream()
             .map { e ->
                 SolutionFindResponseDTO(
@@ -49,6 +50,22 @@ class SolutionController(var solutionService: SolutionService) {
                         e.developer.point,
                         e.developer.popularity
                     ),
+                    e.comments.stream().map {
+                        CommentFindResponseDTO(
+                            id = it.id!!,
+                            content = it.content,
+                            modifiedDate = it.getModifiedDate(),
+                            developer = DeveloperFindResponseDTO(
+                                it.developer.email,
+                                it.developer.name,
+                                it.developer.introduction,
+                                it.developer.pictureUrl,
+                                it.developer.point,
+                                it.developer.popularity
+                            ),
+
+                            )
+                    }.toList(),
                     e.getModifiedDate()
                 )
             }.toList()
