@@ -1,13 +1,20 @@
 server:
   port: 8080
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
 
 spring:
   profiles:
     active:
       - L
   jpa:
-    show-sql: true
-    generate-ddl: true
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: false
+    generate-ddl: false
     hibernate:
       #ddl-auto: create-drop
       ddl-auto: update
@@ -15,6 +22,7 @@ spring:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
   datasource:
     url: jdbc:mysql://18.217.155.120:3306/INT_DB?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC&&allowPublicKeyRetrieval=true&&validationQuery="select 1"
+    #url: jdbc:mysql://localhost:3306/INT_DB?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC&&allowPublicKeyRetrieval=true&&validationQuery="select 1"
     username: INT_ADMIN
     password: aa12345^
     driver-class-name: com.mysql.cj.jdbc.Driver

@@ -29,8 +29,6 @@ include::{snippets}/find-developer-list/response-fields.adoc[]
 include::{snippets}/find-developer-list/response-body.adoc[]
 include::{snippets}/find-developer-list/http-response.adoc[]
 
-
-
 [[resources-developer-find]]
 === developer 조회
 
@@ -64,3 +62,156 @@ include::{snippets}/delete-developer/http-request.adoc[]
 
 ==== HTTP response
 include::{snippets}/delete-developer/http-response.adoc[]
+
+
+
+[[resources-issue]]
+== Issue
+
+[[resources-issue-create]]
+=== issue 생성
+==== HTTP request
+include::{snippets}/save-issue/request-fields.adoc[]
+include::{snippets}/save-issue/http-request.adoc[]
+
+==== HTTP response
+include::{snippets}/save-issue/http-response.adoc[]
+
+[[resources-issue-list-find-latest]]
+=== issue 목록조회 (최신순)
+==== HTTP request
+include::{snippets}/find-issue-list-latest/http-request.adoc[]
+include::{snippets}/find-issue-list-latest/request-parameters.adoc[]
+
+==== HTTP response
+include::{snippets}/find-issue-list-latest/response-fields.adoc[]
+include::{snippets}/find-issue-list-latest/response-body.adoc[]
+include::{snippets}/find-issue-list-latest/http-response.adoc[]
+
+[[resources-issue-find]]
+=== issue 조회
+
+==== HTTP request
+include::{snippets}/find-issue/path-parameters.adoc[]
+include::{snippets}/find-issue/http-request.adoc[]
+
+==== HTTP response
+include::{snippets}/find-issue/response-fields.adoc[]
+include::{snippets}/find-issue/response-body.adoc[]
+include::{snippets}/find-issue/http-response.adoc[]
+
+[[resources-issue-update]]
+=== issue 수정
+
+==== HTTP request
+include::{snippets}/update-issue/request-fields.adoc[]
+include::{snippets}/update-issue/request-body.adoc[]
+include::{snippets}/update-issue/http-request.adoc[]
+
+==== HTTP response
+include::{snippets}/update-issue/http-response.adoc[]
+
+
+[[resources-issue-delete]]
+=== issue 삭제
+
+==== HTTP request
+include::{snippets}/delete-issue/path-parameters.adoc[]
+include::{snippets}/delete-issue/http-request.adoc[]
+
+==== HTTP response
+include::{snippets}/delete-issue/http-response.adoc[]
+
+
+
+[[resources-solution]]
+== Solution
+
+[[resources-solution-create]]
+=== solution 생성
+==== HTTP request
+include::{snippets}/save-solution/request-fields.adoc[]
+include::{snippets}/save-solution/http-request.adoc[]
+
+==== HTTP response
+include::{snippets}/save-solution/http-response.adoc[]
+
+[[resources-solution-list]]
+=== solution 목록조회
+==== HTTP request
+include::{snippets}/find-solution-list/http-request.adoc[]
+include::{snippets}/find-solution-list/request-parameters.adoc[]
+
+==== HTTP response
+include::{snippets}/find-solution-list/response-fields.adoc[]
+include::{snippets}/find-solution-list/response-body.adoc[]
+include::{snippets}/find-solution-list/http-response.adoc[]
+
+[[resources-solution-update]]
+=== solution 수정
+
+==== HTTP request
+include::{snippets}/update-solution/request-fields.adoc[]
+include::{snippets}/update-solution/request-body.adoc[]
+include::{snippets}/update-solution/http-request.adoc[]
+
+==== HTTP response
+include::{snippets}/update-solution/http-response.adoc[]
+
+
+[[resources-solution-delete]]
+=== solution 삭제
+
+==== HTTP request
+include::{snippets}/delete-solution/path-parameters.adoc[]
+include::{snippets}/delete-solution/http-request.adoc[]
+
+==== HTTP response
+include::{snippets}/delete-solution/http-response.adoc[]
+
+
+
+[[resources-comment]]
+== Comment
+
+[[resources-comment-create]]
+=== comment 생성
+==== HTTP request
+include::{snippets}/save-comment/request-fields.adoc[]
+include::{snippets}/save-comment/http-request.adoc[]
+
+==== HTTP response
+include::{snippets}/save-comment/http-response.adoc[]
+
+[[resources-comment-list]]
+=== comment 목록조회
+==== HTTP request
+include::{snippets}/find-comment-list/http-request.adoc[]
+include::{snippets}/find-comment-list/request-parameters.adoc[]
+
+==== HTTP response
+include::{snippets}/find-comment-list/response-fields.adoc[]
+include::{snippets}/find-comment-list/response-body.adoc[]
+include::{snippets}/find-comment-list/http-response.adoc[]
+
+[[resources-comment-update]]
+=== comment 수정
+
+==== HTTP request
+include::{snippets}/update-comment/request-fields.adoc[]
+include::{snippets}/update-comment/request-body.adoc[]
+include::{snippets}/update-comment/http-request.adoc[]
+
+==== HTTP response
+include::{snippets}/update-comment/http-response.adoc[]
+
+
+[[resources-comment-delete]]
+=== comment 삭제
+
+==== HTTP request
+include::{snippets}/delete-comment/path-parameters.adoc[]
+include::{snippets}/delete-comment/http-request.adoc[]
+
+==== HTTP response
+include::{snippets}/delete-comment/http-response.adoc[]

@@ -17,23 +17,6 @@ private val log = KotlinLogging.logger {}
 
 @RestControllerAdvice
 class GlobalExceptionHandler {
-    /**
-     * javax.validation.Valid or @Validated 으로 binding error 발생시 발생한다.
-     * HttpMessageConverter 에서 등록한 HttpMessageConverter binding 못할경우 발생
-     * 주로 @RequestBody, @RequestPart 어노테이션에서 발생
-     */
-    @ExceptionHandler(MethodArgumentNotValidException::class)
-    protected fun handleMethodArgumentNotValidException(
-        e: MethodArgumentNotValidException
-    ): ResponseEntity<ErrorResponse> {
-        log.error("handleMethodArgumentNotValidException", e)
-        val response: ErrorResponse =
-            ErrorResponse(
-                code = "E0001", title = "MethodArgumentNotValid", message = "MethodArgumentNotValidException이 발생하였습니다.",
-                detailMessage = e.message
-            )
-        return ResponseEntity.badRequest().body(response)
-    }
 
     /**
      * @ModelAttribut 으로 binding error 발생시 BindException 발생한다.
@@ -110,6 +93,28 @@ class GlobalExceptionHandler {
                 title = "ConstraintViolationException",
                 message = "ConstraintViolationException이 발생하였습니다.",
                 detailMessage = e.message.orEmpty()
+            )
+        return ResponseEntity.badRequest().body(response)
+    }
+
+    /**
+     * validation 예외처리
+     */
+    @ExceptionHandler(MethodArgumentNotValidException::class)
+    protected fun methodArgumentNotValidException(e: MethodArgumentNotValidException): ResponseEntity<ErrorResponse> {
+        log.error("MethodArgumentNotValidException", e)
+        var defaultDetailMessage: String? = "검증에러 처리시 문제가 발생하였습니다."
+
+        if (e.bindingResult.hasErrors()) {
+            defaultDetailMessage = e.bindingResult.allErrors[0].codes?.get(0)
+        }
+
+        val response: ErrorResponse =
+            ErrorResponse(
+                code = "E0001",
+                title = "ValidException",
+                message = "유효성 검증시 에러가 발생하였습니다.",
+                detailMessage = defaultDetailMessage.orEmpty()
             )
         return ResponseEntity.badRequest().body(response)
     }

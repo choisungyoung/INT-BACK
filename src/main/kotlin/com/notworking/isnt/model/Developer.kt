@@ -4,6 +4,7 @@ import com.notworking.isnt.support.type.Role
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
+import java.time.LocalDateTime
 import javax.persistence.*
 
 @Entity
@@ -34,6 +35,7 @@ data class Developer(
         this.popularity = developer.popularity
 
         this.role = developer.role
+        this.modifiedDate = LocalDateTime.now()
         return this
     }
 

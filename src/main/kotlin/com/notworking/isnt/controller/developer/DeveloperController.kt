@@ -8,6 +8,7 @@ import com.notworking.isnt.support.exception.BusinessException
 import com.notworking.isnt.support.type.Error
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import javax.validation.Valid
 import kotlin.streams.toList
 
 @RequestMapping("/api/developer")
@@ -54,7 +55,7 @@ class DeveloperController(var developerService: DeveloperService) {
 
     /** 사용자 추가 */
     @PostMapping
-    fun save(@RequestBody dto: DeveloperSaveRequestDTO): ResponseEntity<Void> {
+    fun save(@Valid @RequestBody dto: DeveloperSaveRequestDTO): ResponseEntity<Void> {
         developerService.saveDeveloper(dto.toModel())
 
         return ResponseEntity.ok().build()

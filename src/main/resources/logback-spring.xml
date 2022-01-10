@@ -16,19 +16,21 @@
 
         <logger name="com.notworking.isnt" level="debug" />
 
-        <logger name="org.springframework" level="info" />
+        <logger name="org.springframework" level="error" />
         <logger name="org.springframework.remoting" level="error" />
-        <logger name="org.springframework.web.servlet" level="debug" />
-        <logger name="org.springframework.web.servlet.DispatcherServlet" level="debug" />
-        <logger name="org.springframework.security" level="trace" />
+        <logger name="org.springframework.web.servlet" level="error" />
+        <logger name="org.springframework.web.servlet.DispatcherServlet" level="error" />
+        <logger name="org.springframework.security" level="error" />
         <logger name="org.springframework.data" additivity="false" level="error" />
         <logger name="org.springframework.jdbc.datasource.DataSourceTransactionManager" level="error" />
-        <logger name="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" level="trace" />
+        <logger name="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" level="error" />
 
         <!-- 데이터베이스 -->
-        <logger name="jdbc.sqlonly" level="debug" />
-        <logger name="jdbc.resultsettable" level="debug" />
-        <logger name="org.mybatis.spring" level="debug" />
+        <logger name="org.hibernate.SQL" level="debug" />
+        <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="error" />
+        <logger name="jdbc.sqlonly" level="error" />
+        <logger name="jdbc.resultsettable" level="error" />
+        <logger name="org.mybatis.spring" level="error" />
 
         <logger name="jdbc.sqltiming" level="error" />
         <logger name="jdbc.audit" level="error" />

@@ -1,10 +1,14 @@
 package com.notworking.isnt.controller.developer.dto
 
 import com.notworking.isnt.model.Developer
+import javax.validation.constraints.NotEmpty
 
 data class DeveloperUpdateRequestDTO(
+    @field:NotEmpty
     var email: String,
+    @field:NotEmpty
     var password: String,
+    @field:NotEmpty
     var name: String?,
     var introduction: String,
     var pictureUrl: String?,

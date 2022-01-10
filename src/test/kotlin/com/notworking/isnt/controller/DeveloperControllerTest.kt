@@ -6,7 +6,9 @@ import com.notworking.isnt.controller.developer.dto.DeveloperUpdateRequestDTO
 import com.notworking.isnt.model.Developer
 import com.notworking.isnt.service.DeveloperService
 import mu.KotlinLogging
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -23,9 +25,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.transaction.annotation.Transactional
 
+
 private val log = KotlinLogging.logger {}
 
-@TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 @Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -39,13 +41,13 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
 
     private var uri: String = "/api/developer";
 
-    private val beforeEachDeveloperEmail: String = "test@naver.com"
-    private val findDeveloperEmail: String = "test@naver.com"
+    private val beforeEachDeveloperEmail: String = "developerTest@naver.com"
+    private val findDeveloperEmail: String = "developerTest@naver.com"
     private val notFindDeveloperEmail: String = "failedTest@naver.com"
-    private val saveDeveloperEmail: String = "testSave@naver.com"
-    private val deleteDeveloperEmail: String = "test@naver.com"
+    private val saveDeveloperEmail: String = "developerSaveTest@naver.com"
+    private val deleteDeveloperEmail: String = "developerTest@naver.com"
 
-    private val saveDeveloperDTO: DeveloperSaveRequestDTO =
+    private val saveDTO: DeveloperSaveRequestDTO =
         DeveloperSaveRequestDTO(
             email = saveDeveloperEmail,
             password = "aa12345^",
@@ -65,7 +67,6 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
 
     @BeforeEach
     fun beforeEach() {
-
         // 사용자 추가
         developerService.saveDeveloper(
             Developer(
@@ -92,13 +93,11 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
         }
     }
 
-    @Order(1)
     @Test
-    //@Rollback(value = false)
     fun testSave() {
         mockMvc.perform(
             RestDocumentationRequestBuilders.post(uri)
-                .content(mapper.writeValueAsString(saveDeveloperDTO))
+                .content(mapper.writeValueAsString(saveDTO))
                 .contentType(MediaType.APPLICATION_JSON)
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
@@ -117,7 +116,17 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
             )
     }
 
-    @Order(2)
+    @Test
+    fun testSaveValidation() {
+        mockMvc.perform(
+            MockMvcRequestBuilders.post(uri)
+                .content("{\"email\":\"\",\"password\":\"aa12345^\",\"name\":\"테스터01\",\"introduction\":\"안녕하세요\"}")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(MockMvcResultMatchers.status().isBadRequest)
+            .andDo(MockMvcResultHandlers.print())
+    }
+
     @Test
     fun testFindList() {
 
@@ -141,7 +150,6 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
             )
     }
 
-    @Order(3)
     @Test
     fun testFind() {
 
@@ -168,7 +176,6 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
             )
     }
 
-    @Order(4)
     @Test
     fun testNotFind() {
         mockMvc.perform(
@@ -178,7 +185,6 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
             .andDo(MockMvcResultHandlers.print())
     }
 
-    @Order(5)
     @Test
     fun testUpdate() {
         mockMvc.perform(
@@ -204,8 +210,7 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
             )
     }
 
-    @Order(6)
-    //@Test
+    @Test
     fun testDelete() {
 
         mockMvc.perform(
