@@ -17,6 +17,7 @@ data class Solution(
     ) : BaseTimeEntity() {
 
     var recommendationCount: Long = 0
+    var adoptYn: Boolean = false
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "DEVELOPER_ID")

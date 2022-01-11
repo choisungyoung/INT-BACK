@@ -4,6 +4,7 @@ import com.notworking.isnt.controller.developer.dto.DeveloperFindResponseDTO
 import com.notworking.isnt.controller.issue.dto.*
 import com.notworking.isnt.model.Issue
 import com.notworking.isnt.service.IssueService
+import com.notworking.isnt.service.SolutionService
 import com.notworking.isnt.support.exception.BusinessException
 import com.notworking.isnt.support.type.Error
 import org.springframework.data.domain.Page
@@ -18,7 +19,10 @@ import kotlin.streams.toList
 
 @RequestMapping("/api/issue")
 @RestController
-class IssueController(var issueService: IssueService) {
+class IssueController(
+    var issueService: IssueService,
+    var solutionService: SolutionService
+) {
 
     var email = "test@naver.com" // TODO: Authentication 시큐리티 객체에서 받아오는 것으로 수정
 
@@ -104,6 +108,8 @@ class IssueController(var issueService: IssueService) {
                     issue.docType.code,
                     issue.hits,
                     issue.recommendationCount,
+                    solutionService.findSolutionCount(issue.id!!),  // TODO : 성능 체크하기
+                    solutionService.findSolutionAdoptYn(issue.id!!),// TODO : 성능 체크하기
                     DeveloperFindResponseDTO(
                         issue.developer.email,
                         issue.developer.name,

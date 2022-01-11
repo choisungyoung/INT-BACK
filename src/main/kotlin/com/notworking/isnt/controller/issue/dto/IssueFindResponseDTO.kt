@@ -9,6 +9,8 @@ data class IssueFindResponseDTO(
     var docType: String,
     var hits: Long,
     var recommendationCount: Long,
+    var solutionCount: Long,
+    var isAdopt: Boolean,
 
     var developer: DeveloperFindResponseDTO,
     var modifiedDate: String

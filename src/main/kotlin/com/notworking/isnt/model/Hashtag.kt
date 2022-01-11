@@ -14,6 +14,10 @@ data class Hashtag(
     var name: String,
 
     ) : BaseTimeEntity() {
+    /*
+        @OneToMany(mappedBy = "hashtag", cascade = [CascadeType.ALL])
+        var issues: MutableList<Issue> = mutableListOf<Issue>()
+    */
     fun update(issue: Hashtag): Hashtag? {
         this.name = issue.name
         return this

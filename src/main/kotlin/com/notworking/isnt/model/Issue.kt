@@ -27,6 +27,10 @@ data class Issue(
     @OneToMany(mappedBy = "issue", cascade = [CascadeType.ALL])
     var solutions: MutableList<Solution> = mutableListOf<Solution>()
 
+    /*å
+        @OneToMany(mappedBy = "issue", cascade = [CascadeType.ALL])
+        var hashtags: MutableList<Hashtag> = mutableListOf<Hashtag>()
+    */
     fun addSolution(solution: Solution) {
         this.solutions.add(solution)
 

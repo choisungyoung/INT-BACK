@@ -43,10 +43,10 @@ class IssueRepositorySupport(
      * 이슈 검색(제목 + 내용)
      * */
     fun findAllIssueByTitleContentContains(pageable: Pageable, searchQuery: String): Page<Issue> {
-        
+
         var result = query.selectFrom(issue)
             .where(issue.title.contains(searchQuery).or(issue.content.contains(searchQuery)))
-            .orderBy(issue.createdDate.asc())
+            .orderBy(issue.createdDate.desc())
             .offset(pageable.offset)
             .limit(pageable.pageSize.toLong())
             .fetchResults()

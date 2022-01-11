@@ -55,6 +55,17 @@ class SolutionServiceImpl(
         return PageImpl<Solution>(page.content, pageable, page.totalElements)
     }
 
+    override fun findSolutionCount(issueId: Long): Long {
+        return solutionRepositorySupport.findSolutionCount(issueId)
+    }
+
+    override fun findSolutionAdoptYn(issueId: Long): Boolean {
+        if (solutionRepositorySupport.findSolutionAdopt(issueId) == 0L) {
+            return false
+        }
+        return true
+    }
+
     override fun findAllSolution(issueId: Long): List<Solution> {
         return solutionRepositorySupport.findSolutionByIssueId(issueId)
     }
