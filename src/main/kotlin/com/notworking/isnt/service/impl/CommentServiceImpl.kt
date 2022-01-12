@@ -26,7 +26,7 @@ class CommentServiceImpl(
     }
 
     override fun findAllComment(pageable: Pageable, solutionId: Long): Page<Comment> {
-        return commentRepository.findAll(pageable)
+        return commentRepository.findAllBySolutionId(pageable, solutionId)
     }
 
     override fun findComment(id: Long): Comment? {
