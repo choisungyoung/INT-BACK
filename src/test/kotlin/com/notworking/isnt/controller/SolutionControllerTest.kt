@@ -90,7 +90,8 @@ class SolutionControllerTest(
                 content = "Before Test content",
                 docType = DocType.TEXT
             ),
-            beforeSaveSolutionEmail
+            beforeSaveSolutionEmail,
+            mutableListOf("test")
         ).id!!
 
         // 테스트 솔루션 추가
@@ -145,6 +146,7 @@ class SolutionControllerTest(
                         fieldWithPath("content").description("이슈 내용"),
                         fieldWithPath("docType").description("문서유형 ('TEXT', 'MARK_DOWN')"),
                         fieldWithPath("issueId").description("이슈 고유 번호"),
+                        fieldWithPath("hashtags[]").description("해시태그 리스트"),
                     )
                 )
 

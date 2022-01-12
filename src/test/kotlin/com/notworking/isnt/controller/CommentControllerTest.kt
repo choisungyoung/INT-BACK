@@ -89,7 +89,8 @@ class CommentControllerTest(
                 content = "Before Test content",
                 docType = DocType.TEXT
             ),
-            beforeSaveSolutionEmail
+            beforeSaveSolutionEmail,
+            mutableListOf("test")
         ).id!!
 
         // 테스트 솔루션 추가

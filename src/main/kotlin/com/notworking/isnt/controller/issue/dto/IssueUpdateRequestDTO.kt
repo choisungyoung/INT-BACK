@@ -15,6 +15,7 @@ data class IssueUpdateRequestDTO(
     @field:NotEmpty
     var content: String,
     var docType: String,
+    var hashtags: List<String>,
 ) {
     fun toModel(): Issue = Issue(
         id = id,

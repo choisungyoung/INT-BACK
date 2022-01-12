@@ -37,6 +37,9 @@ class IssueController(
                 it.docType.code,
                 it.hits,
                 it.recommendationCount,
+                it.issueHashtags.stream().map {
+                    it.hashtag.name
+                }.toList(),
                 DeveloperFindResponseDTO(
                     it.developer.email,
                     it.developer.name,
@@ -110,6 +113,9 @@ class IssueController(
                     issue.recommendationCount,
                     solutionService.findSolutionCount(issue.id!!),  // TODO : 성능 체크하기
                     solutionService.findSolutionAdoptYn(issue.id!!),// TODO : 성능 체크하기
+                    issue.issueHashtags.stream().map {
+                        it.hashtag.name
+                    }.toList(),
                     DeveloperFindResponseDTO(
                         issue.developer.email,
                         issue.developer.name,
@@ -128,7 +134,7 @@ class IssueController(
     /** 이슈 저장 */
     @PostMapping
     fun save(@Valid @RequestBody dto: IssueSaveRequestDTO): ResponseEntity<Void> {
-        issueService.saveIssue(dto.toModel(), email)
+        issueService.saveIssue(dto.toModel(), email, dto.hashtags)
 
         return ResponseEntity.ok().build()
     }
@@ -136,7 +142,7 @@ class IssueController(
     /** 이슈 수정 */
     @PutMapping
     fun update(@RequestBody dto: IssueUpdateRequestDTO): ResponseEntity<Void> {
-        issueService.updateIssue(dto.toModel())
+        issueService.updateIssue(dto.toModel(), dto.hashtags)
 
         return ResponseEntity.ok().build()
     }

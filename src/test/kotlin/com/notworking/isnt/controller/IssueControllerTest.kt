@@ -61,13 +61,15 @@ class IssueControllerTest(
         title = "Test Title",
         content = "test content",
         docType = DocType.TEXT.code,
+        mutableListOf("test")
     )
 
     private val updateDto = IssueUpdateRequestDTO(
         id = 0,     // beforeEach에서 재설정
         title = "Update Test Title",
         content = "update test content",
-        docType = DocType.MARK_DOWN.code
+        docType = DocType.MARK_DOWN.code,
+        mutableListOf("update test")
     )
 
     @BeforeEach
@@ -94,7 +96,8 @@ class IssueControllerTest(
                 content = "Before Test content",
                 docType = DocType.TEXT
             ),
-            beforeSaveIssueEmail
+            beforeSaveIssueEmail,
+            mutableListOf("test")
         ).id!!
 
         beforeSaveSolutionId = solutionService.saveSolution(
@@ -160,6 +163,7 @@ class IssueControllerTest(
                         fieldWithPath("title").description("이슈 제목"),
                         fieldWithPath("content").description("이슈 내용"),
                         fieldWithPath("docType").description("문서유형 ('TEXT', 'MARK_DOWN')"),
+                        fieldWithPath("hashtags.[]").description("해시태그 리스트"),
                     )
                 )
 
@@ -206,6 +210,7 @@ class IssueControllerTest(
                         fieldWithPath("content.[].recommendationCount").description("추천수"),
                         fieldWithPath("content.[].solutionCount").description("솔루션 수"),
                         fieldWithPath("content.[].isAdopt").description("채택여부"),
+                        fieldWithPath("content.[].hashtags.[]").description("해시태그 리스트"),
                         fieldWithPath("content.[].developer.email").description("작성자 이메일"),
                         fieldWithPath("content.[].developer.name").description("작성자 이름"),
                         fieldWithPath("content.[].developer.introduction").description("작성자 소개"),
@@ -249,7 +254,8 @@ class IssueControllerTest(
                     content = "Pagenation Test content" + i,
                     docType = DocType.TEXT
                 ),
-                beforeSaveIssueEmail
+                beforeSaveIssueEmail,
+                mutableListOf("test")
             )
         mockMvc.perform(
             RestDocumentationRequestBuilders
@@ -272,6 +278,7 @@ class IssueControllerTest(
                         fieldWithPath("content.[].recommendationCount").description("추천수"),
                         fieldWithPath("content.[].solutionCount").description("솔루션 수"),
                         fieldWithPath("content.[].isAdopt").description("채택여부"),
+                        fieldWithPath("content.[].hashtags.[]").description("해시태그 리스트"),
                         fieldWithPath("content.[].developer.email").description("작성자 이메일"),
                         fieldWithPath("content.[].developer.name").description("작성자 이름"),
                         fieldWithPath("content.[].developer.introduction").description("작성자 소개"),
@@ -317,6 +324,7 @@ class IssueControllerTest(
                         fieldWithPath("docType").description("문서유형 ('TEXT', 'MARK_DOWN')"),
                         fieldWithPath("hits").description("조회수"),
                         fieldWithPath("recommendationCount").description("추천수"),
+                        fieldWithPath("hashtags.[]").description("해시태그 리스트"),
                         fieldWithPath("developer.email").description("작성자 이메일"),
                         fieldWithPath("developer.name").description("작성자 이름"),
                         fieldWithPath("developer.introduction").description("작성자 소개"),
@@ -375,6 +383,7 @@ class IssueControllerTest(
                         fieldWithPath("title").description("이슈 제목"),
                         fieldWithPath("content").description("이슈 내용"),
                         fieldWithPath("docType").description("문서유형 ('TEXT', 'MARK_DOWN')"),
+                        fieldWithPath("hashtags.[]").description("해시태그 리스트"),
                     )
                 )
             )

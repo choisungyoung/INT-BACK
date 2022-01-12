@@ -1,6 +1,10 @@
 package com.notworking.isnt.service.impl
 
+import com.notworking.isnt.model.Hashtag
 import com.notworking.isnt.model.Issue
+import com.notworking.isnt.model.IssueHashtag
+import com.notworking.isnt.repository.HashtagRepository
+import com.notworking.isnt.repository.IssueHashtagRepository
 import com.notworking.isnt.repository.IssueRepository
 import com.notworking.isnt.repository.support.IssueRepositorySupport
 import com.notworking.isnt.service.DeveloperService
@@ -19,7 +23,9 @@ class IssueServiceImpl(
     val issueRepository: IssueRepository,
     val issueRepositorySupport: IssueRepositorySupport,
     val solutionServicce: SolutionService,
-    val developerService: DeveloperService
+    val developerService: DeveloperService,
+    val hashtagRepository: HashtagRepository,
+    val issueHashtagRepository: IssueHashtagRepository
 
 ) :
     IssueService {
@@ -34,10 +40,17 @@ class IssueServiceImpl(
 
 
     override fun findAllIssueByTitleContent(pageable: Pageable, query: String?): Page<Issue> {
+        var page: Page<Issue>
         if (query == null) {
-            return issueRepository.findAll(pageable)
+            page = issueRepository.findAll(pageable)
+        } else {
+            page = issueRepositorySupport.findAllIssueByTitleContentContains(pageable, query)
         }
-        return issueRepositorySupport.findAllIssueByTitleContentContains(pageable, query)
+
+        page.content.forEach {
+            it.issueHashtags = issueHashtagRepository.findAllByIssueId(it.id)
+        }
+        return page
     }
 
 
@@ -59,32 +72,71 @@ class IssueServiceImpl(
         ).content
 
         // 조회수 증가
-        // TODO: 방문기록 확인하기
+        // TODO: 방문기록 확인하는 로직 추가하기
         issue.increaseHit()
+
+        // 해시태그조회
+        issue.issueHashtags = issueHashtagRepository.findAllByIssueId(issue.id)
+
         return issue
     }
 
     @Transactional
-    override fun saveIssue(issue: Issue, email: String): Issue {
+    override fun saveIssue(issue: Issue, email: String, hashtags: List<String>): Issue {
         var developer = developerService.findDeveloperByEmail(email)
 
         // 없는 작성자일 경우
         developer ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
-
+        // 작성사 등록
         issue.developer = developer
+
+        hashtags.forEach {
+            // 해시태그 조회
+            var hashtag = hashtagRepository.findByName(it)
+            if (hashtag == null) {
+                // 없을 경우 추가
+                hashtag = hashtagRepository.save(Hashtag(null, name = it))
+            }
+            var issueHashtag = IssueHashtag(null)
+            issueHashtag.issue = issue
+            issueHashtag.hashtag = hashtag
+            issue.addIssueHashtag(issueHashtag)
+        }
         issueRepository.save(issue)
         return issue
     }
 
     @Transactional
-    override fun updateIssue(newIssue: Issue) {
-        var issue: Issue? = newIssue.id?.let {
+    override fun updateIssue(newIssue: Issue, hashtags: List<String>) {
+
+        // 이슈 조회
+        var issue = newIssue.id?.let {
             issueRepository.getById(it)
         }
-
         issue ?: throw BusinessException(Error.ISSUE_NOT_FOUND)
         issue.update(newIssue)
 
+        // 기존 해시태그 조회
+        var issueHashtags = issueHashtagRepository.findAllByIssueId(issue.id)
+        issueHashtags.forEach {
+            issueHashtagRepository.deleteById(it.id!!)
+            if (issueHashtagRepository.countByHashtagId(it.hashtag.id) == 0) {
+                hashtagRepository.deleteById(it.hashtag.id!!)
+            }
+        }
+        // 새로운 해시태그 추가
+        hashtags.forEach {
+            // 해시태그 조회
+            var hashtag = hashtagRepository.findByName(it)
+            if (hashtag == null) {
+                // 없을 경우 추가
+                hashtag = hashtagRepository.save(Hashtag(null, name = it))
+            }
+            var issueHashtag = IssueHashtag(null)
+            issueHashtag.issue = issue
+            issueHashtag.hashtag = hashtag
+            issue.addIssueHashtag(issueHashtag)
+        }
     }
 
     @Transactional

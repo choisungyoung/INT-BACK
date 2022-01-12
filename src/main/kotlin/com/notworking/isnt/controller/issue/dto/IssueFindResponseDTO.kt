@@ -11,6 +11,7 @@ data class IssueFindResponseDTO(
     var recommendationCount: Long,
     var solutionCount: Long,
     var isAdopt: Boolean,
+    var hashtags: List<String>,
 
     var developer: DeveloperFindResponseDTO,
     var modifiedDate: String

@@ -27,16 +27,25 @@ data class Issue(
     @OneToMany(mappedBy = "issue", cascade = [CascadeType.ALL])
     var solutions: MutableList<Solution> = mutableListOf<Solution>()
 
-    /*å
-        @OneToMany(mappedBy = "issue", cascade = [CascadeType.ALL])
-        var hashtags: MutableList<Hashtag> = mutableListOf<Hashtag>()
-    */
+
+    @OneToMany(mappedBy = "issue", cascade = [CascadeType.ALL])
+    var issueHashtags: MutableList<IssueHashtag> = mutableListOf<IssueHashtag>()
+
     fun addSolution(solution: Solution) {
         this.solutions.add(solution)
 
         // 무한루프에 빠지지 않도록 체크
         if (solution.issue != this) {
             solution.issue = this
+        }
+    }
+
+    fun addIssueHashtag(issueHashtag: IssueHashtag) {
+        this.issueHashtags.add(issueHashtag)
+
+        // 무한루프에 빠지지 않도록 체크
+        if (issueHashtag.issue != this) {
+            issueHashtag.issue = this
         }
     }
 

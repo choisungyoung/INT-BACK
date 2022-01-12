@@ -1,9 +1,6 @@
 package com.notworking.isnt.model
 
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.Id
-import javax.persistence.Table
+import javax.persistence.*
 
 @Entity
 @Table(name = "INT_ISSUE_HASHTAG")
@@ -13,15 +10,14 @@ data class IssueHashtag(
     var id: Long?,
 
     ) : BaseTimeEntity() {
-    /*
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ISSUE_ID")
     lateinit var issue: Issue
-*/
-    /*
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "HASHTAG_ID")
-    lateinit var hashtag: Hashtag*/
+    lateinit var hashtag: Hashtag
 }
 
 
