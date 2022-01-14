@@ -10,7 +10,10 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
-class DeveloperServiceImpl(val developerRepository: DeveloperRepository, val passwordEncoder: PasswordEncoder) :
+class DeveloperServiceImpl(
+    val developerRepository: DeveloperRepository,
+    val passwordEncoder: PasswordEncoder
+) :
     DeveloperService {
 
     @Transactional

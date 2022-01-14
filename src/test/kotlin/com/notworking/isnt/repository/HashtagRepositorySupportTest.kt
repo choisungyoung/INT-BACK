@@ -1,8 +1,6 @@
 package com.notworking.isnt.repository
 
-import com.notworking.isnt.model.Hashtag
 import com.notworking.isnt.model.Issue
-import com.notworking.isnt.model.IssueHashtag
 import com.notworking.isnt.support.type.DocType
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
@@ -14,7 +12,6 @@ import org.springframework.test.annotation.Rollback
 internal class HashtagRepositorySupportTest(
     @Autowired var issueRepository: IssueRepository,
     @Autowired var hashtagRepository: HashtagRepository,
-    @Autowired var issueHashtagRepository: IssueHashtagRepository,
 ) {
 
     @Disabled
@@ -25,36 +22,12 @@ internal class HashtagRepositorySupportTest(
         var issue = Issue(null, "hashcode test", "hashcode content test", DocType.TEXT)
 
         hashtags.forEach {
-            // 해시태그 조회
-            var hashtag = hashtagRepository.findByName(it)
-            if (hashtag == null) {
-                // 없을 경우 추가
-                hashtag = hashtagRepository.save(Hashtag(null, name = it))
-            }
-            var issueHashtag = IssueHashtag(null)
-            issueHashtag.issue = issue
-            issueHashtag.hashtag = hashtag
-            issue.addIssueHashtag(issueHashtag)
+            // 해시태그 추가
+
+            //hashtagRepository.save(hashtag)(Hashtag(null, it))
         }
 
         issueRepository.save(issue)
     }
 
-    @Disabled
-    @Rollback(value = false)
-    @Test
-    fun deleteHashtagTest() {
-        var issueHashtags = issueHashtagRepository.findAllByIssueId(378);
-        issueHashtags.forEach {
-            issueHashtagRepository.deleteById(it.id!!)
-            if (issueHashtagRepository.countByHashtagId(it.hashtag.id) == 0) {
-                hashtagRepository.deleteById(it.hashtag.id!!)
-            }
-        }
-    }
-
-    @Test
-    fun findHashtagTest() {
-        
-    }
 }

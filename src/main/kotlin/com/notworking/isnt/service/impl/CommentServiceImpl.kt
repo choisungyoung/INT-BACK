@@ -45,9 +45,9 @@ class CommentServiceImpl(
         var solution = solutionService.findSolution(solutionId)
         solution ?: throw BusinessException(Error.SOLUTION_NOT_FOUND) // 없는 솔루션일 경우
 
-        comment.updateSolution(solution)
-
+        comment.solution = solution
         commentRepository.save(comment)
+
         return comment
     }
 

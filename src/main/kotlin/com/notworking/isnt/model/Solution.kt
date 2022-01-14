@@ -25,33 +25,15 @@ data class Solution(
 
     @ManyToOne
     @JoinColumn(name = "ISSUE_ID")
-    lateinit var issue: Issue
+    var issue: Issue? = null
 
-    @OneToMany(mappedBy = "solution", cascade = [CascadeType.ALL])
+    @OneToMany(mappedBy = "solution", cascade = [CascadeType.ALL], orphanRemoval = true)
     var comments: MutableList<Comment> = mutableListOf<Comment>()
 
     fun update(issue: Solution): Solution? {
         this.content = issue.content
         this.docType = issue.docType
         return this
-    }
-
-    fun updateIssue(issue: Issue) {
-        this.issue = issue
-
-        // 무한루프에 빠지지 않도록 체크
-        if (!issue.solutions.contains(this)) {
-            // issue.solutions.add(this)
-        }
-    }
-
-    fun addComment(comment: Comment) {
-        this.comments.add(comment)
-
-        // 무한루프에 빠지지 않도록 체크
-        if (comment.solution != this) {
-            comment.solution = this
-        }
     }
 
     fun varyRecommendationCount(isIncrease: Boolean) {
@@ -61,6 +43,18 @@ data class Solution(
             recommendationCount--
         this.modifiedDate = LocalDateTime.now()
     }
+
+    fun deleteIssue() {
+        this.issue = null
+    }
+
+    fun deleteComments() {
+        this.comments.forEach {
+            it.deleteSolution();
+        }
+        comments.clear()
+    }
+
 }
 
 

@@ -17,9 +17,9 @@ data class Comment(
     @JoinColumn(name = "DEVELOPER_ID")
     lateinit var developer: Developer
 
-    @ManyToOne
+    @ManyToOne(cascade = [CascadeType.ALL])
     @JoinColumn(name = "SOLUTION_ID")
-    lateinit var solution: Solution
+    var solution: Solution? = null
 
     fun update(issue: Comment): Comment? {
         this.content = issue.content
@@ -27,13 +27,8 @@ data class Comment(
         return this
     }
 
-    fun updateSolution(solution: Solution) {
-        this.solution = solution
-
-        // 무한루프에 빠지지 않도록 체크
-        if (!solution.comments.contains(this)) {
-            //solution.comments.add(this)
-        }
+    fun deleteSolution() {
+        this.solution = null;
     }
 }
 

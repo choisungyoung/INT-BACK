@@ -24,30 +24,12 @@ data class Issue(
     @JoinColumn(name = "DEVELOPER_ID")
     lateinit var developer: Developer
 
-    @OneToMany(mappedBy = "issue", cascade = [CascadeType.ALL])
+    @OneToMany(mappedBy = "issue", cascade = [CascadeType.ALL], orphanRemoval = true)
     var solutions: MutableList<Solution> = mutableListOf<Solution>()
 
 
-    @OneToMany(mappedBy = "issue", cascade = [CascadeType.ALL])
-    var issueHashtags: MutableList<IssueHashtag> = mutableListOf<IssueHashtag>()
-
-    fun addSolution(solution: Solution) {
-        this.solutions.add(solution)
-
-        // 무한루프에 빠지지 않도록 체크
-        if (solution.issue != this) {
-            solution.issue = this
-        }
-    }
-
-    fun addIssueHashtag(issueHashtag: IssueHashtag) {
-        this.issueHashtags.add(issueHashtag)
-
-        // 무한루프에 빠지지 않도록 체크
-        if (issueHashtag.issue != this) {
-            issueHashtag.issue = this
-        }
-    }
+    @OneToMany(mappedBy = "issue", cascade = [CascadeType.ALL], orphanRemoval = true)
+    var hashtags: MutableList<Hashtag> = mutableListOf<Hashtag>()
 
     fun update(issue: Issue): Issue? {
         this.title = issue.title
@@ -65,6 +47,13 @@ data class Issue(
             recommendationCount++
         else
             recommendationCount--
+    }
+
+    fun deleteHashtags() {
+        this.hashtags.forEach {
+            it.deleteIssue();
+        }
+        hashtags.clear()
     }
 }
 

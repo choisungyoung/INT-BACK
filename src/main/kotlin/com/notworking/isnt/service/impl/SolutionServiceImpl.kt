@@ -80,11 +80,10 @@ class SolutionServiceImpl(
 
         // 이슈 조회
         var issue = issueRepository.findById(issueId).get()
-
         solution.developer = developer
-        solution.updateIssue(issue)
-
+        solution.issue = issue
         solutionRepository.save(solution)
+
         return solution
     }
 
@@ -103,7 +102,7 @@ class SolutionServiceImpl(
         //코멘트 조회
         commentRepository.findAllBySolutionId(id).forEach {
             // 코멘트 삭제 TODO : cascade로 자동 삭제되도록 수정
-            commentRepository.deleteById(it.id!!)
+            it.deleteSolution()
         }
 
         solutionRepository.deleteById(id)

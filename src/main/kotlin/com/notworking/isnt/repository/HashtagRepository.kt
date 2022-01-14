@@ -7,5 +7,6 @@ import org.springframework.stereotype.Repository
 @Repository
 interface HashtagRepository : JpaRepository<Hashtag, Long> {
     fun findByName(name: String?): Hashtag?
-
+    fun findAllByIssueId(issueId: Long?): MutableList<Hashtag>
+    fun deleteAllByIssueId(issueId: Long?): Int
 }

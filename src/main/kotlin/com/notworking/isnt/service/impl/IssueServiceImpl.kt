@@ -2,9 +2,7 @@ package com.notworking.isnt.service.impl
 
 import com.notworking.isnt.model.Hashtag
 import com.notworking.isnt.model.Issue
-import com.notworking.isnt.model.IssueHashtag
 import com.notworking.isnt.repository.HashtagRepository
-import com.notworking.isnt.repository.IssueHashtagRepository
 import com.notworking.isnt.repository.IssueRepository
 import com.notworking.isnt.repository.support.IssueRepositorySupport
 import com.notworking.isnt.service.DeveloperService
@@ -25,8 +23,6 @@ class IssueServiceImpl(
     val solutionServicce: SolutionService,
     val developerService: DeveloperService,
     val hashtagRepository: HashtagRepository,
-    val issueHashtagRepository: IssueHashtagRepository
-
 ) :
     IssueService {
 
@@ -48,7 +44,7 @@ class IssueServiceImpl(
         }
 
         page.content.forEach {
-            it.issueHashtags = issueHashtagRepository.findAllByIssueId(it.id)
+            it.hashtags = hashtagRepository.findAllByIssueId(it.id)
         }
         return page
     }
@@ -76,7 +72,7 @@ class IssueServiceImpl(
         issue.increaseHit()
 
         // 해시태그조회
-        issue.issueHashtags = issueHashtagRepository.findAllByIssueId(issue.id)
+        issue.hashtags = hashtagRepository.findAllByIssueId(issue.id)
 
         return issue
     }
@@ -90,19 +86,14 @@ class IssueServiceImpl(
         // 작성사 등록
         issue.developer = developer
 
-        hashtags.forEach {
-            // 해시태그 조회
-            var hashtag = hashtagRepository.findByName(it)
-            if (hashtag == null) {
-                // 없을 경우 추가
-                hashtag = hashtagRepository.save(Hashtag(null, name = it))
-            }
-            var issueHashtag = IssueHashtag(null)
-            issueHashtag.issue = issue
-            issueHashtag.hashtag = hashtag
-            issue.addIssueHashtag(issueHashtag)
-        }
         issueRepository.save(issue)
+
+        hashtags.forEach {
+            var hashtag = Hashtag(null, it)
+            hashtag.issue = issue
+            hashtagRepository.save(hashtag)
+        }
+
         return issue
     }
 
@@ -116,34 +107,24 @@ class IssueServiceImpl(
         issue ?: throw BusinessException(Error.ISSUE_NOT_FOUND)
         issue.update(newIssue)
 
-        // 기존 해시태그 조회
-        var issueHashtags = issueHashtagRepository.findAllByIssueId(issue.id)
-        issueHashtags.forEach {
-            issueHashtagRepository.deleteById(it.id!!)
-            if (issueHashtagRepository.countByHashtagId(it.hashtag.id) == 0) {
-                hashtagRepository.deleteById(it.hashtag.id!!)
-            }
-        }
-        // 새로운 해시태그 추가
+        // 기존 해시태그 삭제
+        issue.deleteHashtags()
         hashtags.forEach {
-            // 해시태그 조회
-            var hashtag = hashtagRepository.findByName(it)
-            if (hashtag == null) {
-                // 없을 경우 추가
-                hashtag = hashtagRepository.save(Hashtag(null, name = it))
-            }
-            var issueHashtag = IssueHashtag(null)
-            issueHashtag.issue = issue
-            issueHashtag.hashtag = hashtag
-            issue.addIssueHashtag(issueHashtag)
+            var hashtag = Hashtag(null, it)
+            hashtag.issue = issue
+            hashtagRepository.save(hashtag)
         }
     }
 
     @Transactional
     override fun deleteIssue(id: Long) {
         solutionServicce.findAllSolution(id).forEach {
-            solutionServicce.deleteSolution(it.id ?: throw BusinessException(Error.SOLUTION_NOT_FOUND))
+            it.deleteIssue()
+            it.deleteComments()
         }
-        issueRepository.deleteById(id)
+
+        var issue = issueRepository.getById(id)
+        issue.deleteHashtags()
+        issueRepository.delete(issue)
     }
 }

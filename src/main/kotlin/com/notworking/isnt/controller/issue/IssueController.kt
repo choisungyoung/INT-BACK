@@ -37,8 +37,8 @@ class IssueController(
                 it.docType.code,
                 it.hits,
                 it.recommendationCount,
-                it.issueHashtags.stream().map {
-                    it.hashtag.name
+                it.hashtags.stream().map {
+                    it.name
                 }.toList(),
                 DeveloperFindResponseDTO(
                     it.developer.email,
@@ -113,8 +113,8 @@ class IssueController(
                     issue.recommendationCount,
                     solutionService.findSolutionCount(issue.id!!),  // TODO : 성능 체크하기
                     solutionService.findSolutionAdoptYn(issue.id!!),// TODO : 성능 체크하기
-                    issue.issueHashtags.stream().map {
-                        it.hashtag.name
+                    issue.hashtags.stream().map {
+                        it.name
                     }.toList(),
                     DeveloperFindResponseDTO(
                         issue.developer.email,
