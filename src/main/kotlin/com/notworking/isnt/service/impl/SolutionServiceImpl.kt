@@ -99,12 +99,12 @@ class SolutionServiceImpl(
 
     @Transactional
     override fun deleteSolution(id: Long) {
-        //코멘트 조회
-        commentRepository.findAllBySolutionId(id).forEach {
-            // 코멘트 삭제 TODO : cascade로 자동 삭제되도록 수정
-            it.deleteSolution()
+        var solution = solutionRepository.findById(id).orElseThrow {
+            throw BusinessException(Error.SOLUTION_NOT_FOUND)
         }
 
-        solutionRepository.deleteById(id)
+        //코멘트 조회
+        solution.comments = commentRepository.findAllBySolutionId(id)
+        solutionRepository.delete(solution) //코멘트도 전의되어 삭제
     }
 }

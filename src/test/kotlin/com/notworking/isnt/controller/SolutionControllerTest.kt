@@ -113,15 +113,7 @@ class SolutionControllerTest(
             beforeSaveSolutionEmail,
             beforeSaveSolutionId
         )
-        
-        commentService.saveComment(
-            Comment(
-                id = null,
-                content = "test comment",
-            ),
-            beforeSaveSolutionEmail,
-            beforeSaveSolutionId
-        )
+
         // 수정 테스트케이스 id 설정
         updateDto.id = beforeSaveSolutionId;
         saveDto.issueId = beforeSaveIssueId;

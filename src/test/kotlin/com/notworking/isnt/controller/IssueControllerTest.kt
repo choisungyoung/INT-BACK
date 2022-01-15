@@ -7,6 +7,7 @@ import com.notworking.isnt.model.Comment
 import com.notworking.isnt.model.Developer
 import com.notworking.isnt.model.Issue
 import com.notworking.isnt.model.Solution
+import com.notworking.isnt.repository.HashtagRepository
 import com.notworking.isnt.service.CommentService
 import com.notworking.isnt.service.DeveloperService
 import com.notworking.isnt.service.IssueService
@@ -43,6 +44,7 @@ class IssueControllerTest(
     @Autowired var issueService: IssueService,
     @Autowired var solutionService: SolutionService,
     @Autowired var commentService: CommentService,
+    @Autowired var hashtagRepository: HashtagRepository,
 ) {
     @Autowired
     private lateinit var mockMvc: MockMvc
@@ -61,7 +63,7 @@ class IssueControllerTest(
         title = "Test Title",
         content = "test content",
         docType = DocType.TEXT.code,
-        mutableListOf("test")
+        mutableListOf("save test")
     )
 
     private val updateDto = IssueUpdateRequestDTO(
@@ -80,9 +82,9 @@ class IssueControllerTest(
                 id = null,
                 email = beforeSaveIssueEmail,
                 pwd = "aa12345^",
-                name = "test",
+                name = "before test",
                 introduction = "안녕하세요",
-                pictureUrl = "testUrl",
+                pictureUrl = "before testUrl",
                 point = 0,
                 popularity = 0,
             )
@@ -97,13 +99,13 @@ class IssueControllerTest(
                 docType = DocType.TEXT
             ),
             beforeSaveIssueEmail,
-            mutableListOf("test")
+            mutableListOf("before test")
         ).id!!
 
         beforeSaveSolutionId = solutionService.saveSolution(
             Solution(
                 id = null,
-                content = "test solution",
+                content = "before test solution",
                 docType = DocType.TEXT
             ),
             beforeSaveIssueEmail,

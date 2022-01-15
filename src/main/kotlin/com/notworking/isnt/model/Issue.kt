@@ -24,12 +24,12 @@ data class Issue(
     @JoinColumn(name = "DEVELOPER_ID")
     lateinit var developer: Developer
 
-    @OneToMany(mappedBy = "issue", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var solutions: MutableList<Solution> = mutableListOf<Solution>()
+    @OneToMany(mappedBy = "issue", cascade = [CascadeType.ALL])
+    var solutions: MutableList<Solution> = ArrayList()
 
 
-    @OneToMany(mappedBy = "issue", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var hashtags: MutableList<Hashtag> = mutableListOf<Hashtag>()
+    @OneToMany(mappedBy = "issue", cascade = [CascadeType.ALL])
+    var hashtags: MutableList<Hashtag> = ArrayList()
 
     fun update(issue: Issue): Issue? {
         this.title = issue.title
@@ -50,9 +50,6 @@ data class Issue(
     }
 
     fun deleteHashtags() {
-        this.hashtags.forEach {
-            it.deleteIssue();
-        }
         hashtags.clear()
     }
 }

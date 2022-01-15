@@ -27,8 +27,8 @@ data class Solution(
     @JoinColumn(name = "ISSUE_ID")
     var issue: Issue? = null
 
-    @OneToMany(mappedBy = "solution", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var comments: MutableList<Comment> = mutableListOf<Comment>()
+    @OneToMany(mappedBy = "solution", cascade = [CascadeType.ALL])
+    var comments: MutableList<Comment> = ArrayList()
 
     fun update(issue: Solution): Solution? {
         this.content = issue.content

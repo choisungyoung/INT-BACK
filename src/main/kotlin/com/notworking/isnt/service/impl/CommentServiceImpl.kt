@@ -36,18 +36,19 @@ class CommentServiceImpl(
     @Transactional
     override fun saveComment(comment: Comment, email: String, solutionId: Long): Comment {
 
+
         var developer = developerService.findDeveloperByEmail(email)
         // 없는 작성자일 경우
         developer ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
-        comment.developer = developer   // 댓글 작성자 정보 추가
 
         // 솔루션 조회
         var solution = solutionService.findSolution(solutionId)
         solution ?: throw BusinessException(Error.SOLUTION_NOT_FOUND) // 없는 솔루션일 경우
 
+        comment.developer = developer   // 댓글 작성자 정보 추가
         comment.solution = solution
+        
         commentRepository.save(comment)
-
         return comment
     }
 

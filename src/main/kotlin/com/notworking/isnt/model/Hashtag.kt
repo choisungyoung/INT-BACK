@@ -14,7 +14,7 @@ data class Hashtag(
     ) : BaseTimeEntity() {
 
 
-    @ManyToOne(cascade = [CascadeType.ALL])
+    @ManyToOne
     @JoinColumn(name = "ISSUE_ID")
     var issue: Issue? = null
 

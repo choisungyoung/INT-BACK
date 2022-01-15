@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional
 class IssueServiceImpl(
     val issueRepository: IssueRepository,
     val issueRepositorySupport: IssueRepositorySupport,
-    val solutionServicce: SolutionService,
+    val solutionService: SolutionService,
     val developerService: DeveloperService,
     val hashtagRepository: HashtagRepository,
 ) :
@@ -60,7 +60,7 @@ class IssueServiceImpl(
         var issue = issueRepository.findById(id).orElseThrow { BusinessException(Error.ISSUE_NOT_FOUND) }
 
         // 솔루션 조회, 첫 10개
-        issue.solutions = solutionServicce.findAllSolutionWithComment(
+        issue.solutions = solutionService.findAllSolutionWithComment(
             PageRequest.of(
                 0,
                 10
@@ -86,13 +86,13 @@ class IssueServiceImpl(
         // 작성사 등록
         issue.developer = developer
 
-        issueRepository.save(issue)
 
         hashtags.forEach {
             var hashtag = Hashtag(null, it)
-            hashtag.issue = issue
-            hashtagRepository.save(hashtag)
+            issue.hashtags.add(hashtag)
         }
+
+        issueRepository.save(issue)
 
         return issue
     }
@@ -108,7 +108,11 @@ class IssueServiceImpl(
         issue.update(newIssue)
 
         // 기존 해시태그 삭제
+        issue.hashtags.forEach {
+            hashtagRepository.delete(it)
+        }
         issue.deleteHashtags()
+        
         hashtags.forEach {
             var hashtag = Hashtag(null, it)
             hashtag.issue = issue
@@ -118,13 +122,12 @@ class IssueServiceImpl(
 
     @Transactional
     override fun deleteIssue(id: Long) {
-        solutionServicce.findAllSolution(id).forEach {
-            it.deleteIssue()
-            it.deleteComments()
-        }
-
         var issue = issueRepository.getById(id)
-        issue.deleteHashtags()
+
+        issue.solutions = solutionService.findAllSolution(issue.id!!).toMutableList()
+        issue.solutions.forEach {
+            solutionService.deleteSolution(it.id!!)
+        }
         issueRepository.delete(issue)
     }
 }

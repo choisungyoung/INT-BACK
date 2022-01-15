@@ -17,7 +17,7 @@ data class Comment(
     @JoinColumn(name = "DEVELOPER_ID")
     lateinit var developer: Developer
 
-    @ManyToOne(cascade = [CascadeType.ALL])
+    @ManyToOne
     @JoinColumn(name = "SOLUTION_ID")
     var solution: Solution? = null
 
