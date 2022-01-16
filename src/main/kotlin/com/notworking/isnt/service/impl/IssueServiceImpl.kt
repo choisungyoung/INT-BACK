@@ -78,7 +78,7 @@ class IssueServiceImpl(
     }
 
     @Transactional
-    override fun saveIssue(issue: Issue, email: String, hashtags: List<String>): Issue {
+    override fun saveIssue(issue: Issue, email: String, hashtags: List<String>?): Issue {
         var developer = developerService.findDeveloperByEmail(email)
 
         // 없는 작성자일 경우
@@ -87,8 +87,9 @@ class IssueServiceImpl(
         issue.developer = developer
 
 
-        hashtags.forEach {
+        hashtags?.forEach {
             var hashtag = Hashtag(null, it)
+            hashtag.issue = issue
             issue.hashtags.add(hashtag)
         }
 
@@ -98,7 +99,7 @@ class IssueServiceImpl(
     }
 
     @Transactional
-    override fun updateIssue(newIssue: Issue, hashtags: List<String>) {
+    override fun updateIssue(newIssue: Issue, hashtags: List<String>?) {
 
         // 이슈 조회
         var issue = newIssue.id?.let {
@@ -112,8 +113,8 @@ class IssueServiceImpl(
             hashtagRepository.delete(it)
         }
         issue.deleteHashtags()
-        
-        hashtags.forEach {
+
+        hashtags?.forEach {
             var hashtag = Hashtag(null, it)
             hashtag.issue = issue
             hashtagRepository.save(hashtag)

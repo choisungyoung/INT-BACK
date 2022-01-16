@@ -66,6 +66,7 @@ class SolutionController(var solutionService: SolutionService) {
 
                             )
                     }.toList(),
+                    e.adoptYn,
                     e.getModifiedDate()
                 )
             }.toList()

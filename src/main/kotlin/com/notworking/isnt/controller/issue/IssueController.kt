@@ -1,5 +1,6 @@
 package com.notworking.isnt.controller.issue
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.notworking.isnt.controller.developer.dto.DeveloperFindResponseDTO
 import com.notworking.isnt.controller.issue.dto.*
 import com.notworking.isnt.model.Issue
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 import kotlin.streams.toList
+
 
 @RequestMapping("/api/issue")
 @RestController
@@ -78,6 +80,7 @@ class IssueController(
 
                                 )
                         }.toList(),
+                        it.adoptYn,
                         it.getModifiedDate()
                     )
                 }.toList(),
@@ -100,7 +103,7 @@ class IssueController(
             direction = Sort.Direction.DESC
         ) pageable: Pageable,
         @RequestParam(required = false) query: String?
-    ): ResponseEntity<Page<IssueFindResponseDTO>> {
+    ): ResponseEntity<Map<String, Object>> {
         var page: Page<Issue> = issueService.findAllIssueByTitleContent(pageable, query)
         var list: List<IssueFindResponseDTO> = page.stream()
             .map { issue ->
@@ -128,7 +131,13 @@ class IssueController(
                 )
             }.toList()
 
-        return ResponseEntity.ok().body(PageImpl(list, pageable, page.totalElements))
+        var pageImpl = PageImpl<IssueFindResponseDTO>(list, pageable, page.totalElements)
+
+        // response에 query 추가
+        var resutlMap = ObjectMapper().convertValue(pageImpl, MutableMap::class.java) as MutableMap<String, Object>
+        if (query != null)
+            resutlMap.put("query", query as Object) // TODO : Reflection등 이용하는 방법 찾아보기
+        return ResponseEntity.ok().body(resutlMap)
     }
 
     /** 이슈 저장 */

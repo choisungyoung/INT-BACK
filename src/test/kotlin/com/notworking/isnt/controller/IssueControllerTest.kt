@@ -211,7 +211,7 @@ class IssueControllerTest(
                         fieldWithPath("content.[].hits").description("조회수"),
                         fieldWithPath("content.[].recommendationCount").description("추천수"),
                         fieldWithPath("content.[].solutionCount").description("솔루션 수"),
-                        fieldWithPath("content.[].isAdopt").description("채택여부"),
+                        fieldWithPath("content.[].adoptYn").description("채택여부"),
                         fieldWithPath("content.[].hashtags.[]").description("해시태그 리스트"),
                         fieldWithPath("content.[].developer.email").description("작성자 이메일"),
                         fieldWithPath("content.[].developer.name").description("작성자 이름"),
@@ -239,6 +239,7 @@ class IssueControllerTest(
                         fieldWithPath("size").description("크기"),
                         fieldWithPath("number").description("번째"),
                         fieldWithPath("empty").description("존재여부"),
+                        fieldWithPath("query").description("검색어"),
                     )
                 )
             )
@@ -279,7 +280,7 @@ class IssueControllerTest(
                         fieldWithPath("content.[].hits").description("조회수"),
                         fieldWithPath("content.[].recommendationCount").description("추천수"),
                         fieldWithPath("content.[].solutionCount").description("솔루션 수"),
-                        fieldWithPath("content.[].isAdopt").description("채택여부"),
+                        fieldWithPath("content.[].adoptYn").description("채택여부"),
                         fieldWithPath("content.[].hashtags.[]").description("해시태그 리스트"),
                         fieldWithPath("content.[].developer.email").description("작성자 이메일"),
                         fieldWithPath("content.[].developer.name").description("작성자 이름"),
@@ -303,6 +304,18 @@ class IssueControllerTest(
                     )
                 )
             )
+    }
+
+    @Test
+    fun testValidFindList() {
+        mockMvc.perform(
+            MockMvcRequestBuilders
+                .get("$uri/list/latest")
+                .param("page", "2")
+                .param("size", "5")
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andDo(MockMvcResultHandlers.print())
     }
 
     @Test
@@ -338,6 +351,7 @@ class IssueControllerTest(
                         fieldWithPath("solutions.[].content").description("내용"),
                         fieldWithPath("solutions.[].docType").description("문서유형 ('TEXT', 'MARK_DOWN')"),
                         fieldWithPath("solutions.[].recommendationCount").description("추천수"),
+                        fieldWithPath("solutions.[].adoptYn").description("채택여부"),
                         fieldWithPath("solutions.[].developer.email").description("작성자 이메일"),
                         fieldWithPath("solutions.[].developer.name").description("작성자 이름"),
                         fieldWithPath("solutions.[].developer.introduction").description("작성자 소개"),

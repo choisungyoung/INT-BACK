@@ -186,6 +186,7 @@ class SolutionControllerTest(
                         fieldWithPath("content.[].content").description("내용"),
                         fieldWithPath("content.[].docType").description("문서유형 ('TEXT', 'MARK_DOWN')"),
                         fieldWithPath("content.[].recommendationCount").description("추천수"),
+                        fieldWithPath("content.[].adoptYn").description("채택여부"),
                         fieldWithPath("content.[].developer.email").description("작성자 이메일"),
                         fieldWithPath("content.[].developer.name").description("작성자 이름"),
                         fieldWithPath("content.[].developer.introduction").description("작성자 소개"),
