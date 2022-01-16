@@ -21,7 +21,7 @@ import kotlin.streams.toList
 @RestController
 class SolutionController(var solutionService: SolutionService) {
 
-    var email = "test@naver.com" // TODO: Authentication 시큐리티 객체에서 받아오는 것으로 수정
+    var userId = "test" // TODO: Authentication 시큐리티 객체에서 받아오는 것으로 수정
 
     /** 솔루션 최신순 목록 조회 */
     @GetMapping("/list/{issueId}")
@@ -43,12 +43,15 @@ class SolutionController(var solutionService: SolutionService) {
                     e.docType.code,
                     e.recommendationCount,
                     DeveloperFindResponseDTO(
-                        e.developer.email,
-                        e.developer.name,
-                        e.developer.introduction,
-                        e.developer.pictureUrl,
-                        e.developer.point,
-                        e.developer.popularity
+                        userId = e.developer.userId,
+                        email = e.developer.email,
+                        name = e.developer.name,
+                        introduction = e.developer.introduction,
+                        gitUrl = e.developer.gitUrl,
+                        webSiteUrl = e.developer.webSiteUrl,
+                        pictureUrl = e.developer.pictureUrl,
+                        point = e.developer.point,
+                        popularity = e.developer.popularity
                     ),
                     e.comments.stream().map {
                         CommentFindResponseDTO(
@@ -56,12 +59,15 @@ class SolutionController(var solutionService: SolutionService) {
                             content = it.content,
                             modifiedDate = it.getModifiedDate(),
                             developer = DeveloperFindResponseDTO(
-                                it.developer.email,
-                                it.developer.name,
-                                it.developer.introduction,
-                                it.developer.pictureUrl,
-                                it.developer.point,
-                                it.developer.popularity
+                                userId = it.developer.userId,
+                                email = it.developer.email,
+                                name = it.developer.name,
+                                introduction = it.developer.introduction,
+                                gitUrl = it.developer.gitUrl,
+                                webSiteUrl = it.developer.webSiteUrl,
+                                pictureUrl = it.developer.pictureUrl,
+                                point = it.developer.point,
+                                popularity = it.developer.popularity
                             ),
 
                             )
@@ -77,7 +83,7 @@ class SolutionController(var solutionService: SolutionService) {
     /** 이슈 저장 */
     @PostMapping
     fun save(@Valid @RequestBody dto: SolutionSaveRequestDTO): ResponseEntity<Void> {
-        solutionService.saveSolution(dto.toModel(), email, dto.issueId)
+        solutionService.saveSolution(dto.toModel(), userId, dto.issueId)
 
         return ResponseEntity.ok().build()
     }

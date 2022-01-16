@@ -78,8 +78,8 @@ class IssueServiceImpl(
     }
 
     @Transactional
-    override fun saveIssue(issue: Issue, email: String, hashtags: List<String>?): Issue {
-        var developer = developerService.findDeveloperByEmail(email)
+    override fun saveIssue(issue: Issue, userId: String, hashtags: List<String>?): Issue {
+        var developer = developerService.findDeveloperByUserId(userId)
 
         // 없는 작성자일 경우
         developer ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service
 @Service
 class UserCustomService(var developerRepository: DeveloperRepository) : UserDetailsService {
     override fun loadUserByUsername(username: String): UserDetails? {
-        return developerRepository.findByEmail(username)
+        //return developerRepository.findByEmail(username)
+        return developerRepository.findByUserId(username)
     }
 }

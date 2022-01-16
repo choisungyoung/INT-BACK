@@ -16,7 +16,7 @@ interface IssueService {
 
     fun findIssue(id: Long): Issue?
 
-    fun saveIssue(issue: Issue, email: String, hashtags: List<String>?): Issue
+    fun saveIssue(issue: Issue, userId: String, hashtags: List<String>?): Issue
 
     fun updateIssue(issue: Issue, hashtags: List<String>?)
 

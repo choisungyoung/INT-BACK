@@ -32,10 +32,13 @@ class TestData(
         developerService.saveDeveloper(
             Developer(
                 id = null,
+                userId = "test",
                 email = "test@naver.com",
                 pwd = "aa12345^",
                 name = "test",
                 introduction = "안녕하세요",
+                gitUrl = "test git url",
+                webSiteUrl = "test web site url",
                 pictureUrl = "testUrl",
                 point = 0,
                 popularity = 0,

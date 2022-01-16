@@ -26,7 +26,7 @@ class IssueController(
     var solutionService: SolutionService
 ) {
 
-    var email = "test@naver.com" // TODO: Authentication 시큐리티 객체에서 받아오는 것으로 수정
+    var userId = "test" // TODO: Authentication 시큐리티 객체에서 받아오는 것으로 수정
 
     /** 이슈 조회 */
     @GetMapping("/{id}")
@@ -43,12 +43,15 @@ class IssueController(
                     it.name
                 }.toList(),
                 DeveloperFindResponseDTO(
-                    it.developer.email,
-                    it.developer.name,
-                    it.developer.introduction,
-                    it.developer.pictureUrl,
-                    it.developer.point,
-                    it.developer.popularity
+                    userId = it.developer.userId,
+                    email = it.developer.email,
+                    name = it.developer.name,
+                    introduction = it.developer.introduction,
+                    gitUrl = it.developer.gitUrl,
+                    webSiteUrl = it.developer.webSiteUrl,
+                    pictureUrl = it.developer.pictureUrl,
+                    point = it.developer.point,
+                    popularity = it.developer.popularity
                 ),
                 it.solutions.stream().map {
                     SolutionFindResponseDTO(
@@ -57,12 +60,15 @@ class IssueController(
                         it.docType.code,
                         it.recommendationCount,
                         DeveloperFindResponseDTO(
-                            it.developer.email,
-                            it.developer.name,
-                            it.developer.introduction,
-                            it.developer.pictureUrl,
-                            it.developer.point,
-                            it.developer.popularity
+                            userId = it.developer.userId,
+                            email = it.developer.email,
+                            name = it.developer.name,
+                            introduction = it.developer.introduction,
+                            gitUrl = it.developer.gitUrl,
+                            webSiteUrl = it.developer.webSiteUrl,
+                            pictureUrl = it.developer.pictureUrl,
+                            point = it.developer.point,
+                            popularity = it.developer.popularity
                         ),
                         it.comments.stream().map {
                             CommentFindResponseDTO(
@@ -70,12 +76,15 @@ class IssueController(
                                 content = it.content,
                                 modifiedDate = it.getModifiedDate(),
                                 developer = DeveloperFindResponseDTO(
-                                    it.developer.email,
-                                    it.developer.name,
-                                    it.developer.introduction,
-                                    it.developer.pictureUrl,
-                                    it.developer.point,
-                                    it.developer.popularity
+                                    userId = it.developer.userId,
+                                    email = it.developer.email,
+                                    name = it.developer.name,
+                                    introduction = it.developer.introduction,
+                                    gitUrl = it.developer.gitUrl,
+                                    webSiteUrl = it.developer.webSiteUrl,
+                                    pictureUrl = it.developer.pictureUrl,
+                                    point = it.developer.point,
+                                    popularity = it.developer.popularity
                                 ),
 
                                 )
@@ -120,12 +129,15 @@ class IssueController(
                         it.name
                     }.toList(),
                     DeveloperFindResponseDTO(
-                        issue.developer.email,
-                        issue.developer.name,
-                        issue.developer.introduction,
-                        issue.developer.pictureUrl,
-                        issue.developer.point,
-                        issue.developer.popularity
+                        userId = issue.developer.userId,
+                        email = issue.developer.email,
+                        name = issue.developer.name,
+                        introduction = issue.developer.introduction,
+                        gitUrl = issue.developer.gitUrl,
+                        webSiteUrl = issue.developer.webSiteUrl,
+                        pictureUrl = issue.developer.pictureUrl,
+                        point = issue.developer.point,
+                        popularity = issue.developer.popularity
                     ),
                     issue.getModifiedDate()
                 )
@@ -143,7 +155,7 @@ class IssueController(
     /** 이슈 저장 */
     @PostMapping
     fun save(@Valid @RequestBody dto: IssueSaveRequestDTO): ResponseEntity<Void> {
-        issueService.saveIssue(dto.toModel(), email, dto.hashtags)
+        issueService.saveIssue(dto.toModel(), userId, dto.hashtags)
 
         return ResponseEntity.ok().build()
     }

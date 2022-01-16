@@ -28,13 +28,13 @@ class DeveloperServiceImpl(
         return developerRepository.findAll().toList()
     }
 
-    override fun findDeveloperByEmail(email: String): Developer? {
-        return developerRepository.findByEmail(email)
+    override fun findDeveloperByUserId(userId: String): Developer? {
+        return developerRepository.findByUserId(userId)
     }
 
     @Transactional
     override fun updateDeveloper(newDeveloper: Developer) {
-        var developer: Developer? = newDeveloper.email?.let { developerRepository.findByEmail(it) }
+        var developer: Developer? = newDeveloper.userId?.let { developerRepository.findByUserId(it) }
 
         // null일 경우 예외처리
         developer ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
@@ -42,8 +42,8 @@ class DeveloperServiceImpl(
     }
 
     @Transactional
-    override fun deleteDeveloper(email: String) {
-        var developer: Developer? = developerRepository.findByEmail(email)
+    override fun deleteDeveloper(userId: String) {
+        var developer: Developer? = developerRepository.findByUserId(userId)
 
         // null일 경우 예외처리
         developer ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
