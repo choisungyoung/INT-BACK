@@ -10,7 +10,10 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
-class DeveloperServiceImpl(val developerRepository: DeveloperRepository, val passwordEncoder: PasswordEncoder) :
+class DeveloperServiceImpl(
+    val developerRepository: DeveloperRepository,
+    val passwordEncoder: PasswordEncoder
+) :
     DeveloperService {
 
     @Transactional
@@ -25,13 +28,13 @@ class DeveloperServiceImpl(val developerRepository: DeveloperRepository, val pas
         return developerRepository.findAll().toList()
     }
 
-    override fun findDeveloperByEmail(email: String): Developer? {
-        return developerRepository.findByEmail(email)
+    override fun findDeveloperByUserId(userId: String): Developer? {
+        return developerRepository.findByUserId(userId)
     }
 
     @Transactional
     override fun updateDeveloper(newDeveloper: Developer) {
-        var developer: Developer? = newDeveloper.email?.let { developerRepository.findByEmail(it) }
+        var developer: Developer? = newDeveloper.userId?.let { developerRepository.findByUserId(it) }
 
         // null일 경우 예외처리
         developer ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
@@ -39,8 +42,8 @@ class DeveloperServiceImpl(val developerRepository: DeveloperRepository, val pas
     }
 
     @Transactional
-    override fun deleteDeveloper(email: String) {
-        var developer: Developer? = developerRepository.findByEmail(email)
+    override fun deleteDeveloper(userId: String) {
+        var developer: Developer? = developerRepository.findByUserId(userId)
 
         // null일 경우 예외처리
         developer ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)

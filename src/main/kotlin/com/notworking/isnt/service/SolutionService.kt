@@ -16,7 +16,11 @@ interface SolutionService {
 
     fun findAllSolution(issueId: Long): List<Solution>
 
-    fun saveSolution(solution: Solution, email: String, issueId: Long): Solution
+    fun findSolutionCount(issueId: Long): Long
+
+    fun findSolutionAdoptYn(issueId: Long): Boolean
+
+    fun saveSolution(solution: Solution, userId: String, issueId: Long): Solution
 
     fun updateSolution(solution: Solution)
 

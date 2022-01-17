@@ -2,7 +2,7 @@
 /build/
 .idea/uiDesigner.xml
 /out/
-
+.idea
 # Ignore Gradle GUI config
 gradle-app.setting
 

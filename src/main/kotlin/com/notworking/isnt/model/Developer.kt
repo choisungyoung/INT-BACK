@@ -14,10 +14,15 @@ data class Developer(
     @GeneratedValue
     var id: Long?,
     @Column(unique = true)
-    var email: String,
+    var userId: String,
     var pwd: String,
-    var name: String?,
-    var introduction: String,
+    var email: String,
+    var name: String,
+    var introduction: String?,
+
+    var gitUrl: String?,
+    var webSiteUrl: String?,
+
     var pictureUrl: String?,
     var point: Int?,
     var popularity: Int?,

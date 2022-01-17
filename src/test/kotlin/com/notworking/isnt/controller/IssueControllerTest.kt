@@ -7,6 +7,7 @@ import com.notworking.isnt.model.Comment
 import com.notworking.isnt.model.Developer
 import com.notworking.isnt.model.Issue
 import com.notworking.isnt.model.Solution
+import com.notworking.isnt.repository.HashtagRepository
 import com.notworking.isnt.service.CommentService
 import com.notworking.isnt.service.DeveloperService
 import com.notworking.isnt.service.IssueService
@@ -43,6 +44,7 @@ class IssueControllerTest(
     @Autowired var issueService: IssueService,
     @Autowired var solutionService: SolutionService,
     @Autowired var commentService: CommentService,
+    @Autowired var hashtagRepository: HashtagRepository,
 ) {
     @Autowired
     private lateinit var mockMvc: MockMvc
@@ -52,7 +54,7 @@ class IssueControllerTest(
 
     private var uri: String = "/api/issue"
 
-    private val beforeSaveIssueEmail = "issueTester@naver.com"
+    private val beforeSaveIssueUserId = "issueTester"
     private var beforeSaveIssueId: Long = 0
     private var beforeSaveSolutionId: Long = 0
     private val notFindIssueId: Long = -999
@@ -61,13 +63,15 @@ class IssueControllerTest(
         title = "Test Title",
         content = "test content",
         docType = DocType.TEXT.code,
+        mutableListOf("save test")
     )
 
     private val updateDto = IssueUpdateRequestDTO(
         id = 0,     // beforeEach에서 재설정
         title = "Update Test Title",
         content = "update test content",
-        docType = DocType.MARK_DOWN.code
+        docType = DocType.MARK_DOWN.code,
+        mutableListOf("update test")
     )
 
     @BeforeEach
@@ -76,11 +80,14 @@ class IssueControllerTest(
         developerService.saveDeveloper(
             Developer(
                 id = null,
-                email = beforeSaveIssueEmail,
+                userId = beforeSaveIssueUserId,
+                email = "beforeSaveIssueEmail@naver.com",
                 pwd = "aa12345^",
-                name = "test",
+                name = "before test",
                 introduction = "안녕하세요",
-                pictureUrl = "testUrl",
+                gitUrl = "test git url",
+                webSiteUrl = "test web site url",
+                pictureUrl = "before testUrl",
                 point = 0,
                 popularity = 0,
             )
@@ -94,16 +101,17 @@ class IssueControllerTest(
                 content = "Before Test content",
                 docType = DocType.TEXT
             ),
-            beforeSaveIssueEmail
+            beforeSaveIssueUserId,
+            mutableListOf("before test")
         ).id!!
 
         beforeSaveSolutionId = solutionService.saveSolution(
             Solution(
                 id = null,
-                content = "test solution",
+                content = "before test solution",
                 docType = DocType.TEXT
             ),
-            beforeSaveIssueEmail,
+            beforeSaveIssueUserId,
             beforeSaveIssueId
         ).id!!
 
@@ -112,7 +120,7 @@ class IssueControllerTest(
                 id = null,
                 content = "test comment"
             ),
-            beforeSaveIssueEmail,
+            beforeSaveIssueUserId,
             beforeSaveSolutionId
         )
 
@@ -160,6 +168,7 @@ class IssueControllerTest(
                         fieldWithPath("title").description("이슈 제목"),
                         fieldWithPath("content").description("이슈 내용"),
                         fieldWithPath("docType").description("문서유형 ('TEXT', 'MARK_DOWN')"),
+                        fieldWithPath("hashtags.[]").description("해시태그 리스트"),
                     )
                 )
 
@@ -204,9 +213,15 @@ class IssueControllerTest(
                         fieldWithPath("content.[].docType").description("문서유형 ('TEXT', 'MARK_DOWN')"),
                         fieldWithPath("content.[].hits").description("조회수"),
                         fieldWithPath("content.[].recommendationCount").description("추천수"),
+                        fieldWithPath("content.[].solutionCount").description("솔루션 수"),
+                        fieldWithPath("content.[].adoptYn").description("채택여부"),
+                        fieldWithPath("content.[].hashtags.[]").description("해시태그 리스트"),
+                        fieldWithPath("content.[].developer.userId").description("작성자 아이디"),
                         fieldWithPath("content.[].developer.email").description("작성자 이메일"),
                         fieldWithPath("content.[].developer.name").description("작성자 이름"),
                         fieldWithPath("content.[].developer.introduction").description("작성자 소개"),
+                        fieldWithPath("content.[].developer.gitUrl").description("작성자 깃주소"),
+                        fieldWithPath("content.[].developer.webSiteUrl").description("작성자 웹사이트(블로그) 주소"),
                         fieldWithPath("content.[].developer.pictureUrl").description("작성자 사진경로"),
                         fieldWithPath("content.[].developer.point").description("작성자 점수"),
                         fieldWithPath("content.[].developer.popularity").description("작성자 인기도"),
@@ -230,6 +245,7 @@ class IssueControllerTest(
                         fieldWithPath("size").description("크기"),
                         fieldWithPath("number").description("번째"),
                         fieldWithPath("empty").description("존재여부"),
+                        fieldWithPath("query").description("검색어"),
                     )
                 )
             )
@@ -247,7 +263,8 @@ class IssueControllerTest(
                     content = "Pagenation Test content" + i,
                     docType = DocType.TEXT
                 ),
-                beforeSaveIssueEmail
+                beforeSaveIssueUserId,
+                mutableListOf("test")
             )
         mockMvc.perform(
             RestDocumentationRequestBuilders
@@ -268,6 +285,9 @@ class IssueControllerTest(
                         fieldWithPath("content.[].docType").description("문서유형 ('TEXT', 'MARK_DOWN')"),
                         fieldWithPath("content.[].hits").description("조회수"),
                         fieldWithPath("content.[].recommendationCount").description("추천수"),
+                        fieldWithPath("content.[].solutionCount").description("솔루션 수"),
+                        fieldWithPath("content.[].adoptYn").description("채택여부"),
+                        fieldWithPath("content.[].hashtags.[]").description("해시태그 리스트"),
                         fieldWithPath("content.[].developer.email").description("작성자 이메일"),
                         fieldWithPath("content.[].developer.name").description("작성자 이름"),
                         fieldWithPath("content.[].developer.introduction").description("작성자 소개"),
@@ -293,6 +313,18 @@ class IssueControllerTest(
     }
 
     @Test
+    fun testValidFindList() {
+        mockMvc.perform(
+            MockMvcRequestBuilders
+                .get("$uri/list/latest")
+                .param("page", "2")
+                .param("size", "5")
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andDo(MockMvcResultHandlers.print())
+    }
+
+    @Test
     fun testFind() {
 
         mockMvc.perform(
@@ -313,9 +345,13 @@ class IssueControllerTest(
                         fieldWithPath("docType").description("문서유형 ('TEXT', 'MARK_DOWN')"),
                         fieldWithPath("hits").description("조회수"),
                         fieldWithPath("recommendationCount").description("추천수"),
+                        fieldWithPath("hashtags.[]").description("해시태그 리스트"),
+                        fieldWithPath("developer.userId").description("작성자 아이디"),
                         fieldWithPath("developer.email").description("작성자 이메일"),
                         fieldWithPath("developer.name").description("작성자 이름"),
                         fieldWithPath("developer.introduction").description("작성자 소개"),
+                        fieldWithPath("developer.gitUrl").description("작성자 깃주소"),
+                        fieldWithPath("developer.webSiteUrl").description("작성자 웹사이트(블로그) 주소"),
                         fieldWithPath("developer.pictureUrl").description("작성자 사진경로"),
                         fieldWithPath("developer.point").description("작성자 점수"),
                         fieldWithPath("developer.popularity").description("작성자 인기도"),
@@ -324,18 +360,25 @@ class IssueControllerTest(
                         fieldWithPath("solutions.[].content").description("내용"),
                         fieldWithPath("solutions.[].docType").description("문서유형 ('TEXT', 'MARK_DOWN')"),
                         fieldWithPath("solutions.[].recommendationCount").description("추천수"),
+                        fieldWithPath("solutions.[].adoptYn").description("채택여부"),
+                        fieldWithPath("solutions.[].developer.userId").description("작성자 아이디"),
                         fieldWithPath("solutions.[].developer.email").description("작성자 이메일"),
                         fieldWithPath("solutions.[].developer.name").description("작성자 이름"),
                         fieldWithPath("solutions.[].developer.introduction").description("작성자 소개"),
+                        fieldWithPath("solutions.[].developer.gitUrl").description("작성자 깃주소"),
+                        fieldWithPath("solutions.[].developer.webSiteUrl").description("작성자 웹사이트(블로그) 주소"),
                         fieldWithPath("solutions.[].developer.pictureUrl").description("작성자 사진경로"),
                         fieldWithPath("solutions.[].developer.point").description("작성자 점수"),
                         fieldWithPath("solutions.[].developer.popularity").description("작성자 인기도"),
                         fieldWithPath("solutions.[].comment.[].id").description("코멘트 고유 아이디"),
                         fieldWithPath("solutions.[].comment.[].content").description("코멘트 내용"),
                         fieldWithPath("solutions.[].comment.[].modifiedDate").description("코멘트 최종수정일시"),
+                        fieldWithPath("solutions.[].comment.[].developer.userId").description("코멘트 작성자 아이디"),
                         fieldWithPath("solutions.[].comment.[].developer.email").description("코멘트 작성자 이메일"),
                         fieldWithPath("solutions.[].comment.[].developer.name").description("코멘트 작성자 이름"),
                         fieldWithPath("solutions.[].comment.[].developer.introduction").description("코멘트 작성자 소개"),
+                        fieldWithPath("solutions.[].comment.[].developer.gitUrl").description("작성자 깃주소"),
+                        fieldWithPath("solutions.[].comment.[].developer.webSiteUrl").description("작성자 웹사이트(블로그) 주소"),
                         fieldWithPath("solutions.[].comment.[].developer.pictureUrl").description("코멘트 작성자 사진경로"),
                         fieldWithPath("solutions.[].comment.[].developer.point").description("코멘트 작성자 포인트"),
                         fieldWithPath("solutions.[].comment.[].developer.popularity").description("코멘트 작성자 인기도"),
@@ -371,6 +414,7 @@ class IssueControllerTest(
                         fieldWithPath("title").description("이슈 제목"),
                         fieldWithPath("content").description("이슈 내용"),
                         fieldWithPath("docType").description("문서유형 ('TEXT', 'MARK_DOWN')"),
+                        fieldWithPath("hashtags.[]").description("해시태그 리스트"),
                     )
                 )
             )

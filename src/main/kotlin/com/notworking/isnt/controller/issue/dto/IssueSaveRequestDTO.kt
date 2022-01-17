@@ -13,6 +13,7 @@ data class IssueSaveRequestDTO(
     var content: String,
     @field:NotEmpty
     var docType: String,
+    var hashtags: List<String>?,
 ) {
     fun toModel(): Issue = Issue(
         id = null,
@@ -20,4 +21,5 @@ data class IssueSaveRequestDTO(
         content = this.content,
         docType = DocType.valueOf(docType),
     )
+
 }

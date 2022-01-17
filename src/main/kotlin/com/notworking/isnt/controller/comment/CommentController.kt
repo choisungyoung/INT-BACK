@@ -20,7 +20,7 @@ import kotlin.streams.toList
 @RestController
 class CommentController(var commentService: CommentService) {
 
-    var email = "test@naver.com" // TODO: Authentication 시큐리티 객체에서 받아오는 것으로 수정
+    var userId = "test" // TODO: Authentication 시큐리티 객체에서 받아오는 것으로 수정
 
     /** 댓글목록 오래된 순 */
     @GetMapping("/list/{solutionId}")
@@ -41,12 +41,15 @@ class CommentController(var commentService: CommentService) {
                     entity.content,
                     entity.getModifiedDate(),
                     DeveloperFindResponseDTO(
-                        entity.developer.email,
-                        entity.developer.name,
-                        entity.developer.introduction,
-                        entity.developer.pictureUrl,
-                        entity.developer.point,
-                        entity.developer.popularity
+                        userId = entity.developer.userId,
+                        email = entity.developer.email,
+                        name = entity.developer.name,
+                        introduction = entity.developer.introduction,
+                        gitUrl = entity.developer.gitUrl,
+                        webSiteUrl = entity.developer.webSiteUrl,
+                        pictureUrl = entity.developer.pictureUrl,
+                        point = entity.developer.point,
+                        popularity = entity.developer.popularity
                     )
                 )
             }.toList()
@@ -57,7 +60,7 @@ class CommentController(var commentService: CommentService) {
     /** 이슈 저장 */
     @PostMapping
     fun save(@Valid @RequestBody dto: CommentSaveRequestDTO): ResponseEntity<Void> {
-        commentService.saveComment(dto.toModel(), email, dto.solutionId)
+        commentService.saveComment(dto.toModel(), userId, dto.solutionId)
 
         return ResponseEntity.ok().build()
     }

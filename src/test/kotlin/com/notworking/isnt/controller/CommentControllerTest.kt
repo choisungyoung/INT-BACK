@@ -51,6 +51,7 @@ class CommentControllerTest(
 
     private var uri: String = "/api/comment"
 
+    private val beforeSaveSolutionUserId = "commentTester"
     private val beforeSaveSolutionEmail = "commentTester@naver.com"
     private var beforeSaveSolutionId: Long = 0
     private var beforeSaveIssueId: Long = 0
@@ -72,10 +73,13 @@ class CommentControllerTest(
         developerService.saveDeveloper(
             Developer(
                 id = null,
+                userId = beforeSaveSolutionUserId,
                 email = beforeSaveSolutionEmail,
                 pwd = "aa12345^",
                 name = "test",
                 introduction = "안녕하세요",
+                gitUrl = "test git url",
+                webSiteUrl = "test web site url",
                 pictureUrl = "testUrl",
                 point = 0,
                 popularity = 0,
@@ -89,7 +93,8 @@ class CommentControllerTest(
                 content = "Before Test content",
                 docType = DocType.TEXT
             ),
-            beforeSaveSolutionEmail
+            beforeSaveSolutionUserId,
+            mutableListOf("test")
         ).id!!
 
         // 테스트 솔루션 추가
@@ -99,7 +104,7 @@ class CommentControllerTest(
                 content = "Before Test content",
                 docType = DocType.TEXT
             ),
-            beforeSaveSolutionEmail,
+            beforeSaveSolutionUserId,
             beforeSaveIssueId
         ).id!!
 
@@ -108,7 +113,7 @@ class CommentControllerTest(
                 id = null,
                 content = "test comment",
             ),
-            beforeSaveSolutionEmail,
+            beforeSaveSolutionUserId,
             beforeSaveSolutionId
         ).id!!
 
@@ -182,9 +187,12 @@ class CommentControllerTest(
                         fieldWithPath("content.[].id").description("코멘트 고유 아이디"),
                         fieldWithPath("content.[].content").description("코멘트 내용"),
                         fieldWithPath("content.[].modifiedDate").description("코멘트 최종수정일시"),
+                        fieldWithPath("content.[].developer.userId").description("코멘트 작성자 아이디"),
                         fieldWithPath("content.[].developer.email").description("코멘트 작성자 이메일"),
                         fieldWithPath("content.[].developer.name").description("코멘트 작성자 이름"),
                         fieldWithPath("content.[].developer.introduction").description("코멘트 작성자 소개"),
+                        fieldWithPath("content.[].developer.gitUrl").description("작성자 깃주소"),
+                        fieldWithPath("content.[].developer.webSiteUrl").description("작성자 웹사이트(블로그) 주소"),
                         fieldWithPath("content.[].developer.pictureUrl").description("코멘트 작성자 사진경로"),
                         fieldWithPath("content.[].developer.point").description("코멘트 작성자 포인트"),
                         fieldWithPath("content.[].developer.popularity").description("코멘트 작성자 인기도"),

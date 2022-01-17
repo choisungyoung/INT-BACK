@@ -21,6 +21,29 @@ class SolutionRepositorySupport(
     var query: JPAQueryFactory
 ) : QuerydslRepositorySupport(SolutionRepository::class.java) {
 
+    /**
+     * 이슈의 솔루션 갯수 조회
+     * */
+    fun findSolutionCount(issueId: Long): Long {
+        var result = query.selectFrom(solution)
+            .distinct()
+            .where(issue.id.eq(issueId))
+            .fetchCount()
+
+        return result
+    }
+
+    /**
+     * 이슈의 솔루션 채택 존재 여부 조회
+     * */
+    fun findSolutionAdopt(issueId: Long): Long {
+        var result = query.selectFrom(solution)
+            .distinct()
+            .where(issue.id.eq(issueId).and(solution.adoptYn.isTrue))
+            .fetchCount()
+
+        return result
+    }
 
     /**
      * 최신순 솔루션 조회 (이슈상세에서 솔루션 추가조회시 사용)

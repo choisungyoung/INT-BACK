@@ -18,6 +18,7 @@ class LogAspect {
         var start: Long
         var executionTime: Long
         var proceed: Object? = null
+        
         try {
             log.debug(
                 "▶▶ START CONTROLLER: {}.{}({})",

@@ -9,6 +9,7 @@ data class IssueDetailFindResponseDTO(
     var docType: String,
     var hits: Long,
     var recommendationCount: Long,
+    var hashtags: List<String>,
 
     var developer: DeveloperFindResponseDTO,
     var solutions: List<SolutionFindResponseDTO>,

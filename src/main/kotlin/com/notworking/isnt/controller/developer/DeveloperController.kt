@@ -16,16 +16,19 @@ import kotlin.streams.toList
 class DeveloperController(var developerService: DeveloperService) {
 
     /** 사용자 조회 */
-    @GetMapping("/{email}")
-    fun find(@PathVariable email: String): ResponseEntity<DeveloperFindResponseDTO> {
-        var dto: DeveloperFindResponseDTO? = developerService.findDeveloperByEmail(email)?.let {
+    @GetMapping("/{userId}")
+    fun find(@PathVariable userId: String): ResponseEntity<DeveloperFindResponseDTO> {
+        var dto: DeveloperFindResponseDTO? = developerService.findDeveloperByUserId(userId)?.let {
             DeveloperFindResponseDTO(
-                it.email,
-                it.name,
-                it.introduction,
-                it.pictureUrl,
-                it.point,
-                it.popularity
+                userId = it.userId,
+                email = it.email,
+                name = it.name,
+                introduction = it.introduction,
+                gitUrl = it.gitUrl,
+                webSiteUrl = it.webSiteUrl,
+                pictureUrl = it.pictureUrl,
+                point = it.point,
+                popularity = it.popularity
             )
         }
         //존재하지 않을 경우 에러처리
@@ -39,12 +42,15 @@ class DeveloperController(var developerService: DeveloperService) {
         var list: List<DeveloperFindResponseDTO>? = developerService.findAllDeveloper()?.stream()
             .map { dev ->
                 DeveloperFindResponseDTO(
-                    dev.email,
-                    dev.name,
-                    dev.introduction,
-                    dev.pictureUrl,
-                    dev.point,
-                    dev.popularity
+                    userId = dev.userId,
+                    email = dev.email,
+                    name = dev.name,
+                    introduction = dev.introduction,
+                    gitUrl = dev.gitUrl,
+                    webSiteUrl = dev.webSiteUrl,
+                    pictureUrl = dev.pictureUrl,
+                    point = dev.point,
+                    popularity = dev.popularity
                 )
             }.toList()
 

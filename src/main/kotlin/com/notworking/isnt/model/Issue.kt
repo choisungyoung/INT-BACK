@@ -25,16 +25,11 @@ data class Issue(
     lateinit var developer: Developer
 
     @OneToMany(mappedBy = "issue", cascade = [CascadeType.ALL])
-    var solutions: MutableList<Solution> = mutableListOf<Solution>()
+    var solutions: MutableList<Solution> = ArrayList()
 
-    fun addSolution(solution: Solution) {
-        this.solutions.add(solution)
 
-        // 무한루프에 빠지지 않도록 체크
-        if (solution.issue != this) {
-            solution.issue = this
-        }
-    }
+    @OneToMany(mappedBy = "issue", cascade = [CascadeType.ALL])
+    var hashtags: MutableList<Hashtag> = ArrayList()
 
     fun update(issue: Issue): Issue? {
         this.title = issue.title
@@ -52,6 +47,10 @@ data class Issue(
             recommendationCount++
         else
             recommendationCount--
+    }
+
+    fun deleteHashtags() {
+        hashtags.clear()
     }
 }
 

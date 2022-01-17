@@ -51,7 +51,7 @@ class SolutionControllerTest(
 
     private var uri: String = "/api/solution"
 
-    private val beforeSaveSolutionEmail = "solutionTester@naver.com"
+    private val beforeSaveSolutionUserId = "solutionTester"
     private var beforeSaveSolutionId: Long = 0
     private var beforeSaveIssueId: Long = 0
 
@@ -73,10 +73,13 @@ class SolutionControllerTest(
         developerService.saveDeveloper(
             Developer(
                 id = null,
-                email = beforeSaveSolutionEmail,
+                userId = beforeSaveSolutionUserId,
+                email = "beforeSaveSolutionEmail@naver.com",
                 pwd = "aa12345^",
                 name = "test",
                 introduction = "안녕하세요",
+                gitUrl = "test git url",
+                webSiteUrl = "test web site url",
                 pictureUrl = "testUrl",
                 point = 0,
                 popularity = 0,
@@ -90,7 +93,8 @@ class SolutionControllerTest(
                 content = "Before Test content",
                 docType = DocType.TEXT
             ),
-            beforeSaveSolutionEmail
+            beforeSaveSolutionUserId,
+            mutableListOf("test")
         ).id!!
 
         // 테스트 솔루션 추가
@@ -100,7 +104,7 @@ class SolutionControllerTest(
                 content = "Before Test content",
                 docType = DocType.TEXT
             ),
-            beforeSaveSolutionEmail,
+            beforeSaveSolutionUserId,
             beforeSaveIssueId
         ).id!!
 
@@ -109,7 +113,7 @@ class SolutionControllerTest(
                 id = null,
                 content = "test comment",
             ),
-            beforeSaveSolutionEmail,
+            beforeSaveSolutionUserId,
             beforeSaveSolutionId
         )
 
@@ -185,18 +189,25 @@ class SolutionControllerTest(
                         fieldWithPath("content.[].content").description("내용"),
                         fieldWithPath("content.[].docType").description("문서유형 ('TEXT', 'MARK_DOWN')"),
                         fieldWithPath("content.[].recommendationCount").description("추천수"),
+                        fieldWithPath("content.[].adoptYn").description("채택여부"),
+                        fieldWithPath("content.[].developer.userId").description("작성자 아이디"),
                         fieldWithPath("content.[].developer.email").description("작성자 이메일"),
                         fieldWithPath("content.[].developer.name").description("작성자 이름"),
                         fieldWithPath("content.[].developer.introduction").description("작성자 소개"),
+                        fieldWithPath("content.[].developer.gitUrl").description("작성자 깃주소"),
+                        fieldWithPath("content.[].developer.webSiteUrl").description("작성자 웹사이트(블로그) 주소"),
                         fieldWithPath("content.[].developer.pictureUrl").description("작성자 사진경로"),
                         fieldWithPath("content.[].developer.point").description("작성자 점수"),
                         fieldWithPath("content.[].developer.popularity").description("작성자 인기도"),
                         fieldWithPath("content.[].comment.[].id").description("코멘트 고유 아이디"),
                         fieldWithPath("content.[].comment.[].content").description("코멘트 내용"),
                         fieldWithPath("content.[].comment.[].modifiedDate").description("코멘트 최종수정일시"),
+                        fieldWithPath("content.[].comment.[].developer.userId").description("작성자 아이디"),
                         fieldWithPath("content.[].comment.[].developer.email").description("코멘트 작성자 이메일"),
                         fieldWithPath("content.[].comment.[].developer.name").description("코멘트 작성자 이름"),
                         fieldWithPath("content.[].comment.[].developer.introduction").description("코멘트 작성자 소개"),
+                        fieldWithPath("content.[].comment.[].developer.gitUrl").description("작성자 깃주소"),
+                        fieldWithPath("content.[].comment.[].developer.webSiteUrl").description("작성자 웹사이트(블로그) 주소"),
                         fieldWithPath("content.[].comment.[].developer.pictureUrl").description("코멘트 작성자 사진경로"),
                         fieldWithPath("content.[].comment.[].developer.point").description("코멘트 작성자 포인트"),
                         fieldWithPath("content.[].comment.[].developer.popularity").description("코멘트 작성자 인기도"),

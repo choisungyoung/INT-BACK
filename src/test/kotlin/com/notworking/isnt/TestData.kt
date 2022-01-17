@@ -32,10 +32,13 @@ class TestData(
         developerService.saveDeveloper(
             Developer(
                 id = null,
+                userId = "test",
                 email = "test@naver.com",
                 pwd = "aa12345^",
                 name = "test",
                 introduction = "안녕하세요",
+                gitUrl = "test git url",
+                webSiteUrl = "test web site url",
                 pictureUrl = "testUrl",
                 point = 0,
                 popularity = 0,
@@ -50,7 +53,7 @@ class TestData(
                     content = "Test content" + i,
                     docType = DocType.TEXT
                 ),
-                "test@naver.com"
+                "test@naver.com", mutableListOf("spring", "test", "junit")
             ).id!!
 
         for (i: Int in 1..24)
@@ -78,7 +81,8 @@ class TestData(
                 """.trimMargin(),
                 docType = DocType.TEXT
             ),
-            "test@naver.com"
+            "test@naver.com",
+            mutableListOf("spring", "test", "junit")
         )
     }
 }

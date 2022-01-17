@@ -26,7 +26,8 @@ class AuthControllerTest() {
     @Autowired
     private lateinit var developerService: DeveloperService
 
-    private var loginUsername: String = "testLogin@naver.com"
+    private var loginUsername: String = "testLogin"
+    private var loginEmail: String = "testLogin@naver.com"
     private var loginPassword: String = "aa12345^"
 
     private var failLoginUsername: String = "testLogin@naver.com"
@@ -39,10 +40,13 @@ class AuthControllerTest() {
         developerService.saveDeveloper(
             Developer(
                 id = null,
-                email = loginUsername,
+                userId = loginUsername,
+                email = loginEmail,
                 pwd = loginPassword,
                 name = "sungyoung",
                 introduction = "안녕하세요",
+                gitUrl = "test git url",
+                webSiteUrl = "test web site url",
                 pictureUrl = "testUrl",
                 point = 0,
                 popularity = 0,

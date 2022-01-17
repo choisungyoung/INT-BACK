@@ -9,5 +9,6 @@ data class SolutionFindResponseDTO(
     var recommendationCount: Long,
     var developer: DeveloperFindResponseDTO,
     var comment: List<CommentFindResponseDTO>,
+    var adoptYn: Boolean,
     var modifiedDate: String
 )

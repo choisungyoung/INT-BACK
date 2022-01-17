@@ -55,25 +55,35 @@ class SolutionServiceImpl(
         return PageImpl<Solution>(page.content, pageable, page.totalElements)
     }
 
+    override fun findSolutionCount(issueId: Long): Long {
+        return solutionRepositorySupport.findSolutionCount(issueId)
+    }
+
+    override fun findSolutionAdoptYn(issueId: Long): Boolean {
+        if (solutionRepositorySupport.findSolutionAdopt(issueId) == 0L) {
+            return false
+        }
+        return true
+    }
+
     override fun findAllSolution(issueId: Long): List<Solution> {
         return solutionRepositorySupport.findSolutionByIssueId(issueId)
     }
 
     @Transactional
-    override fun saveSolution(solution: Solution, email: String, issueId: Long): Solution {
+    override fun saveSolution(solution: Solution, userId: String, issueId: Long): Solution {
         // 사용자 조회
-        var developer = developerService.findDeveloperByEmail(email)
+        var developer = developerService.findDeveloperByUserId(userId)
         // 없는 작성자일 경우
         developer ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
 
 
         // 이슈 조회
         var issue = issueRepository.findById(issueId).get()
-
         solution.developer = developer
-        solution.updateIssue(issue)
-
+        solution.issue = issue
         solutionRepository.save(solution)
+
         return solution
     }
 
@@ -89,12 +99,12 @@ class SolutionServiceImpl(
 
     @Transactional
     override fun deleteSolution(id: Long) {
-        //코멘트 조회
-        commentRepository.findAllBySolutionId(id).forEach {
-            // 코멘트 삭제 TODO : cascade로 자동 삭제되도록 수정
-            commentRepository.deleteById(it.id!!)
+        var solution = solutionRepository.findById(id).orElseThrow {
+            throw BusinessException(Error.SOLUTION_NOT_FOUND)
         }
 
-        solutionRepository.deleteById(id)
+        //코멘트 조회
+        solution.comments = commentRepository.findAllBySolutionId(id)
+        solutionRepository.delete(solution) //코멘트도 전의되어 삭제
     }
 }

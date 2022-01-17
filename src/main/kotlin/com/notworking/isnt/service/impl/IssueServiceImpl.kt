@@ -1,6 +1,8 @@
 package com.notworking.isnt.service.impl
 
+import com.notworking.isnt.model.Hashtag
 import com.notworking.isnt.model.Issue
+import com.notworking.isnt.repository.HashtagRepository
 import com.notworking.isnt.repository.IssueRepository
 import com.notworking.isnt.repository.support.IssueRepositorySupport
 import com.notworking.isnt.service.DeveloperService
@@ -18,9 +20,9 @@ import org.springframework.transaction.annotation.Transactional
 class IssueServiceImpl(
     val issueRepository: IssueRepository,
     val issueRepositorySupport: IssueRepositorySupport,
-    val solutionServicce: SolutionService,
-    val developerService: DeveloperService
-
+    val solutionService: SolutionService,
+    val developerService: DeveloperService,
+    val hashtagRepository: HashtagRepository,
 ) :
     IssueService {
 
@@ -34,10 +36,17 @@ class IssueServiceImpl(
 
 
     override fun findAllIssueByTitleContent(pageable: Pageable, query: String?): Page<Issue> {
+        var page: Page<Issue>
         if (query == null) {
-            return issueRepository.findAll(pageable)
+            page = issueRepository.findAll(pageable)
+        } else {
+            page = issueRepositorySupport.findAllIssueByTitleContentContains(pageable, query)
         }
-        return issueRepositorySupport.findAllIssueByTitleContentContains(pageable, query)
+
+        page.content.forEach {
+            it.hashtags = hashtagRepository.findAllByIssueId(it.id)
+        }
+        return page
     }
 
 
@@ -51,7 +60,7 @@ class IssueServiceImpl(
         var issue = issueRepository.findById(id).orElseThrow { BusinessException(Error.ISSUE_NOT_FOUND) }
 
         // 솔루션 조회, 첫 10개
-        issue.solutions = solutionServicce.findAllSolutionWithComment(
+        issue.solutions = solutionService.findAllSolutionWithComment(
             PageRequest.of(
                 0,
                 10
@@ -59,39 +68,67 @@ class IssueServiceImpl(
         ).content
 
         // 조회수 증가
-        // TODO: 방문기록 확인하기
+        // TODO: 방문기록 확인하는 로직 추가하기
         issue.increaseHit()
+
+        // 해시태그조회
+        issue.hashtags = hashtagRepository.findAllByIssueId(issue.id)
+
         return issue
     }
 
     @Transactional
-    override fun saveIssue(issue: Issue, email: String): Issue {
-        var developer = developerService.findDeveloperByEmail(email)
+    override fun saveIssue(issue: Issue, userId: String, hashtags: List<String>?): Issue {
+        var developer = developerService.findDeveloperByUserId(userId)
 
         // 없는 작성자일 경우
         developer ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
-
+        // 작성사 등록
         issue.developer = developer
+
+
+        hashtags?.forEach {
+            var hashtag = Hashtag(null, it)
+            hashtag.issue = issue
+            issue.hashtags.add(hashtag)
+        }
+
         issueRepository.save(issue)
+
         return issue
     }
 
     @Transactional
-    override fun updateIssue(newIssue: Issue) {
-        var issue: Issue? = newIssue.id?.let {
+    override fun updateIssue(newIssue: Issue, hashtags: List<String>?) {
+
+        // 이슈 조회
+        var issue = newIssue.id?.let {
             issueRepository.getById(it)
         }
-
         issue ?: throw BusinessException(Error.ISSUE_NOT_FOUND)
         issue.update(newIssue)
 
+        // 기존 해시태그 삭제
+        issue.hashtags.forEach {
+            hashtagRepository.delete(it)
+        }
+        issue.deleteHashtags()
+
+        hashtags?.forEach {
+            var hashtag = Hashtag(null, it)
+            hashtag.issue = issue
+            hashtagRepository.save(hashtag)
+        }
     }
 
     @Transactional
     override fun deleteIssue(id: Long) {
-        solutionServicce.findAllSolution(id).forEach {
-            solutionServicce.deleteSolution(it.id ?: throw BusinessException(Error.SOLUTION_NOT_FOUND))
+        var issue = issueRepository.getById(id)
+
+        issue.solutions = solutionService.findAllSolution(issue.id!!).toMutableList()
+        issue.solutions.forEach {
+            solutionService.deleteSolution(it.id!!)
         }
-        issueRepository.deleteById(id)
+        issueRepository.delete(issue)
     }
 }

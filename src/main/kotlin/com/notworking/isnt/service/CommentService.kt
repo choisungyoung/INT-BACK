@@ -12,7 +12,7 @@ interface CommentService {
 
     fun findComment(id: Long): Comment?
 
-    fun saveComment(comment: Comment, email: String, solutionId: Long): Comment
+    fun saveComment(comment: Comment, userId: String, solutionId: Long): Comment
 
     fun updateComment(comment: Comment)
 

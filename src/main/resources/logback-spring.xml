@@ -49,4 +49,108 @@
             <appender-ref ref="STDOUT" />
         </root>
     </springProfile>
+
+    <springProfile name="D">
+
+<!--
+        <property name="LOG_DIR" value="/log/int" />
+        <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                    <maxFileSize>50MB</maxFileSize>
+                </timeBasedFileNamingAndTriggeringPolicy>
+                <maxHistory>7</maxHistory>
+            </rollingPolicy>
+            <encoder>
+                <charset>UTF-8</charset>
+                <pattern><![CDATA[%d{yyyy-MM-dd HH:mm:ss} | %white(%thread) | %highlight(%-5level) | %magenta(%X{X-Gbl-Id}) | %boldGreen(%X{X-User-Id}) | %cyan(%-48logger{48}) | %boldYellow(%line) | %msg%n]]></pattern>
+            </encoder>
+        </appender>
+        <appender name="ASYNC_FILE" class="ch.qos.logback.classic.AsyncAppender">
+            <appender-ref ref="FILE" />
+        </appender>
+-->
+        <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern><![CDATA[%d{yyyy-MM-dd HH:mm:ss} | %white(%thread) | %highlight(%-5level) | %magenta(%X{X-Gbl-Id}) | %boldGreen(%X{X-User-Id}) | %cyan(%-48logger{48}) | %boldYellow(%line) | %msg%n]]></pattern>
+            </encoder>
+        </appender>
+        <logger name="com.notworking.isnt" level="debug" />
+
+        <logger name="org.springframework" level="error" />
+        <logger name="org.springframework.remoting" level="error" />
+        <logger name="org.springframework.web.servlet" level="error" />
+        <logger name="org.springframework.web.servlet.DispatcherServlet" level="error" />
+        <logger name="org.springframework.security" level="error" />
+        <logger name="org.springframework.data" additivity="false" level="error" />
+        <logger name="org.springframework.jdbc.datasource.DataSourceTransactionManager" level="error" />
+        <logger name="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" level="error" />
+
+        <!-- 데이터베이스 -->
+        <logger name="org.hibernate.SQL" level="debug" />
+        <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="error" />
+        <logger name="jdbc.sqlonly" level="error" />
+        <logger name="jdbc.resultsettable" level="error" />
+        <logger name="org.mybatis.spring" level="error" />
+
+        <logger name="jdbc.sqltiming" level="error" />
+        <logger name="jdbc.audit" level="error" />
+        <logger name="jdbc.resultset" level="error" />
+        <logger name="jdbc.connection" level="error" />
+
+        <logger name="redis.clients" level="error" />
+        <logger name="org.springframework.data" level="error" />
+
+        <logger name="org.hibernate" level="error" />
+        <logger name="com.querydsl" level="error" />
+        <logger name="javax.persistence" level="error" />
+        <logger name="com.zaxxer" level="error" />
+
+        <root level="info">
+            <appender-ref ref="STDOUT" />
+        </root>
+    </springProfile>
+
+    <springProfile name="P">
+        <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern><![CDATA[%d{yyyy-MM-dd HH:mm:ss} | %white(%thread) | %highlight(%-5level) | %magenta(%X{X-Gbl-Id}) | %boldGreen(%X{X-User-Id}) | %cyan(%-48logger{48}) | %boldYellow(%line) | %msg%n]]></pattern>
+            </encoder>
+        </appender>
+
+        <logger name="com.notworking.isnt" level="debug" />
+
+        <logger name="org.springframework" level="error" />
+        <logger name="org.springframework.remoting" level="error" />
+        <logger name="org.springframework.web.servlet" level="error" />
+        <logger name="org.springframework.web.servlet.DispatcherServlet" level="error" />
+        <logger name="org.springframework.security" level="error" />
+        <logger name="org.springframework.data" additivity="false" level="error" />
+        <logger name="org.springframework.jdbc.datasource.DataSourceTransactionManager" level="error" />
+        <logger name="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" level="error" />
+
+        <!-- 데이터베이스 -->
+        <logger name="org.hibernate.SQL" level="debug" />
+        <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="error" />
+        <logger name="jdbc.sqlonly" level="error" />
+        <logger name="jdbc.resultsettable" level="error" />
+        <logger name="org.mybatis.spring" level="error" />
+
+        <logger name="jdbc.sqltiming" level="error" />
+        <logger name="jdbc.audit" level="error" />
+        <logger name="jdbc.resultset" level="error" />
+        <logger name="jdbc.connection" level="error" />
+
+        <logger name="redis.clients" level="error" />
+        <logger name="org.springframework.data" level="error" />
+
+        <logger name="org.hibernate" level="error" />
+        <logger name="com.querydsl" level="error" />
+        <logger name="javax.persistence" level="error" />
+        <logger name="com.zaxxer" level="error" />
+
+        <root level="info">
+            <appender-ref ref="STDOUT" />
+        </root>
+    </springProfile>
 </configuration>

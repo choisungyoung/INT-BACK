@@ -41,25 +41,31 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
 
     private var uri: String = "/api/developer";
 
-    private val beforeEachDeveloperEmail: String = "developerTest@naver.com"
-    private val findDeveloperEmail: String = "developerTest@naver.com"
-    private val notFindDeveloperEmail: String = "failedTest@naver.com"
-    private val saveDeveloperEmail: String = "developerSaveTest@naver.com"
-    private val deleteDeveloperEmail: String = "developerTest@naver.com"
+    private val beforeDeveloperId: String = "developerBeforeTest"
+    private val saveDeveloperId: String = "developerSaveTest"
+
+    private val findDeveloperId: String = "developerBeforeTest"
+    private val notFindDeveloperId: String = "developerNotFoundTest"
 
     private val saveDTO: DeveloperSaveRequestDTO =
         DeveloperSaveRequestDTO(
-            email = saveDeveloperEmail,
+            userId = saveDeveloperId,
+            email = "saveDeveloperEmail@naver.com",
             password = "aa12345^",
             name = "테스터01",
             introduction = "안녕하세요",
+            gitUrl = "test git url",
+            webSiteUrl = "test web site url",
         )
     private val updateDeveloperDTO: DeveloperUpdateRequestDTO =
         DeveloperUpdateRequestDTO(
-            email = findDeveloperEmail,
+            userId = beforeDeveloperId,
+            email = "updateDeveloper@naver.com",
             password = "aa12345^",
             name = "sungyoung",
             introduction = "반갑습니다.",
+            gitUrl = "test git url",
+            webSiteUrl = "test web site url",
             pictureUrl = "testUrl",
             point = 0,
             popularity = 0,
@@ -71,10 +77,13 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
         developerService.saveDeveloper(
             Developer(
                 id = null,
-                email = beforeEachDeveloperEmail,
+                userId = beforeDeveloperId,
+                email = "beforeEachDeveloperEmail@naver.com",
                 pwd = "aa12345^",
                 name = "test",
                 introduction = "안녕하세요",
+                gitUrl = "test git url",
+                webSiteUrl = "test web site url",
                 pictureUrl = "testUrl",
                 point = 0,
                 popularity = 0,
@@ -106,10 +115,13 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
                 document(
                     "save-developer",
                     requestFields(
+                        fieldWithPath("userId").description("유저 아이디"),
                         fieldWithPath("email").description("이메일"),
                         fieldWithPath("password").description("패스워드"),
                         fieldWithPath("name").description("이름"),
-                        fieldWithPath("introduction").description("소개")
+                        fieldWithPath("introduction").description("소개"),
+                        fieldWithPath("gitUrl").description("작성자 깃주소"),
+                        fieldWithPath("webSiteUrl").description("작성자 웹사이트(블로그) 주소"),
                     )
                 )
 
@@ -139,9 +151,12 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
                 document(
                     "find-developer-list",
                     responseFields(
+                        fieldWithPath("[].userId").description("유저아이디"),
                         fieldWithPath("[].email").description("이메일"),
                         fieldWithPath("[].name").description("이름"),
                         fieldWithPath("[].introduction").description("소개"),
+                        fieldWithPath("[].gitUrl").description("작성자 깃주소"),
+                        fieldWithPath("[].webSiteUrl").description("작성자 웹사이트(블로그) 주소"),
                         fieldWithPath("[].pictureUrl").description("사진경로"),
                         fieldWithPath("[].point").description("점수"),
                         fieldWithPath("[].popularity").description("인기도"),
@@ -154,7 +169,7 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
     fun testFind() {
 
         mockMvc.perform(
-            RestDocumentationRequestBuilders.get("$uri/{email}", findDeveloperEmail)
+            RestDocumentationRequestBuilders.get("$uri/{userId}", findDeveloperId)
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andDo(MockMvcResultHandlers.print())
@@ -162,12 +177,15 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
                 document(
                     "find-developer",
                     pathParameters(
-                        parameterWithName("email").description("이메일")
+                        parameterWithName("userId").description("유저 아이디")
                     ),
                     responseFields(
+                        fieldWithPath("userId").description("유저 아이디"),
                         fieldWithPath("email").description("이메일"),
                         fieldWithPath("name").description("이름"),
                         fieldWithPath("introduction").description("소개"),
+                        fieldWithPath("gitUrl").description("작성자 깃주소"),
+                        fieldWithPath("webSiteUrl").description("작성자 웹사이트(블로그) 주소"),
                         fieldWithPath("pictureUrl").description("사진경로"),
                         fieldWithPath("point").description("점수"),
                         fieldWithPath("popularity").description("인기도"),
@@ -179,7 +197,7 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
     @Test
     fun testNotFind() {
         mockMvc.perform(
-            MockMvcRequestBuilders.get("$uri/{email}", notFindDeveloperEmail)
+            MockMvcRequestBuilders.get("$uri/{userId}", notFindDeveloperId)
         )
             .andExpect(MockMvcResultMatchers.status().isBadRequest)
             .andDo(MockMvcResultHandlers.print())
@@ -198,10 +216,13 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
                 document(
                     "update-developer",
                     requestFields(
+                        fieldWithPath("userId").description("유저 아이디"),
                         fieldWithPath("email").description("이메일"),
                         fieldWithPath("password").description("패스워드"),
                         fieldWithPath("name").description("이름"),
                         fieldWithPath("introduction").description("소개"),
+                        fieldWithPath("gitUrl").description("작성자 깃주소"),
+                        fieldWithPath("webSiteUrl").description("작성자 웹사이트(블로그) 주소"),
                         fieldWithPath("pictureUrl").description("사진경로"),
                         fieldWithPath("point").description("점수"),
                         fieldWithPath("popularity").description("인기도")
@@ -214,7 +235,7 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
     fun testDelete() {
 
         mockMvc.perform(
-            RestDocumentationRequestBuilders.delete("$uri/{email}", deleteDeveloperEmail)
+            RestDocumentationRequestBuilders.delete("$uri/{userId}", beforeDeveloperId)
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andDo(MockMvcResultHandlers.print())
@@ -222,7 +243,7 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
                 document(
                     "delete-developer",
                     pathParameters(
-                        parameterWithName("email").description("이메일")
+                        parameterWithName("userId").description("유저 아이디")
                     ),
                 )
             )

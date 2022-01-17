@@ -8,7 +8,7 @@ interface DeveloperService {
 
     fun findAllDeveloper(): List<Developer>
 
-    fun findDeveloperByEmail(email: String): Developer?
+    fun findDeveloperByUserId(email: String): Developer?
 
     fun updateDeveloper(developer: Developer)
 

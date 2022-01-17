@@ -1,9 +1,11 @@
 package com.notworking.isnt.controller.issue
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.notworking.isnt.controller.developer.dto.DeveloperFindResponseDTO
 import com.notworking.isnt.controller.issue.dto.*
 import com.notworking.isnt.model.Issue
 import com.notworking.isnt.service.IssueService
+import com.notworking.isnt.service.SolutionService
 import com.notworking.isnt.support.exception.BusinessException
 import com.notworking.isnt.support.type.Error
 import org.springframework.data.domain.Page
@@ -16,11 +18,15 @@ import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 import kotlin.streams.toList
 
+
 @RequestMapping("/api/issue")
 @RestController
-class IssueController(var issueService: IssueService) {
+class IssueController(
+    var issueService: IssueService,
+    var solutionService: SolutionService
+) {
 
-    var email = "test@naver.com" // TODO: Authentication 시큐리티 객체에서 받아오는 것으로 수정
+    var userId = "test" // TODO: Authentication 시큐리티 객체에서 받아오는 것으로 수정
 
     /** 이슈 조회 */
     @GetMapping("/{id}")
@@ -33,13 +39,19 @@ class IssueController(var issueService: IssueService) {
                 it.docType.code,
                 it.hits,
                 it.recommendationCount,
+                it.hashtags.stream().map {
+                    it.name
+                }.toList(),
                 DeveloperFindResponseDTO(
-                    it.developer.email,
-                    it.developer.name,
-                    it.developer.introduction,
-                    it.developer.pictureUrl,
-                    it.developer.point,
-                    it.developer.popularity
+                    userId = it.developer.userId,
+                    email = it.developer.email,
+                    name = it.developer.name,
+                    introduction = it.developer.introduction,
+                    gitUrl = it.developer.gitUrl,
+                    webSiteUrl = it.developer.webSiteUrl,
+                    pictureUrl = it.developer.pictureUrl,
+                    point = it.developer.point,
+                    popularity = it.developer.popularity
                 ),
                 it.solutions.stream().map {
                     SolutionFindResponseDTO(
@@ -48,12 +60,15 @@ class IssueController(var issueService: IssueService) {
                         it.docType.code,
                         it.recommendationCount,
                         DeveloperFindResponseDTO(
-                            it.developer.email,
-                            it.developer.name,
-                            it.developer.introduction,
-                            it.developer.pictureUrl,
-                            it.developer.point,
-                            it.developer.popularity
+                            userId = it.developer.userId,
+                            email = it.developer.email,
+                            name = it.developer.name,
+                            introduction = it.developer.introduction,
+                            gitUrl = it.developer.gitUrl,
+                            webSiteUrl = it.developer.webSiteUrl,
+                            pictureUrl = it.developer.pictureUrl,
+                            point = it.developer.point,
+                            popularity = it.developer.popularity
                         ),
                         it.comments.stream().map {
                             CommentFindResponseDTO(
@@ -61,16 +76,20 @@ class IssueController(var issueService: IssueService) {
                                 content = it.content,
                                 modifiedDate = it.getModifiedDate(),
                                 developer = DeveloperFindResponseDTO(
-                                    it.developer.email,
-                                    it.developer.name,
-                                    it.developer.introduction,
-                                    it.developer.pictureUrl,
-                                    it.developer.point,
-                                    it.developer.popularity
+                                    userId = it.developer.userId,
+                                    email = it.developer.email,
+                                    name = it.developer.name,
+                                    introduction = it.developer.introduction,
+                                    gitUrl = it.developer.gitUrl,
+                                    webSiteUrl = it.developer.webSiteUrl,
+                                    pictureUrl = it.developer.pictureUrl,
+                                    point = it.developer.point,
+                                    popularity = it.developer.popularity
                                 ),
 
                                 )
                         }.toList(),
+                        it.adoptYn,
                         it.getModifiedDate()
                     )
                 }.toList(),
@@ -93,7 +112,7 @@ class IssueController(var issueService: IssueService) {
             direction = Sort.Direction.DESC
         ) pageable: Pageable,
         @RequestParam(required = false) query: String?
-    ): ResponseEntity<Page<IssueFindResponseDTO>> {
+    ): ResponseEntity<Map<String, Object>> {
         var page: Page<Issue> = issueService.findAllIssueByTitleContent(pageable, query)
         var list: List<IssueFindResponseDTO> = page.stream()
             .map { issue ->
@@ -104,25 +123,39 @@ class IssueController(var issueService: IssueService) {
                     issue.docType.code,
                     issue.hits,
                     issue.recommendationCount,
+                    solutionService.findSolutionCount(issue.id!!),  // TODO : 성능 체크하기
+                    solutionService.findSolutionAdoptYn(issue.id!!),// TODO : 성능 체크하기
+                    issue.hashtags.stream().map {
+                        it.name
+                    }.toList(),
                     DeveloperFindResponseDTO(
-                        issue.developer.email,
-                        issue.developer.name,
-                        issue.developer.introduction,
-                        issue.developer.pictureUrl,
-                        issue.developer.point,
-                        issue.developer.popularity
+                        userId = issue.developer.userId,
+                        email = issue.developer.email,
+                        name = issue.developer.name,
+                        introduction = issue.developer.introduction,
+                        gitUrl = issue.developer.gitUrl,
+                        webSiteUrl = issue.developer.webSiteUrl,
+                        pictureUrl = issue.developer.pictureUrl,
+                        point = issue.developer.point,
+                        popularity = issue.developer.popularity
                     ),
                     issue.getModifiedDate()
                 )
             }.toList()
 
-        return ResponseEntity.ok().body(PageImpl(list, pageable, page.totalElements))
+        var pageImpl = PageImpl<IssueFindResponseDTO>(list, pageable, page.totalElements)
+
+        // response에 query 추가
+        var resutlMap = ObjectMapper().convertValue(pageImpl, MutableMap::class.java) as MutableMap<String, Object>
+        if (query != null)
+            resutlMap.put("query", query as Object) // TODO : Reflection등 이용하는 방법 찾아보기
+        return ResponseEntity.ok().body(resutlMap)
     }
 
     /** 이슈 저장 */
     @PostMapping
     fun save(@Valid @RequestBody dto: IssueSaveRequestDTO): ResponseEntity<Void> {
-        issueService.saveIssue(dto.toModel(), email)
+        issueService.saveIssue(dto.toModel(), userId, dto.hashtags)
 
         return ResponseEntity.ok().build()
     }
@@ -130,7 +163,7 @@ class IssueController(var issueService: IssueService) {
     /** 이슈 수정 */
     @PutMapping
     fun update(@RequestBody dto: IssueUpdateRequestDTO): ResponseEntity<Void> {
-        issueService.updateIssue(dto.toModel())
+        issueService.updateIssue(dto.toModel(), dto.hashtags)
 
         return ResponseEntity.ok().build()
     }
