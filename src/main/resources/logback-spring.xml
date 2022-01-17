@@ -51,12 +51,30 @@
     </springProfile>
 
     <springProfile name="D">
+
+<!--
+        <property name="LOG_DIR" value="/log/int" />
+        <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                    <maxFileSize>50MB</maxFileSize>
+                </timeBasedFileNamingAndTriggeringPolicy>
+                <maxHistory>7</maxHistory>
+            </rollingPolicy>
+            <encoder>
+                <charset>UTF-8</charset>
+                <pattern><![CDATA[%d{yyyy-MM-dd HH:mm:ss} | %white(%thread) | %highlight(%-5level) | %magenta(%X{X-Gbl-Id}) | %boldGreen(%X{X-User-Id}) | %cyan(%-48logger{48}) | %boldYellow(%line) | %msg%n]]></pattern>
+            </encoder>
+        </appender>
+        <appender name="ASYNC_FILE" class="ch.qos.logback.classic.AsyncAppender">
+            <appender-ref ref="FILE" />
+        </appender>
+-->
         <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
             <encoder>
                 <pattern><![CDATA[%d{yyyy-MM-dd HH:mm:ss} | %white(%thread) | %highlight(%-5level) | %magenta(%X{X-Gbl-Id}) | %boldGreen(%X{X-User-Id}) | %cyan(%-48logger{48}) | %boldYellow(%line) | %msg%n]]></pattern>
             </encoder>
         </appender>
-
         <logger name="com.notworking.isnt" level="debug" />
 
         <logger name="org.springframework" level="error" />
