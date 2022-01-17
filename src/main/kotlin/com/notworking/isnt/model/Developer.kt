@@ -47,7 +47,7 @@ data class Developer(
 
     /** Spring Security */
     override fun getPassword(): String = pwd
-    override fun getUsername(): String = email
+    override fun getUsername(): String = userId
     override fun isAccountNonExpired(): Boolean = true
     override fun isAccountNonLocked(): Boolean = true
     override fun isCredentialsNonExpired(): Boolean = true

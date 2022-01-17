@@ -6,6 +6,19 @@ endif::[]
 :toclevels: 2
 :sectlinks:
 
+[[resources-developer]]
+== Authentication
+
+[[resources-developer-create]]
+=== login
+==== HTTP request
+include::{snippets}/login/http-request.adoc[]
+
+==== HTTP response
+include::{snippets}/login/http-response.adoc[]
+include::{snippets}/login/response-fields.adoc[]
+
+
 
 [[resources-developer]]
 == Developer

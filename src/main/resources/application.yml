@@ -7,6 +7,10 @@ server:
 logging:
   config: classpath:logback-spring.xml
 
+token:
+  secret: aa12345^
+  expiration-time: 30
+
 spring:
   profiles:
     active:

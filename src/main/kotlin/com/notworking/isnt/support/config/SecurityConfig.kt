@@ -57,6 +57,11 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
             ?.loginProcessingUrl("/api/auth/login")
             ?.successHandler(customAuthenticationSuccessHandler)
             ?.failureHandler(customAuthenticationFailureHandler)
+        /*
+    ?.and()
+    ?.logout()
+    ?.logoutUrl("/api/auth/login")
+    ?.addLogoutHandler()*/
     }
 
 
