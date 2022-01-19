@@ -1,7 +1,9 @@
 package com.notworking.isnt.support.handler
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.notworking.isnt.controller.dto.ResponseDTO
+import com.notworking.isnt.controller.dto.ErrorResponse
+import com.notworking.isnt.support.exception.BusinessException
+import com.notworking.isnt.support.type.Error
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler
@@ -15,18 +17,22 @@ import javax.servlet.http.HttpServletResponse
 @Component
 class CustomAuthenticationFailureHandler : SimpleUrlAuthenticationFailureHandler() {
     @Override
-    @Throws(IOException::class, ServletException::class)
+    @Throws(IOException::class, ServletException::class, BusinessException::class)
     override fun onAuthenticationFailure(
         request: HttpServletRequest?, response: HttpServletResponse,
-        exception: AuthenticationException?
+        e: AuthenticationException?
     ) {
+        var error = Error.LOGIN_FAILED
         val mapper = ObjectMapper() //JSON 변경용
-        val responseDTO = ResponseDTO()
-        responseDTO.code = HttpStatus.UNAUTHORIZED.value()
-        responseDTO.message = "아이디 혹은 비밀번호가 일치하지 않습니다."
+        val errorResponse = ErrorResponse(
+            code = error.code,
+            title = "업무처리 에러",
+            message = error.message,
+            detailMessage = e?.message.orEmpty()
+        )
         response.characterEncoding = "UTF-8"
-        response.status = HttpServletResponse.SC_OK
-        response.writer.print(mapper.writeValueAsString(responseDTO))
+        response.status = HttpStatus.UNAUTHORIZED.value()
+        response.writer.print(mapper.writeValueAsString(errorResponse))
         response.writer.flush()
     }
 

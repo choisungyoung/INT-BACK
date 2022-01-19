@@ -1,5 +1,6 @@
 package com.notworking.isnt.controller
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.notworking.isnt.model.Developer
 import com.notworking.isnt.service.DeveloperService
 import mu.KotlinLogging
@@ -36,7 +37,7 @@ class AuthControllerTest() {
     private var loginEmail: String = "testLogin@naver.com"
     private var loginPassword: String = "aa12345^"
 
-    private var failLoginUsername: String = "testLogin@naver.com"
+    private var failLoginUsername: String = "testLogin"
     private var failLoginPassword: String = "aa12345^^"
 
     @BeforeEach
@@ -63,12 +64,12 @@ class AuthControllerTest() {
     @Test
     fun testLoginSuccess() {
         val uri: String = "/api/auth/login"
-
+        var objectMapper = ObjectMapper()
         mockMvc.perform(
             RestDocumentationRequestBuilders.post(uri)
                 .param("username", loginUsername)
                 .param("password", loginPassword)
-            //.content("{\"username\"=\"testLogin\", \"password\"=\"aa12345^\"}")
+
         )
             .andExpect(SecurityMockMvcResultMatchers.authenticated())
             .andDo(MockMvcResultHandlers.print())

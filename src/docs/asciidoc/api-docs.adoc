@@ -6,10 +6,10 @@ endif::[]
 :toclevels: 2
 :sectlinks:
 
-[[resources-developer]]
+[[resources-authentication]]
 == Authentication
 
-[[resources-developer-create]]
+[[resources-authentication-login]]
 === login
 ==== HTTP request
 include::{snippets}/login/http-request.adoc[]

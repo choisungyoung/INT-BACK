@@ -89,6 +89,7 @@ tasks.withType<Test> {
 	useJUnitPlatform()
 }
 */
+
 tasks {
 	val snippetsDir = file("$buildDir/generated-snippets")
 
@@ -97,6 +98,7 @@ tasks {
 	}
 
 	test {
+		//exclude("**/*")
 		useJUnitPlatform()
 		systemProperty("org.springframework.restdocs.outputDir", snippetsDir)
 		outputs.dir(snippetsDir)

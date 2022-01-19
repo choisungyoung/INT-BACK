@@ -53,6 +53,7 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
             ?.formLogin()
             ?.usernameParameter("username")
             ?.passwordParameter("password")
+            ?.permitAll()
             ?.loginPage("/login")
             ?.loginProcessingUrl("/api/auth/login")
             ?.successHandler(customAuthenticationSuccessHandler)
