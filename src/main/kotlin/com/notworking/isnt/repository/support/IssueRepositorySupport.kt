@@ -53,4 +53,17 @@ class IssueRepositorySupport(
 
         return PageImpl(result.results, pageable, result.total)
     }
+
+    fun findAllIssuePage(pageable: Pageable, searchQuery: String): Page<Issue> {
+
+        var result = query.selectFrom(issue)
+            .leftJoin(issue.solutions, solution).fetchJoin()
+            .where(issue.title.contains(searchQuery).or(issue.content.contains(searchQuery)))
+            .orderBy(issue.createdDate.desc())
+            .offset(pageable.offset)
+            .limit(pageable.pageSize.toLong())
+            .fetchResults()
+
+        return PageImpl(result.results, pageable, result.total)
+    }
 }

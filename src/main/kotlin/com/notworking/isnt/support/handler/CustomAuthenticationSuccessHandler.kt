@@ -17,6 +17,7 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.*
 import javax.servlet.ServletException
+import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
@@ -52,6 +53,10 @@ class CustomAuthenticationSuccessHandler(
         response.characterEncoding = "UTF-8"
         response.status = HttpServletResponse.SC_OK
         response.writer.print(mapper.writeValueAsString(developerDto))
+        response.contentType = "application/json; charset=UTF-8"
+        response.addHeader("Access-Control-Allow-Origin", "http://localhost:3000")
+
+        // TODO: 로그인 응답 전체적으로 수정 필요..
 
         var expirationTime: Long = environment.getProperty("token.expiration-time", "30").toLong();
         developerDto ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
@@ -64,8 +69,8 @@ class CustomAuthenticationSuccessHandler(
             )
             .signWith(SignatureAlgorithm.HS512, environment.getProperty("token.secret"))
             .compact()
-
-        response.addHeader("accessToken", token)
+        //response.addHeader("accessToken", token)
+        response.addCookie(Cookie("accessToken", token))
         //Jwts.parser().parse(token)
         response.writer.flush()
 

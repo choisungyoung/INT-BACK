@@ -28,4 +28,15 @@ internal class IssueRepositorySupportTest(
         )
         System.out.println(issue)
     }
+
+    @Test
+    fun findAllIssuePage() {
+        var issue = issueRepositorySupport.findAllIssuePage(
+            PageRequest.of(
+                0,
+                10
+            ), "t"
+        )
+        System.out.println(issue)
+    }
 }
