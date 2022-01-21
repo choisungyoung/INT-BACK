@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.domain.PageRequest
 
+@Disabled
 @SpringBootTest
 internal class IssueRepositorySupportTest(
     @Autowired var issueRepositorySupport: IssueRepositorySupport,
@@ -37,7 +38,7 @@ internal class IssueRepositorySupportTest(
             PageRequest.of(
                 0,
                 10
-            ), "t"
+            ), null
         )
         System.out.println(issue)
     }

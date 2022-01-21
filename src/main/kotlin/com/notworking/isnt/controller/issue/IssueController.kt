@@ -8,6 +8,7 @@ import com.notworking.isnt.service.IssueService
 import com.notworking.isnt.service.SolutionService
 import com.notworking.isnt.support.exception.BusinessException
 import com.notworking.isnt.support.type.Error
+import com.querydsl.core.Tuple
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
@@ -113,35 +114,41 @@ class IssueController(
         ) pageable: Pageable,
         @RequestParam(required = false) query: String?
     ): ResponseEntity<Map<String, Object>> {
-        var page: Page<Issue> = issueService.findAllIssueByTitleContent(pageable, query)
-        var list: List<IssueFindResponseDTO> = page.stream()
-            .map { issue ->
-                IssueFindResponseDTO(
-                    issue.id!!,
-                    issue.title,
-                    issue.content,
-                    issue.docType.code,
-                    issue.hits,
-                    issue.recommendationCount,
-                    solutionService.findSolutionCount(issue.id!!),  // TODO : 성능 수정예정
-                    solutionService.findSolutionAdoptYn(issue.id!!),// TODO : 성능 수정예정
-                    issue.hashtags.stream().map {
-                        it.name
-                    }.toList(),
-                    DeveloperFindResponseDTO(
-                        userId = issue.developer.userId,
-                        email = issue.developer.email,
-                        name = issue.developer.name,
-                        introduction = issue.developer.introduction,
-                        gitUrl = issue.developer.gitUrl,
-                        webSiteUrl = issue.developer.webSiteUrl,
-                        pictureUrl = issue.developer.pictureUrl,
-                        point = issue.developer.point,
-                        popularity = issue.developer.popularity
-                    ),
-                    issue.getModifiedDate()
-                )
-            }.toList()
+        var page: Page<Tuple> = issueService.findAllIssue(pageable, query)
+        var list: List<IssueFindResponseDTO> = page.map {
+            var issue = it.get(0, Issue::class.java)
+            var solutionCount = it.get(1, Long::class.java)
+            var adoptYn: Boolean = it.get(2, Long::class.java)!! > 0
+
+            issue ?: throw BusinessException(Error.ISSUE_NOT_FOUND)
+            solutionCount = solutionCount ?: 0
+
+            IssueFindResponseDTO(
+                issue.id!!,
+                issue.title,
+                issue.content,
+                issue.docType.code,
+                issue.hits,
+                issue.recommendationCount,
+                solutionCount,
+                adoptYn,
+                issue.hashtags.stream().map {
+                    it.name
+                }.toList(),
+                DeveloperFindResponseDTO(
+                    userId = issue.developer.userId,
+                    email = issue.developer.email,
+                    name = issue.developer.name,
+                    introduction = issue.developer.introduction,
+                    gitUrl = issue.developer.gitUrl,
+                    webSiteUrl = issue.developer.webSiteUrl,
+                    pictureUrl = issue.developer.pictureUrl,
+                    point = issue.developer.point,
+                    popularity = issue.developer.popularity
+                ),
+                issue.getModifiedDate()
+            )
+        }.toList()
 
         var pageImpl = PageImpl<IssueFindResponseDTO>(list, pageable, page.totalElements)
 

@@ -2,10 +2,12 @@ package com.notworking.isnt.repository.support
 
 import com.notworking.isnt.model.Issue
 import com.notworking.isnt.model.QDeveloper.developer
+import com.notworking.isnt.model.QHashtag.hashtag
 import com.notworking.isnt.model.QIssue
 import com.notworking.isnt.model.QIssue.issue
 import com.notworking.isnt.model.QSolution.solution
 import com.notworking.isnt.repository.IssueRepository
+import com.querydsl.core.BooleanBuilder
 import com.querydsl.core.Tuple
 import com.querydsl.jpa.JPAExpressions.select
 import com.querydsl.jpa.impl.JPAQueryFactory
@@ -56,15 +58,21 @@ class IssueRepositorySupport(
         return PageImpl(result.results, pageable, result.total)
     }
 
-    fun findAllIssuePage(pageable: Pageable, searchQuery: String): Page<Tuple> {
+    fun findAllIssuePage(pageable: Pageable, searchQuery: String?): Page<Tuple> {
+        val builder = BooleanBuilder()
+        if (searchQuery != null) {
+            builder.and(issue.title.contains(searchQuery).or(issue.content.contains(searchQuery)))
+        }
 
         var subIssue = QIssue("subIssue")
         var result = query.select(
             issue,
             select(solution.id.count()).from(solution).where(solution.issue.eq(issue)),
+            select(solution.id.count()).from(solution).where(solution.issue.eq(issue).and(solution.adoptYn.isTrue)),
         )
             .from(issue)
-            .where(issue.title.contains(searchQuery).or(issue.content.contains(searchQuery)))
+            .leftJoin(issue.hashtags, hashtag).fetchJoin()
+            .where(builder)
             .orderBy(issue.createdDate.desc())
             .offset(pageable.offset)
             .limit(pageable.pageSize.toLong())
