@@ -1,6 +1,7 @@
 package com.notworking.isnt.repository
 
 import com.notworking.isnt.repository.support.IssueRepositorySupport
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -29,6 +30,7 @@ internal class IssueRepositorySupportTest(
         System.out.println(issue)
     }
 
+    @Disabled
     @Test
     fun findAllIssuePage() {
         var issue = issueRepositorySupport.findAllIssuePage(

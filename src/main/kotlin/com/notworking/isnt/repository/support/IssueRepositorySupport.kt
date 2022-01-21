@@ -6,6 +6,8 @@ import com.notworking.isnt.model.QIssue
 import com.notworking.isnt.model.QIssue.issue
 import com.notworking.isnt.model.QSolution.solution
 import com.notworking.isnt.repository.IssueRepository
+import com.querydsl.core.Tuple
+import com.querydsl.jpa.JPAExpressions.select
 import com.querydsl.jpa.impl.JPAQueryFactory
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
@@ -54,10 +56,14 @@ class IssueRepositorySupport(
         return PageImpl(result.results, pageable, result.total)
     }
 
-    fun findAllIssuePage(pageable: Pageable, searchQuery: String): Page<Issue> {
+    fun findAllIssuePage(pageable: Pageable, searchQuery: String): Page<Tuple> {
 
-        var result = query.selectFrom(issue)
-            .leftJoin(issue.solutions, solution).fetchJoin()
+        var subIssue = QIssue("subIssue")
+        var result = query.select(
+            issue,
+            select(solution.id.count()).from(solution).where(solution.issue.eq(issue)),
+        )
+            .from(issue)
             .where(issue.title.contains(searchQuery).or(issue.content.contains(searchQuery)))
             .orderBy(issue.createdDate.desc())
             .offset(pageable.offset)

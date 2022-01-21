@@ -123,8 +123,8 @@ class IssueController(
                     issue.docType.code,
                     issue.hits,
                     issue.recommendationCount,
-                    solutionService.findSolutionCount(issue.id!!),  // TODO : 성능 체크하기
-                    solutionService.findSolutionAdoptYn(issue.id!!),// TODO : 성능 체크하기
+                    solutionService.findSolutionCount(issue.id!!),  // TODO : 성능 수정예정
+                    solutionService.findSolutionAdoptYn(issue.id!!),// TODO : 성능 수정예정
                     issue.hashtags.stream().map {
                         it.name
                     }.toList(),

@@ -70,7 +70,9 @@ class CustomAuthenticationSuccessHandler(
             .signWith(SignatureAlgorithm.HS512, environment.getProperty("token.secret"))
             .compact()
         //response.addHeader("accessToken", token)
-        response.addCookie(Cookie("accessToken", token))
+        var atCookie = Cookie("accessToken", token)
+        //atCookie.secure = true
+        response.addCookie(atCookie)
         //Jwts.parser().parse(token)
         response.writer.flush()
 
