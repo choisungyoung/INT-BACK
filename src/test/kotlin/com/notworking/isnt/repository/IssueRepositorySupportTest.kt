@@ -16,7 +16,7 @@ internal class IssueRepositorySupportTest(
 
     @Test
     fun findIssueJoinSolution() {
-        var issue = issueRepositorySupport.findIssueByIdOtoM(25)
+        var issue = issueRepositorySupport.findIssueByIdOtoM(2852)
         System.out.println(issue)
     }
 

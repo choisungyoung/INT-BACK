@@ -17,7 +17,6 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.*
 import javax.servlet.ServletException
-import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
@@ -69,11 +68,7 @@ class CustomAuthenticationSuccessHandler(
             )
             .signWith(SignatureAlgorithm.HS512, environment.getProperty("token.secret"))
             .compact()
-        //response.addHeader("accessToken", token)
-        var atCookie = Cookie("accessToken", token)
-        //atCookie.secure = true
-        response.addCookie(atCookie)
-        //Jwts.parser().parse(token)
+        response.addHeader("Access-Token", token)
         response.writer.flush()
 
     }

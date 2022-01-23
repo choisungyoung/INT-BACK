@@ -2,7 +2,6 @@ package com.notworking.isnt.repository.support
 
 import com.notworking.isnt.model.Issue
 import com.notworking.isnt.model.QDeveloper.developer
-import com.notworking.isnt.model.QHashtag.hashtag
 import com.notworking.isnt.model.QIssue
 import com.notworking.isnt.model.QIssue.issue
 import com.notworking.isnt.model.QSolution.solution
@@ -65,13 +64,12 @@ class IssueRepositorySupport(
         }
 
         var subIssue = QIssue("subIssue")
-        var result = query.select(
+        var result = query.selectDistinct(
             issue,
             select(solution.id.count()).from(solution).where(solution.issue.eq(issue)),
             select(solution.id.count()).from(solution).where(solution.issue.eq(issue).and(solution.adoptYn.isTrue)),
         )
             .from(issue)
-            .leftJoin(issue.hashtags, hashtag).fetchJoin()
             .where(builder)
             .orderBy(issue.createdDate.desc())
             .offset(pageable.offset)
