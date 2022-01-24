@@ -1,8 +1,10 @@
 package com.notworking.isnt.service.impl
 
+import com.notworking.isnt.model.Recommend
 import com.notworking.isnt.model.Solution
 import com.notworking.isnt.repository.CommentRepository
 import com.notworking.isnt.repository.IssueRepository
+import com.notworking.isnt.repository.RecommendRepository
 import com.notworking.isnt.repository.SolutionRepository
 import com.notworking.isnt.repository.support.SolutionRepositorySupport
 import com.notworking.isnt.service.DeveloperService
@@ -23,6 +25,7 @@ class SolutionServiceImpl(
     val solutionRepository: SolutionRepository,
     val solutionRepositorySupport: SolutionRepositorySupport,
     val commentRepository: CommentRepository,
+    val recommendRepository: RecommendRepository,
 
     ) :
     SolutionService {
@@ -106,5 +109,16 @@ class SolutionServiceImpl(
         //코멘트 조회
         solution.comments = commentRepository.findAllBySolutionId(id)
         solutionRepository.delete(solution) //코멘트도 전의되어 삭제
+    }
+
+    override fun recommendSolution(solutionId: Long, userId: String, recommendYn: Boolean) {
+
+        var recommend = Recommend(null, recommendYn)
+        recommend.solution = solutionRepository.findById(solutionId).orElseThrow {
+            throw BusinessException(Error.SOLUTION_NOT_FOUND)
+        }
+        recommend.developer = developerService.findDeveloperByUserId(userId)
+
+        recommendRepository.save(recommend)
     }
 }

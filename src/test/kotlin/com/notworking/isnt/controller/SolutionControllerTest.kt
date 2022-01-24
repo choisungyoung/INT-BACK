@@ -274,4 +274,22 @@ class SolutionControllerTest(
                 )
             )
     }
+
+    @Test
+    fun testRecommend() {
+
+        mockMvc.perform(
+            RestDocumentationRequestBuilders.put("$uri/recommend/{id}", beforeSaveSolutionId)
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andDo(MockMvcResultHandlers.print())
+            .andDo(
+                document(
+                    "delete-solution",
+                    pathParameters(
+                        parameterWithName("id").description("고유번호")
+                    ),
+                )
+            )
+    }
 }

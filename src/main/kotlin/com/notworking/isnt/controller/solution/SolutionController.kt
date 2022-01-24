@@ -80,7 +80,7 @@ class SolutionController(var solutionService: SolutionService) {
         return ResponseEntity.ok().body(PageImpl<SolutionFindResponseDTO>(list, pageable, page.totalElements))
     }
 
-    /** 이슈 저장 */
+    /** 솔루션 저장 */
     @PostMapping
     fun save(@Valid @RequestBody dto: SolutionSaveRequestDTO): ResponseEntity<Void> {
         solutionService.saveSolution(dto.toModel(), userId, dto.issueId)
@@ -88,7 +88,7 @@ class SolutionController(var solutionService: SolutionService) {
         return ResponseEntity.ok().build()
     }
 
-    /** 이슈 수정 */
+    /** 솔루션 수정 */
     @PutMapping
     fun update(@RequestBody dto: SolutionUpdateRequestDTO): ResponseEntity<Void> {
         solutionService.updateSolution(dto.toModel())
@@ -96,12 +96,25 @@ class SolutionController(var solutionService: SolutionService) {
         return ResponseEntity.ok().build()
     }
 
-
-    /** 이슈 삭제 */
+    /** 솔루션 삭제 */
     @DeleteMapping("/{id}")
     fun delete(@PathVariable id: Long): ResponseEntity<Void> {
         solutionService.deleteSolution(id)
 
+        return ResponseEntity.ok().build()
+    }
+
+    /** 솔루션 추천  */
+    @PutMapping("/recommend/{id}")
+    fun recommend(@PathVariable id: Long): ResponseEntity<Void> {
+        solutionService.recommendSolution(id, userId, true)
+        return ResponseEntity.ok().build()
+    }
+
+    /** 솔루션 비추천  */
+    @PutMapping("/notrecommend/{id}")
+    fun notrecommend(@PathVariable id: Long): ResponseEntity<Void> {
+        solutionService.recommendSolution(id, userId, false)
         return ResponseEntity.ok().build()
     }
 }
