@@ -5,18 +5,15 @@ import com.notworking.isnt.controller.developer.dto.DeveloperFindResponseDTO
 import com.notworking.isnt.model.Developer
 import com.notworking.isnt.repository.DeveloperRepository
 import com.notworking.isnt.support.exception.BusinessException
+import com.notworking.isnt.support.provider.JwtTokenProvider
 import com.notworking.isnt.support.type.Error
-import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.SignatureAlgorithm
 import org.springframework.core.env.Environment
 import org.springframework.security.core.Authentication
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler
 import org.springframework.stereotype.Component
 import java.io.IOException
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.util.*
 import javax.servlet.ServletException
+import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
@@ -24,7 +21,8 @@ import javax.servlet.http.HttpServletResponse
 @Component
 class CustomAuthenticationSuccessHandler(
     val environment: Environment,
-    var developerRepository: DeveloperRepository
+    var developerRepository: DeveloperRepository,
+    var jwtTokenProvider: JwtTokenProvider
 ) : SimpleUrlAuthenticationSuccessHandler() {
     @Override
     @Throws(ServletException::class, IOException::class)
@@ -49,26 +47,22 @@ class CustomAuthenticationSuccessHandler(
                 popularity = it.popularity,
             )
         }
+        // TODO: 로그인 응답 전체적으로 수정 필요..
         response.characterEncoding = "UTF-8"
         response.status = HttpServletResponse.SC_OK
         response.writer.print(mapper.writeValueAsString(developerDto))
         response.contentType = "application/json; charset=UTF-8"
         response.addHeader("Access-Control-Allow-Origin", "http://localhost:3000")
 
-        // TODO: 로그인 응답 전체적으로 수정 필요..
-
-        var expirationTime: Long = environment.getProperty("token.expiration-time", "30").toLong();
         developerDto ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
-        var token = Jwts.builder()
-            .setSubject(developerDto.userId)
-            .setExpiration(
-                Date.from(
-                    LocalDateTime.now().plusMinutes(expirationTime).atZone(ZoneId.of("Asia/Seoul")).toInstant()
-                )
+
+        response.addHeader(JwtTokenProvider.REFRESH_TOKEN_NAME, jwtTokenProvider.buildAccessToken(authentication))
+        response.addCookie(
+            Cookie(
+                JwtTokenProvider.REFRESH_TOKEN_NAME,
+                jwtTokenProvider.buildRefreshToken(authentication)
             )
-            .signWith(SignatureAlgorithm.HS512, environment.getProperty("token.secret"))
-            .compact()
-        response.addHeader("Access-Token", token)
+        )
         response.writer.flush()
 
     }

@@ -42,10 +42,11 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
     }
 
     override fun configure(http: HttpSecurity?) {
-        
-        http
-            ?.csrf()?.disable()
-            ?.headers()?.frameOptions()?.disable()
+
+        http?.csrf()?.disable()
+            ?.headers()
+            ?.frameOptions()
+            ?.disable()
             ?.and()
             ?.authorizeRequests()
             ?.antMatchers("/resources/**")?.permitAll()
