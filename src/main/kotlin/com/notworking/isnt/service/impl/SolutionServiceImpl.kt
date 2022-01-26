@@ -117,6 +117,8 @@ class SolutionServiceImpl(
         recommend.solution = solutionRepository.findById(solutionId).orElseThrow {
             throw BusinessException(Error.SOLUTION_NOT_FOUND)
         }
+        recommend.solution?.recommendationCount =
+            recommend.solution?.recommendationCount!!.plus(if (recommendYn) 1 else -1)
         recommend.developer = developerService.findDeveloperByUserId(userId)
 
         recommendRepository.save(recommend)

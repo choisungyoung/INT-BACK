@@ -1,5 +1,6 @@
 package com.notworking.isnt.support.config
 
+import com.notworking.isnt.support.provider.JwtTokenProvider
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
 import org.springframework.web.servlet.config.annotation.CorsRegistry
@@ -20,5 +21,6 @@ class WebMvcConfig : WebMvcConfigurer {
             )
             .allowCredentials(true)
             .maxAge(3600)
+            .exposedHeaders(JwtTokenProvider.ACCESS_TOKEN_NAME)
     }
 }

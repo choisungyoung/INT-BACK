@@ -183,6 +183,28 @@ include::{snippets}/delete-solution/http-request.adoc[]
 include::{snippets}/delete-solution/http-response.adoc[]
 
 
+[[resources-solution-recommend]]
+=== solution 추천
+
+==== HTTP request
+include::{snippets}/recommend-solution/path-parameters.adoc[]
+include::{snippets}/recommend-solution/http-request.adoc[]
+
+==== HTTP response
+include::{snippets}/recommend-solution/http-response.adoc[]
+
+
+[[resources-solution-recommend]]
+=== solution 비추천
+
+==== HTTP request
+include::{snippets}/decommend-solution/path-parameters.adoc[]
+include::{snippets}/decommend-solution/http-request.adoc[]
+
+==== HTTP response
+include::{snippets}/decommend-solution/http-response.adoc[]
+
+
 
 [[resources-comment]]
 == Comment
