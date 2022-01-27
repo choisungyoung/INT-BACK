@@ -117,4 +117,11 @@ class SolutionController(var solutionService: SolutionService) {
         solutionService.recommendSolution(id, userId, false)
         return ResponseEntity.ok().build()
     }
+
+    /** 솔루션 채택  */
+    @PutMapping("/adopt/{id}")
+    fun adopt(@PathVariable id: Long): ResponseEntity<Boolean> {
+        var adoptYn = solutionService.adoptSolution(id, userId)
+        return ResponseEntity.ok().body(adoptYn)
+    }
 }

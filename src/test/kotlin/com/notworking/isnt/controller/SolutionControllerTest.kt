@@ -308,4 +308,21 @@ class SolutionControllerTest(
                 )
             )
     }
+
+    @Test
+    fun testAdopt() {
+        mockMvc.perform(
+            RestDocumentationRequestBuilders.put("$uri/adopt/{id}", beforeSaveSolutionId)
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andDo(MockMvcResultHandlers.print())
+            .andDo(
+                document(
+                    "adopt-solution",
+                    pathParameters(
+                        parameterWithName("id").description("고유번호")
+                    ),
+                )
+            )
+    }
 }

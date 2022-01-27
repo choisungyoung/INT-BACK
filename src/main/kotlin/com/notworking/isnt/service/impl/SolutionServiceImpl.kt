@@ -123,4 +123,21 @@ class SolutionServiceImpl(
 
         recommendRepository.save(recommend)
     }
+
+    override fun adoptSolution(solutionId: Long, userId: String): Boolean {
+
+        var solution = solutionRepository.findById(solutionId).orElseThrow {
+            throw BusinessException(Error.SOLUTION_NOT_FOUND)
+        }
+        if (solution.developer.id != solutionId) {
+            // throw BusinessException(Error.SOLUTION_NOT_DEVELOPER)
+            // TODO: 로그인 되면 주석제거하기
+        }
+        // 이미 채택된 솔루션이 있는지 확인?
+
+        // 채택 토글
+        solution.adoptYn = !solution.adoptYn
+
+        return solution.adoptYn
+    }
 }

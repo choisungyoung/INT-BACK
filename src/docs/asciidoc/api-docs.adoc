@@ -205,6 +205,17 @@ include::{snippets}/decommend-solution/http-request.adoc[]
 include::{snippets}/decommend-solution/http-response.adoc[]
 
 
+[[resources-solution-adopt]]
+=== solution 채택
+
+==== HTTP request
+include::{snippets}/adopt-solution/path-parameters.adoc[]
+include::{snippets}/adopt-solution/http-request.adoc[]
+
+==== HTTP response
+include::{snippets}/adopt-solution/http-response.adoc[]
+
+
 
 [[resources-comment]]
 == Comment

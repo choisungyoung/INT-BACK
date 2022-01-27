@@ -27,4 +27,7 @@ interface SolutionService {
     fun deleteSolution(id: Long)
 
     fun recommendSolution(solutionId: Long, userId: String, recommendYn: Boolean)
+
+    fun adoptSolution(solutionId: Long, userId: String): Boolean
+
 }

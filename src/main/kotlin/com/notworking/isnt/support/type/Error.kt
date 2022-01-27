@@ -26,6 +26,7 @@ enum class Error(
 
     // Solution
     SOLUTION_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "SLT001", "존재하지 않는 솔루션입니다."),
+    SOLUTION_NOT_DEVELOPER(HttpStatus.BAD_REQUEST.value(), "SLT002", "솔루션 작성자가 아닙니다."),
 
     // Comment
     COMMENT_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "CMT001", "존재하지 않는 이슈입니다."),
