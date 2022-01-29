@@ -111,19 +111,37 @@ class SolutionServiceImpl(
         solutionRepository.delete(solution) //코멘트도 전의되어 삭제
     }
 
-    override fun recommendSolution(solutionId: Long, userId: String, recommendYn: Boolean) {
+    @Transactional
+    override fun recommendSolution(solutionId: Long, userId: String) {
 
-        var recommend = Recommend(null, recommendYn)
-        recommend.solution = solutionRepository.findById(solutionId).orElseThrow {
+        var solution = solutionRepository.findById(solutionId).orElseThrow {
             throw BusinessException(Error.SOLUTION_NOT_FOUND)
         }
-        recommend.solution?.recommendationCount =
-            recommend.solution?.recommendationCount!!.plus(if (recommendYn) 1 else -1)
-        recommend.developer = developerService.findDeveloperByUserId(userId)
+        var developer =
+            developerService.findDeveloperByUserId(userId) ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
 
-        recommendRepository.save(recommend)
+        // 이미 추천한 솔루션인지 체크
+        var recommend = recommendRepository.findAllBySolutionAndDeveloper(solution, developer)
+
+        if (recommend == null) {
+            // 이미 추천한 이력이 없는 경우 새로 추가
+            recommend = Recommend(null)
+            solution?.recommendationCount = solution?.recommendationCount!!.plus(1)
+
+            recommend.solution = solution
+            recommend.developer = developer
+            recommendRepository.save(recommend)
+        } else {
+            // 이미 추천한 이력이 있는 경우 마이너스
+            solution?.recommendationCount =
+                solution?.recommendationCount!!.plus(-1)
+            recommendRepository.delete(recommend)
+        }
+
+
     }
 
+    @Transactional
     override fun adoptSolution(solutionId: Long, userId: String): Boolean {
 
         var solution = solutionRepository.findById(solutionId).orElseThrow {

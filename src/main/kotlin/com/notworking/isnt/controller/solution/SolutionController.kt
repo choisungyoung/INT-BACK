@@ -107,14 +107,7 @@ class SolutionController(var solutionService: SolutionService) {
     /** 솔루션 추천  */
     @PutMapping("/recommend/{id}")
     fun recommend(@PathVariable id: Long): ResponseEntity<Void> {
-        solutionService.recommendSolution(id, userId, true)
-        return ResponseEntity.ok().build()
-    }
-
-    /** 솔루션 비추천  */
-    @PutMapping("/decommend/{id}")
-    fun notrecommend(@PathVariable id: Long): ResponseEntity<Void> {
-        solutionService.recommendSolution(id, userId, false)
+        solutionService.recommendSolution(id, userId)
         return ResponseEntity.ok().build()
     }
 

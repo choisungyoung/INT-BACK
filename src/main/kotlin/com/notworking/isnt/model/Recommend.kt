@@ -8,7 +8,6 @@ data class Recommend(
     @Id
     @GeneratedValue
     var id: Long?,
-    var recommendYn: Boolean = true
 ) : BaseTimeEntity() {
 
     @ManyToOne

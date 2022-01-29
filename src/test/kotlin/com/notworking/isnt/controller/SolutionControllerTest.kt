@@ -292,22 +292,6 @@ class SolutionControllerTest(
             )
     }
 
-    @Test
-    fun testDecommend() {
-        mockMvc.perform(
-            RestDocumentationRequestBuilders.put("$uri/decommend/{id}", beforeSaveSolutionId)
-        )
-            .andExpect(MockMvcResultMatchers.status().isOk)
-            .andDo(MockMvcResultHandlers.print())
-            .andDo(
-                document(
-                    "decommend-solution",
-                    pathParameters(
-                        parameterWithName("id").description("고유번호")
-                    ),
-                )
-            )
-    }
 
     @Test
     fun testAdopt() {
