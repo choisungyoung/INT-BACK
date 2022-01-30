@@ -194,17 +194,6 @@ include::{snippets}/recommend-solution/http-request.adoc[]
 include::{snippets}/recommend-solution/http-response.adoc[]
 
 
-[[resources-solution-recommend]]
-=== solution 비추천
-
-==== HTTP request
-include::{snippets}/decommend-solution/path-parameters.adoc[]
-include::{snippets}/decommend-solution/http-request.adoc[]
-
-==== HTTP response
-include::{snippets}/decommend-solution/http-response.adoc[]
-
-
 [[resources-solution-adopt]]
 === solution 채택
 

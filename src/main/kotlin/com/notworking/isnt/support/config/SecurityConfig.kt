@@ -1,8 +1,10 @@
 package com.notworking.isnt.support.config
 
 import com.notworking.isnt.service.UserCustomService
+import com.notworking.isnt.support.filter.JwtAuthenticationFilter
 import com.notworking.isnt.support.handler.CustomAuthenticationFailureHandler
 import com.notworking.isnt.support.handler.CustomAuthenticationSuccessHandler
+import com.notworking.isnt.support.provider.JwtTokenProvider
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Configurable
 import org.springframework.context.annotation.Bean
@@ -13,6 +15,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 
 @Configurable
@@ -27,6 +30,9 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
 
     @Autowired
     lateinit var customAuthenticationFailureHandler: CustomAuthenticationFailureHandler
+
+    @Autowired
+    lateinit var jwtTokenProvider: JwtTokenProvider
 
     @Bean
     fun encoder(): PasswordEncoder = BCryptPasswordEncoder(11)
@@ -60,6 +66,12 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
             ?.loginProcessingUrl("/api/auth/login")
             ?.successHandler(customAuthenticationSuccessHandler)
             ?.failureHandler(customAuthenticationFailureHandler)
+            ?.and()
+            ?.addFilterBefore(
+                JwtAuthenticationFilter(jwtTokenProvider),
+                UsernamePasswordAuthenticationFilter::class.java
+            )
+
         /*
     ?.and()
     ?.logout()
