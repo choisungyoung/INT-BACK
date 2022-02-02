@@ -6,6 +6,7 @@ import org.springframework.http.HttpMethod
 import org.springframework.web.servlet.config.annotation.CorsRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
+
 @Configuration
 class WebMvcConfig : WebMvcConfigurer {
     override
@@ -23,4 +24,5 @@ class WebMvcConfig : WebMvcConfigurer {
             .maxAge(3600)
             .exposedHeaders(JwtTokenProvider.ACCESS_TOKEN_NAME)
     }
+
 }

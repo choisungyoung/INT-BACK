@@ -7,6 +7,7 @@ import com.notworking.isnt.repository.DeveloperRepository
 import com.notworking.isnt.support.exception.BusinessException
 import com.notworking.isnt.support.provider.JwtTokenProvider
 import com.notworking.isnt.support.type.Error
+import com.notworking.isnt.support.util.ResponseUtil
 import org.springframework.core.env.Environment
 import org.springframework.security.core.Authentication
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler
@@ -48,15 +49,11 @@ class CustomAuthenticationSuccessHandler(
             )
         }
         // TODO: 로그인 응답 전체적으로 수정 필요..
-        response.characterEncoding = "UTF-8"
-        response.status = HttpServletResponse.SC_OK
+        ResponseUtil.setResponse(response)
         response.writer.print(mapper.writeValueAsString(developerDto))
-        response.contentType = "application/json; charset=UTF-8"
-        response.addHeader("Access-Control-Allow-Origin", "http://localhost:3000")
-
         developerDto ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
 
-        response.addHeader(JwtTokenProvider.REFRESH_TOKEN_NAME, jwtTokenProvider.buildAccessToken(authentication))
+        response.addHeader(JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(authentication))
         response.addCookie(
             Cookie(
                 JwtTokenProvider.REFRESH_TOKEN_NAME,
@@ -64,7 +61,6 @@ class CustomAuthenticationSuccessHandler(
             )
         )
         response.writer.flush()
-
     }
 
 }

@@ -18,6 +18,16 @@ include::{snippets}/login/http-request.adoc[]
 include::{snippets}/login/http-response.adoc[]
 include::{snippets}/login/response-fields.adoc[]
 
+[[resources-authentication-refreshtoken]]
+=== refresh token
+==== HTTP request
+include::{snippets}/refreshtoken/http-request.adoc[]
+
+==== HTTP response
+include::{snippets}/refreshtoken/http-response.adoc[]
+include::{snippets}/refreshtoken/response-fields.adoc[]
+
+
 
 
 [[resources-developer]]

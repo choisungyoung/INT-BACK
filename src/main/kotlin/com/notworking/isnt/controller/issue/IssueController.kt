@@ -15,6 +15,8 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.core.userdetails.User
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 import kotlin.streams.toList
@@ -26,8 +28,6 @@ class IssueController(
     var issueService: IssueService,
     var solutionService: SolutionService
 ) {
-
-    var userId = "test" // TODO: Authentication 시큐리티 객체에서 받아오는 것으로 수정
 
     /** 이슈 조회 */
     @GetMapping("/{id}")
@@ -162,7 +162,10 @@ class IssueController(
     /** 이슈 저장 */
     @PostMapping
     fun save(@Valid @RequestBody dto: IssueSaveRequestDTO): ResponseEntity<Void> {
-        issueService.saveIssue(dto.toModel(), userId, dto.hashtags)
+        var user = SecurityContextHolder.getContext().authentication.principal as User?
+        user ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
+
+        issueService.saveIssue(dto.toModel(), user.username, dto.hashtags)
 
         return ResponseEntity.ok().build()
     }

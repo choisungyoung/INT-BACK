@@ -26,10 +26,8 @@ class JwtTokenProvider(
     val AUTHORITIES_KEY = "auth"
     val BEARER_TYPE = "bearer"
 
-    @Value("\${spring.access-token.expiration-time}")
+    //var ACCESS_TOKEN_EXPIRE_TIME = (30).toLong()  // 30ms
     var ACCESS_TOKEN_EXPIRE_TIME = (1000 * 60 * 30).toLong()  // 30분
-
-    @Value("\${spring.refresh-token.expiration-time}")
     var REFRESH_TOKEN_EXPIRE_TIME = (1000 * 60 * 60 * 24 * 7).toLong()  // 7일
 
     val log = LoggerFactory.getLogger(javaClass)
@@ -48,6 +46,19 @@ class JwtTokenProvider(
     init {
         accessTokenkey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(accessTokenSecret))
         refreshTokenkey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(refreshTokenSecret))
+
+    }
+
+
+    fun buildAccessToken(username: String?): String? {
+        val now: Long = Date().getTime()
+        val accessTokenExpiresIn = Date(now + ACCESS_TOKEN_EXPIRE_TIME)
+        return Jwts.builder()
+            .setSubject(username)
+            .claim(AUTHORITIES_KEY, "ROLE_USER") // payload "auth": "ROLE_USER"
+            .setExpiration(accessTokenExpiresIn)
+            .signWith(accessTokenkey, SignatureAlgorithm.HS512)
+            .compact()
     }
 
     fun buildAccessToken(authentication: Authentication): String? {
@@ -108,14 +119,19 @@ class JwtTokenProvider(
             return true
         } catch (e: SecurityException) {
             log.info("잘못된 JWT 서명입니다.")
+            throw e
         } catch (e: MalformedJwtException) {
             log.info("잘못된 JWT 서명입니다.")
+            throw e
         } catch (e: ExpiredJwtException) {
             log.info("만료된 JWT 토큰입니다.")
+            throw e
         } catch (e: UnsupportedJwtException) {
             log.info("지원되지 않는 JWT 토큰입니다.")
+            throw e
         } catch (e: IllegalArgumentException) {
             log.info("JWT 토큰이 잘못되었습니다.")
+            throw e
         }
         return false
     }

@@ -8,9 +8,11 @@ import com.notworking.isnt.support.provider.JwtTokenProvider
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Configurable
 import org.springframework.context.annotation.Bean
+import org.springframework.http.HttpMethod
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
+import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
@@ -34,17 +36,29 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
     @Autowired
     lateinit var jwtTokenProvider: JwtTokenProvider
 
+
     @Bean
     fun encoder(): PasswordEncoder = BCryptPasswordEncoder(11)
+
     override fun configure(auth: AuthenticationManagerBuilder?) {
         auth?.authenticationProvider(authenticationProvider())
     }
 
+    @Bean
     fun authenticationProvider(): DaoAuthenticationProvider {
         val authProvider = DaoAuthenticationProvider()
         authProvider.setUserDetailsService(userCustomService)
         authProvider.setPasswordEncoder(encoder())
         return authProvider
+    }
+
+    override fun configure(web: WebSecurity) {
+        web.ignoring()
+            .mvcMatchers(HttpMethod.GET, "/api/issue/**")
+            .mvcMatchers(HttpMethod.GET, "/api/solution/**")
+            .mvcMatchers(HttpMethod.GET, "/api/comment/**")
+            .mvcMatchers("/api/developer/**")
+        //.mvcMatchers("/api/auth/login") // login이 security filter를 사용하므로 WebSecurity ignore하면 안됨
     }
 
     override fun configure(http: HttpSecurity?) {
@@ -56,7 +70,8 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
             ?.and()
             ?.authorizeRequests()
             ?.antMatchers("/resources/**")?.permitAll()
-            ?.anyRequest()?.permitAll()
+            ?.antMatchers(HttpMethod.GET, "/api/**")?.permitAll()
+            //?.anyRequest()?.permitAll()
             ?.and()
             ?.formLogin()
             ?.usernameParameter("username")

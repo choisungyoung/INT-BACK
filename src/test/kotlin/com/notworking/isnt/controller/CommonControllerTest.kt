@@ -1,61 +1,60 @@
 package com.notworking.isnt.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.notworking.isnt.CommonMvcTest
+import com.notworking.isnt.model.Developer
+import com.notworking.isnt.service.DeveloperService
 import com.notworking.isnt.support.provider.JwtTokenProvider
 import mu.KotlinLogging
-import org.junit.jupiter.api.MethodOrderer
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestMethodOrder
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders
 import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 import org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers
-import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
-import org.springframework.transaction.annotation.Transactional
 
 private val log = KotlinLogging.logger {}
 
-@TestMethodOrder(MethodOrderer.OrderAnnotation::class)
-@Transactional
-@SpringBootTest
-@AutoConfigureMockMvc
-@AutoConfigureRestDocs(uriScheme = "https", uriHost = "localhost")
-class CommonControllerTest() {
-    @Autowired
-    private lateinit var mockMvc: MockMvc
+class CommonControllerTest(
+    @Autowired var developerService: DeveloperService,
+) : CommonMvcTest() {
+    val uri: String = "/api/common"
 
-    @Autowired
-    lateinit var jwtTokenProvider: JwtTokenProvider
+    private val beforeSaveUserId = "commonTester"
+    private val beforeSaveEmail = "commonTester@naver.com"
+
+    @BeforeEach
+    fun beforeEach() {
+
+        developerService.saveDeveloper(
+            Developer(
+                id = null,
+                userId = beforeSaveUserId,
+                email = beforeSaveEmail,
+                pwd = "aa12345^",
+                name = "test",
+                introduction = "안녕하세요",
+                gitUrl = "test git url",
+                webSiteUrl = "test web site url",
+                pictureUrl = "testUrl",
+                point = 0,
+                popularity = 0,
+            )
+        )
+
+    }
 
     @Test
-    fun testLoginSuccess() {
-        val uri: String = "/api/common/refreshtoken"
+    fun testRefreshToken() {
         var objectMapper = ObjectMapper()
         mockMvc.perform(
-            RestDocumentationRequestBuilders.post(uri)
-            /*.header(
-                JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(
-                    authentication = Developer(
-                        null,
-                        "refreshTestId",
-                        "aa12345^",
-                        "refreshTest@naver.com",
-                        "테스터",
-                        null,
-                        null,
-                        null,
-                        null,
-                        0,
-                        0
-                    )
+            RestDocumentationRequestBuilders.get("$uri/refreshtoken")
+                .header(
+                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeSaveUserId)
                 )
-            )*/
         )
             .andExpect(SecurityMockMvcResultMatchers.authenticated())
             .andDo(MockMvcResultHandlers.print())

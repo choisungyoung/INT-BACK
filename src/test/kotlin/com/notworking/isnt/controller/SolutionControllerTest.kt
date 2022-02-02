@@ -1,6 +1,6 @@
 package com.notworking.isnt.controller
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import com.notworking.isnt.CommonMvcTest
 import com.notworking.isnt.controller.issue.dto.SolutionSaveRequestDTO
 import com.notworking.isnt.controller.issue.dto.SolutionUpdateRequestDTO
 import com.notworking.isnt.model.Comment
@@ -11,44 +11,30 @@ import com.notworking.isnt.service.CommentService
 import com.notworking.isnt.service.DeveloperService
 import com.notworking.isnt.service.IssueService
 import com.notworking.isnt.service.SolutionService
+import com.notworking.isnt.support.provider.JwtTokenProvider
 import com.notworking.isnt.support.type.DocType
 import mu.KotlinLogging
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders
 import org.springframework.restdocs.payload.PayloadDocumentation.*
 import org.springframework.restdocs.request.RequestDocumentation.*
-import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
-import org.springframework.transaction.annotation.Transactional
 
 private val log = KotlinLogging.logger {}
 
-@Transactional
-@SpringBootTest
-@AutoConfigureMockMvc
-@AutoConfigureRestDocs(uriScheme = "https", uriHost = "localhost")
 class SolutionControllerTest(
     @Autowired var developerService: DeveloperService,
     @Autowired var issueService: IssueService,
     @Autowired var solutionService: SolutionService,
     @Autowired var commentService: CommentService,
-) {
-    @Autowired
-    private lateinit var mockMvc: MockMvc
-
-    @Autowired
-    private lateinit var mapper: ObjectMapper
-
+) : CommonMvcTest() {
     private var uri: String = "/api/solution"
 
     private val beforeSaveSolutionUserId = "solutionTester"
@@ -139,6 +125,9 @@ class SolutionControllerTest(
             RestDocumentationRequestBuilders.post(uri)
                 .content(mapper.writeValueAsString(saveDto))
                 .contentType(MediaType.APPLICATION_JSON)
+                .header(
+                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeSaveSolutionUserId)
+                )
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andDo(MockMvcResultHandlers.print())
@@ -161,6 +150,9 @@ class SolutionControllerTest(
             MockMvcRequestBuilders.post(uri)
                 .content("{\"content\":\"\",\"docType\":\"TEXT\",\"issueId\":135}")
                 .contentType(MediaType.APPLICATION_JSON)
+                .header(
+                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeSaveSolutionUserId)
+                )
         )
             .andExpect(MockMvcResultMatchers.status().isBadRequest)
             .andDo(MockMvcResultHandlers.print())
@@ -242,6 +234,9 @@ class SolutionControllerTest(
             RestDocumentationRequestBuilders.put(uri)
                 .content(mapper.writeValueAsString(updateDto))
                 .contentType(MediaType.APPLICATION_JSON)
+                .header(
+                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeSaveSolutionUserId)
+                )
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andDo(MockMvcResultHandlers.print())
@@ -261,7 +256,11 @@ class SolutionControllerTest(
     fun testDelete() {
 
         mockMvc.perform(
-            RestDocumentationRequestBuilders.delete("$uri/{id}", beforeSaveSolutionId)
+            RestDocumentationRequestBuilders
+                .delete("$uri/{id}", beforeSaveSolutionId)
+                .header(
+                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeSaveSolutionUserId)
+                )
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andDo(MockMvcResultHandlers.print())
@@ -278,7 +277,11 @@ class SolutionControllerTest(
     @Test
     fun testRecommend() {
         mockMvc.perform(
-            RestDocumentationRequestBuilders.put("$uri/recommend/{id}", beforeSaveSolutionId)
+            RestDocumentationRequestBuilders
+                .put("$uri/recommend/{id}", beforeSaveSolutionId)
+                .header(
+                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeSaveSolutionUserId)
+                )
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andDo(MockMvcResultHandlers.print())
@@ -296,7 +299,11 @@ class SolutionControllerTest(
     @Test
     fun testAdopt() {
         mockMvc.perform(
-            RestDocumentationRequestBuilders.put("$uri/adopt/{id}", beforeSaveSolutionId)
+            RestDocumentationRequestBuilders
+                .put("$uri/adopt/{id}", beforeSaveSolutionId)
+                .header(
+                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeSaveSolutionUserId)
+                )
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andDo(MockMvcResultHandlers.print())

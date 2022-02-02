@@ -6,12 +6,16 @@ import com.notworking.isnt.controller.issue.dto.CommentSaveRequestDTO
 import com.notworking.isnt.controller.issue.dto.CommentUpdateRequestDTO
 import com.notworking.isnt.model.Comment
 import com.notworking.isnt.service.CommentService
+import com.notworking.isnt.support.exception.BusinessException
+import com.notworking.isnt.support.type.Error
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.core.userdetails.User
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 import kotlin.streams.toList
@@ -19,9 +23,6 @@ import kotlin.streams.toList
 @RequestMapping("/api/comment")
 @RestController
 class CommentController(var commentService: CommentService) {
-
-    var userId = "test" // TODO: Authentication 시큐리티 객체에서 받아오는 것으로 수정
-
     /** 댓글목록 오래된 순 */
     @GetMapping("/list/{solutionId}")
     fun findList(
@@ -60,7 +61,11 @@ class CommentController(var commentService: CommentService) {
     /** 이슈 저장 */
     @PostMapping
     fun save(@Valid @RequestBody dto: CommentSaveRequestDTO): ResponseEntity<Void> {
-        commentService.saveComment(dto.toModel(), userId, dto.solutionId)
+
+        var user = SecurityContextHolder.getContext().authentication.principal as User?
+        user ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
+
+        commentService.saveComment(dto.toModel(), user.username, dto.solutionId)
 
         return ResponseEntity.ok().build()
     }
