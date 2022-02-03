@@ -7,6 +7,7 @@ import com.notworking.isnt.support.handler.CustomAuthenticationSuccessHandler
 import com.notworking.isnt.support.provider.JwtTokenProvider
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Configurable
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest
 import org.springframework.context.annotation.Bean
 import org.springframework.http.HttpMethod
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider
@@ -54,10 +55,16 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
 
     override fun configure(web: WebSecurity) {
         web.ignoring()
-            .mvcMatchers(HttpMethod.GET, "/api/issue/**")
-            .mvcMatchers(HttpMethod.GET, "/api/solution/**")
-            .mvcMatchers(HttpMethod.GET, "/api/comment/**")
-            .mvcMatchers("/api/developer/**")
+            .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
+
+            .antMatchers("/docs/**")
+            .antMatchers("/error")
+
+            .antMatchers(HttpMethod.GET, "/api/issue/**")
+            .antMatchers(HttpMethod.GET, "/api/solution/**")
+            .antMatchers(HttpMethod.GET, "/api/comment/**")
+            .antMatchers("/api/developer/**")
+
         //.mvcMatchers("/api/auth/login") // login이 security filter를 사용하므로 WebSecurity ignore하면 안됨
     }
 

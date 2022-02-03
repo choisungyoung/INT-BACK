@@ -150,6 +150,9 @@ class CommentControllerTest(
             MockMvcRequestBuilders.post(uri)
                 .content("{\"content\":\"\",\"solutionId\":135}")
                 .contentType(MediaType.APPLICATION_JSON)
+                .header(
+                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeSaveSolutionUserId)
+                )
         )
             .andExpect(MockMvcResultMatchers.status().isBadRequest)
             .andDo(MockMvcResultHandlers.print())
@@ -216,6 +219,9 @@ class CommentControllerTest(
             RestDocumentationRequestBuilders.put(uri)
                 .content(mapper.writeValueAsString(updateDto))
                 .contentType(MediaType.APPLICATION_JSON)
+                .header(
+                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeSaveSolutionUserId)
+                )
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andDo(MockMvcResultHandlers.print())
@@ -234,7 +240,11 @@ class CommentControllerTest(
     fun testDelete() {
 
         mockMvc.perform(
-            RestDocumentationRequestBuilders.delete("$uri/{id}", beforeSaveCommentId)
+            RestDocumentationRequestBuilders
+                .delete("$uri/{id}", beforeSaveCommentId)
+                .header(
+                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeSaveSolutionUserId)
+                )
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andDo(MockMvcResultHandlers.print())

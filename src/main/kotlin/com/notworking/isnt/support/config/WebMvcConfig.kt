@@ -13,16 +13,17 @@ class WebMvcConfig : WebMvcConfigurer {
     fun addCorsMappings(registry: CorsRegistry) {
         registry.addMapping("/**")
             .allowedOrigins("http://localhost:3000")
+            .exposedHeaders(JwtTokenProvider.ACCESS_TOKEN_NAME, "*")
+            .allowCredentials(true)
             //.allowedOrigins("*")
             .allowedMethods(
                 HttpMethod.GET.name,
                 HttpMethod.POST.name,
                 HttpMethod.PUT.name,
-                HttpMethod.DELETE.name
+                HttpMethod.DELETE.name,
+                HttpMethod.OPTIONS.name
             )
-            .allowCredentials(true)
-            .maxAge(3600)
-            .exposedHeaders(JwtTokenProvider.ACCESS_TOKEN_NAME)
+            .maxAge(32400)
     }
 
 }
