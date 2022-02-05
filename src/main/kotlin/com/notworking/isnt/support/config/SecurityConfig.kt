@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Configurable
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest
 import org.springframework.context.annotation.Bean
 import org.springframework.http.HttpMethod
+import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -80,15 +81,16 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
             ?.antMatchers(HttpMethod.GET, "/api/**")?.permitAll()
             //?.anyRequest()?.permitAll()
             ?.and()
-            ?.formLogin()
-            ?.usernameParameter("username")
-            ?.passwordParameter("password")
-            ?.permitAll()
-            ?.loginPage("/login")
-            ?.loginProcessingUrl("/api/auth/login")
-            ?.successHandler(customAuthenticationSuccessHandler)
-            ?.failureHandler(customAuthenticationFailureHandler)
-            ?.and()
+            /*
+        ?.formLogin()
+        ?.usernameParameter("username")
+        ?.passwordParameter("password")
+        ?.permitAll()
+        ?.loginPage("/login")
+        ?.loginProcessingUrl("/api/auth/login")
+        ?.successHandler(customAuthenticationSuccessHandler)
+        ?.failureHandler(customAuthenticationFailureHandler)
+        ?.and()*/
             ?.addFilterBefore(
                 JwtAuthenticationFilter(jwtTokenProvider),
                 UsernamePasswordAuthenticationFilter::class.java
@@ -101,5 +103,9 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
     ?.addLogoutHandler()*/
     }
 
-
+    @Bean
+    @Throws(Exception::class)
+    override fun authenticationManagerBean(): AuthenticationManager? {
+        return super.authenticationManagerBean()
+    }
 }

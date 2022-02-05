@@ -2,9 +2,12 @@ package com.notworking.isnt.support.handler
 
 import com.notworking.isnt.controller.dto.ErrorResponse
 import com.notworking.isnt.support.exception.BusinessException
+import com.notworking.isnt.support.type.Error
 import mu.KotlinLogging
 import org.hibernate.exception.ConstraintViolationException
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.AuthenticationException
 import org.springframework.validation.BindException
 import org.springframework.web.HttpRequestMethodNotSupportedException
 import org.springframework.web.bind.MethodArgumentNotValidException
@@ -130,6 +133,22 @@ class GlobalExceptionHandler {
                 code = e.error.code, title = "업무처리 에러", message = e.error.message, detailMessage = e.message.orEmpty()
             )
         return ResponseEntity.badRequest().body(response)
+    }
+
+    /**
+     * 업무처리 중 에러를 발생한 경우
+     */
+    @ExceptionHandler(AuthenticationException::class)
+    protected fun authenticationException(e: AuthenticationException): ResponseEntity<ErrorResponse> {
+        log.error("authenticationException", e)
+        val response: ErrorResponse =
+            ErrorResponse(
+                code = Error.AUTH_FAILED.code,
+                title = "로그인 에러",
+                message = Error.AUTH_FAILED.message,
+                detailMessage = e.message.orEmpty()
+            )
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response)
     }
 
     @ExceptionHandler(Exception::class)

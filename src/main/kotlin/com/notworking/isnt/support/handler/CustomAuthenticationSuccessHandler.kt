@@ -60,6 +60,7 @@ class CustomAuthenticationSuccessHandler(
                 jwtTokenProvider.buildRefreshToken(authentication)
             )
         )
+
         response.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         response.addHeader("Access-Control-Allow-Headers", JwtTokenProvider.ACCESS_TOKEN_NAME);
         response.addHeader("Access-Control-Max-Age", "1728000");
