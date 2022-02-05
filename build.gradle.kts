@@ -52,6 +52,10 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+	//implementation("io.jsonwebtoken:jjwt:0.9.1")
+	implementation("io.jsonwebtoken:jjwt-api:0.11.2")
+	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.2")
+	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.2")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation( "io.github.microutils:kotlin-logging-jvm:2.1.20")
@@ -60,6 +64,7 @@ dependencies {
 	runtimeOnly("mysql:mysql-connector-java")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.security:spring-security-test")
+
 
 	implementation("com.querydsl:querydsl-jpa")
 	kapt(group = "com.querydsl", name = "querydsl-apt", classifier = "jpa")
@@ -88,6 +93,7 @@ tasks.withType<Test> {
 	useJUnitPlatform()
 }
 */
+
 tasks {
 	val snippetsDir = file("$buildDir/generated-snippets")
 
@@ -96,6 +102,7 @@ tasks {
 	}
 
 	test {
+		//exclude("**/*")
 		useJUnitPlatform()
 		systemProperty("org.springframework.restdocs.outputDir", snippetsDir)
 		outputs.dir(snippetsDir)

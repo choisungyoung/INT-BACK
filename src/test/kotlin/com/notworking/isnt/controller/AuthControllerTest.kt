@@ -1,37 +1,42 @@
 package com.notworking.isnt.controller
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.notworking.isnt.CommonMvcTest
+import com.notworking.isnt.controller.issue.dto.AuthLoginRequestDTO
 import com.notworking.isnt.model.Developer
 import com.notworking.isnt.service.DeveloperService
 import mu.KotlinLogging
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.MethodOrderer
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestMethodOrder
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders
-import org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers
-import org.springframework.test.web.servlet.MockMvc
+import org.springframework.http.MediaType
+import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders
+import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
+import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
-import org.springframework.transaction.annotation.Transactional
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 
 private val log = KotlinLogging.logger {}
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
-@Transactional
-@SpringBootTest
-@AutoConfigureMockMvc
-class AuthControllerTest() {
-    @Autowired
-    private lateinit var mockMvc: MockMvc
+class AuthControllerTest() : CommonMvcTest() {
 
     @Autowired
-    private lateinit var developerService: DeveloperService
+    lateinit var developerService: DeveloperService
 
-    private var loginUsername: String = "testLogin"
-    private var loginEmail: String = "testLogin@naver.com"
-    private var loginPassword: String = "aa12345^"
+    var loginDto = AuthLoginRequestDTO(
+        "testLogin",
+        "aa12345^"
+    )
 
-    private var failLoginUsername: String = "testLogin@naver.com"
-    private var failLoginPassword: String = "aa12345^^"
+    var loginFailDto = AuthLoginRequestDTO(
+        "testLogin",
+        "aa12345^^"
+    )
 
     @BeforeEach
     fun beforeEach() {
@@ -40,9 +45,9 @@ class AuthControllerTest() {
         developerService.saveDeveloper(
             Developer(
                 id = null,
-                userId = loginUsername,
-                email = loginEmail,
-                pwd = loginPassword,
+                userId = loginDto.username,
+                email = "loginEmail@naver.com",
+                pwd = loginDto.password,
                 name = "sungyoung",
                 introduction = "안녕하세요",
                 gitUrl = "test git url",
@@ -54,9 +59,54 @@ class AuthControllerTest() {
         )
     }
 
-    @Order(1)
     @Test
     fun testLoginSuccess() {
+        val uri: String = "/api/auth/login"
+        var objectMapper = ObjectMapper()
+        mockMvc.perform(
+            RestDocumentationRequestBuilders.post(uri)
+                .content(mapper.writeValueAsString(loginDto))
+                .contentType(MediaType.APPLICATION_JSON)
+
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andDo(MockMvcResultHandlers.print())
+            .andDo(
+                document(
+                    "login",
+                    responseFields(
+                        fieldWithPath("userId").description("유저아이디"),
+                        fieldWithPath("email").description("이메일"),
+                        fieldWithPath("name").description("이름"),
+                        fieldWithPath("introduction").description("소개"),
+                        fieldWithPath("gitUrl").description("작성자 깃주소"),
+                        fieldWithPath("webSiteUrl").description("작성자 웹사이트(블로그) 주소"),
+                        fieldWithPath("pictureUrl").description("사진경로"),
+                        fieldWithPath("point").description("점수"),
+                        fieldWithPath("popularity").description("인기도"),
+                    )
+                )
+            )
+    }
+
+    @Test
+    fun testLoginFail() {
+        val uri: String = "/api/auth/login"
+        var objectMapper = ObjectMapper()
+        mockMvc.perform(
+            MockMvcRequestBuilders.post(uri)
+                .content(mapper.writeValueAsString(loginFailDto))
+                .contentType(MediaType.APPLICATION_JSON)
+
+        )
+            .andExpect(MockMvcResultMatchers.status().isUnauthorized)
+            .andDo(MockMvcResultHandlers.print())
+    }
+
+    /*
+    @Order(1)
+    @Test
+    fun testSecurityLoginSuccess() {
         val uri: String = "/api/auth/login"
 
         mockMvc.perform(
@@ -77,4 +127,6 @@ class AuthControllerTest() {
             .andExpect(SecurityMockMvcResultMatchers.unauthenticated())
             .andDo(MockMvcResultHandlers.print())
     }
+
+     */
 }

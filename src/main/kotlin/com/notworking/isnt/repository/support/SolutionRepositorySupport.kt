@@ -46,7 +46,7 @@ class SolutionRepositorySupport(
     }
 
     /**
-     * 최신순 솔루션 조회 (이슈상세에서 솔루션 추가조회시 사용)
+     * 최신순 솔루션 조회
      * */
     fun findSolutionByIssueId(pageable: Pageable, issueId: Long): Page<Solution> {
         var result = query.selectFrom(solution)

@@ -1,8 +1,10 @@
 package com.notworking.isnt.service.impl
 
+import com.notworking.isnt.model.Recommend
 import com.notworking.isnt.model.Solution
 import com.notworking.isnt.repository.CommentRepository
 import com.notworking.isnt.repository.IssueRepository
+import com.notworking.isnt.repository.RecommendRepository
 import com.notworking.isnt.repository.SolutionRepository
 import com.notworking.isnt.repository.support.SolutionRepositorySupport
 import com.notworking.isnt.service.DeveloperService
@@ -23,6 +25,7 @@ class SolutionServiceImpl(
     val solutionRepository: SolutionRepository,
     val solutionRepositorySupport: SolutionRepositorySupport,
     val commentRepository: CommentRepository,
+    val recommendRepository: RecommendRepository,
 
     ) :
     SolutionService {
@@ -106,5 +109,53 @@ class SolutionServiceImpl(
         //코멘트 조회
         solution.comments = commentRepository.findAllBySolutionId(id)
         solutionRepository.delete(solution) //코멘트도 전의되어 삭제
+    }
+
+    @Transactional
+    override fun recommendSolution(solutionId: Long, userId: String) {
+
+        var solution = solutionRepository.findById(solutionId).orElseThrow {
+            throw BusinessException(Error.SOLUTION_NOT_FOUND)
+        }
+        var developer =
+            developerService.findDeveloperByUserId(userId) ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
+
+        // 이미 추천한 솔루션인지 체크
+        var recommend = recommendRepository.findAllBySolutionAndDeveloper(solution, developer)
+
+        if (recommend == null) {
+            // 이미 추천한 이력이 없는 경우 새로 추가
+            recommend = Recommend(null)
+            solution?.recommendationCount = solution?.recommendationCount!!.plus(1)
+
+            recommend.solution = solution
+            recommend.developer = developer
+            recommendRepository.save(recommend)
+        } else {
+            // 이미 추천한 이력이 있는 경우 마이너스
+            solution?.recommendationCount =
+                solution?.recommendationCount!!.plus(-1)
+            recommendRepository.delete(recommend)
+        }
+
+
+    }
+
+    @Transactional
+    override fun adoptSolution(solutionId: Long, userId: String): Boolean {
+
+        var solution = solutionRepository.findById(solutionId).orElseThrow {
+            throw BusinessException(Error.SOLUTION_NOT_FOUND)
+        }
+        if (solution.developer.id != solutionId) {
+            // throw BusinessException(Error.SOLUTION_NOT_DEVELOPER)
+            // TODO: 로그인 되면 주석제거하기
+        }
+        // 이미 채택된 솔루션이 있는지 확인?
+
+        // 채택 토글
+        solution.adoptYn = !solution.adoptYn
+
+        return solution.adoptYn
     }
 }

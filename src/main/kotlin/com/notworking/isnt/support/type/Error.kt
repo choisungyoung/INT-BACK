@@ -13,8 +13,9 @@ enum class Error(
     HANDLE_ACCESS_DENIED(403, "CMN006", "Access is Denied"),
 
     // Auth(login)
-    LOGIN_INPUT_INVALID(HttpStatus.BAD_REQUEST.value(), "ATH001", "로그인 입력값이 유효하지 않습니다."),
-    LOGIN_FAILED(HttpStatus.UNAUTHORIZED.value(), "ATH002", "이메일 혹은 패스워드가 틀렸습니다."),
+    AUTH_INPUT_INVALID(HttpStatus.BAD_REQUEST.value(), "ATH001", "로그인 입력값이 유효하지 않습니다."),
+    AUTH_FAILED(HttpStatus.UNAUTHORIZED.value(), "ATH002", "이메일 혹은 패스워드가 틀렸습니다."),
+    AUTH_INVALID_TOKEN(HttpStatus.UNAUTHORIZED.value(), "ATH003", "인증 토큰이 유효하지 않습니다."),
 
     // Developer
     DEVELOPER_INPUT_INVALID(HttpStatus.BAD_REQUEST.value(), "DEV001", "사용자 정보가 유효하지 않습니다."),
@@ -26,6 +27,7 @@ enum class Error(
 
     // Solution
     SOLUTION_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "SLT001", "존재하지 않는 솔루션입니다."),
+    SOLUTION_NOT_DEVELOPER(HttpStatus.BAD_REQUEST.value(), "SLT002", "솔루션 작성자가 아닙니다."),
 
     // Comment
     COMMENT_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "CMT001", "존재하지 않는 이슈입니다."),

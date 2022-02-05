@@ -6,6 +6,29 @@ endif::[]
 :toclevels: 2
 :sectlinks:
 
+[[resources-authentication]]
+== Authentication
+
+[[resources-authentication-login]]
+=== login
+==== HTTP request
+include::{snippets}/login/http-request.adoc[]
+
+==== HTTP response
+include::{snippets}/login/http-response.adoc[]
+include::{snippets}/login/response-fields.adoc[]
+
+[[resources-authentication-refreshtoken]]
+=== refresh token
+==== HTTP request
+include::{snippets}/refreshtoken/http-request.adoc[]
+
+==== HTTP response
+include::{snippets}/refreshtoken/http-response.adoc[]
+include::{snippets}/refreshtoken/response-fields.adoc[]
+
+
+
 
 [[resources-developer]]
 == Developer
@@ -168,6 +191,28 @@ include::{snippets}/delete-solution/http-request.adoc[]
 
 ==== HTTP response
 include::{snippets}/delete-solution/http-response.adoc[]
+
+
+[[resources-solution-recommend]]
+=== solution 추천
+
+==== HTTP request
+include::{snippets}/recommend-solution/path-parameters.adoc[]
+include::{snippets}/recommend-solution/http-request.adoc[]
+
+==== HTTP response
+include::{snippets}/recommend-solution/http-response.adoc[]
+
+
+[[resources-solution-adopt]]
+=== solution 채택
+
+==== HTTP request
+include::{snippets}/adopt-solution/path-parameters.adoc[]
+include::{snippets}/adopt-solution/http-request.adoc[]
+
+==== HTTP response
+include::{snippets}/adopt-solution/http-response.adoc[]
 
 
 

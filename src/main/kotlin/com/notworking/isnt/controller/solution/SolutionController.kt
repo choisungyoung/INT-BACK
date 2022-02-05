@@ -7,12 +7,16 @@ import com.notworking.isnt.controller.issue.dto.SolutionSaveRequestDTO
 import com.notworking.isnt.controller.issue.dto.SolutionUpdateRequestDTO
 import com.notworking.isnt.model.Solution
 import com.notworking.isnt.service.SolutionService
+import com.notworking.isnt.support.exception.BusinessException
+import com.notworking.isnt.support.type.Error
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.core.userdetails.User
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 import kotlin.streams.toList
@@ -80,15 +84,19 @@ class SolutionController(var solutionService: SolutionService) {
         return ResponseEntity.ok().body(PageImpl<SolutionFindResponseDTO>(list, pageable, page.totalElements))
     }
 
-    /** 이슈 저장 */
+    /** 솔루션 저장 */
     @PostMapping
     fun save(@Valid @RequestBody dto: SolutionSaveRequestDTO): ResponseEntity<Void> {
-        solutionService.saveSolution(dto.toModel(), userId, dto.issueId)
+
+        var user = SecurityContextHolder.getContext().authentication.principal as User?
+        user ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
+
+        solutionService.saveSolution(dto.toModel(), user.username, dto.issueId)
 
         return ResponseEntity.ok().build()
     }
 
-    /** 이슈 수정 */
+    /** 솔루션 수정 */
     @PutMapping
     fun update(@RequestBody dto: SolutionUpdateRequestDTO): ResponseEntity<Void> {
         solutionService.updateSolution(dto.toModel())
@@ -96,12 +104,25 @@ class SolutionController(var solutionService: SolutionService) {
         return ResponseEntity.ok().build()
     }
 
-
-    /** 이슈 삭제 */
+    /** 솔루션 삭제 */
     @DeleteMapping("/{id}")
     fun delete(@PathVariable id: Long): ResponseEntity<Void> {
         solutionService.deleteSolution(id)
 
         return ResponseEntity.ok().build()
+    }
+
+    /** 솔루션 추천  */
+    @PutMapping("/recommend/{id}")
+    fun recommend(@PathVariable id: Long): ResponseEntity<Void> {
+        solutionService.recommendSolution(id, userId)
+        return ResponseEntity.ok().build()
+    }
+
+    /** 솔루션 채택  */
+    @PutMapping("/adopt/{id}")
+    fun adopt(@PathVariable id: Long): ResponseEntity<Boolean> {
+        var adoptYn = solutionService.adoptSolution(id, userId)
+        return ResponseEntity.ok().body(adoptYn)
     }
 }

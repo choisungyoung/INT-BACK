@@ -10,6 +10,7 @@ import com.notworking.isnt.service.IssueService
 import com.notworking.isnt.service.SolutionService
 import com.notworking.isnt.support.exception.BusinessException
 import com.notworking.isnt.support.type.Error
+import com.querydsl.core.Tuple
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -35,18 +36,9 @@ class IssueServiceImpl(
     }
 
 
-    override fun findAllIssueByTitleContent(pageable: Pageable, query: String?): Page<Issue> {
-        var page: Page<Issue>
-        if (query == null) {
-            page = issueRepository.findAll(pageable)
-        } else {
-            page = issueRepositorySupport.findAllIssueByTitleContentContains(pageable, query)
-        }
+    override fun findAllIssue(pageable: Pageable, query: String?): Page<Tuple> {
 
-        page.content.forEach {
-            it.hashtags = hashtagRepository.findAllByIssueId(it.id)
-        }
-        return page
+        return issueRepositorySupport.findAllIssuePage(pageable, query)
     }
 
 

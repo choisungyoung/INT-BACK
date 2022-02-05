@@ -1,11 +1,13 @@
 package com.notworking.isnt.repository
 
 import com.notworking.isnt.repository.support.SolutionRepositorySupport
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.domain.PageRequest
 
+@Disabled
 @SpringBootTest
 internal class SolutionRepositorySupportTest(
     @Autowired var solutionRepositorySupport: SolutionRepositorySupport,

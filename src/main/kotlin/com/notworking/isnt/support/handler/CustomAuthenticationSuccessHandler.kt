@@ -1,19 +1,30 @@
 package com.notworking.isnt.support.handler
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.notworking.isnt.controller.dto.ResponseDTO
-import org.springframework.http.HttpStatus
+import com.notworking.isnt.controller.developer.dto.DeveloperFindResponseDTO
+import com.notworking.isnt.model.Developer
+import com.notworking.isnt.repository.DeveloperRepository
+import com.notworking.isnt.support.exception.BusinessException
+import com.notworking.isnt.support.provider.JwtTokenProvider
+import com.notworking.isnt.support.type.Error
+import com.notworking.isnt.support.util.ResponseUtil
+import org.springframework.core.env.Environment
 import org.springframework.security.core.Authentication
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler
 import org.springframework.stereotype.Component
 import java.io.IOException
 import javax.servlet.ServletException
+import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 
 @Component
-class CustomAuthenticationSuccessHandler : SimpleUrlAuthenticationSuccessHandler() {
+class CustomAuthenticationSuccessHandler(
+    val environment: Environment,
+    var developerRepository: DeveloperRepository,
+    var jwtTokenProvider: JwtTokenProvider
+) : SimpleUrlAuthenticationSuccessHandler() {
     @Override
     @Throws(ServletException::class, IOException::class)
     override fun onAuthenticationSuccess(
@@ -21,15 +32,39 @@ class CustomAuthenticationSuccessHandler : SimpleUrlAuthenticationSuccessHandler
         authentication: Authentication?
     ) {
         val mapper = ObjectMapper() //JSON 변경용
-        val responseDTO = ResponseDTO()
-        responseDTO.code = HttpStatus.OK.value()
-        //val prevPage = request.session.getAttribute("prevPage").toString() //이전 페이지 가져오기
-        val items: MutableMap<String, String> = HashMap()
-        //items["url"] = prevPage // 이전 페이지 저장
-        responseDTO.item = items
-        response.characterEncoding = "UTF-8"
-        response.status = HttpServletResponse.SC_OK
-        response.writer.print(mapper.writeValueAsString(responseDTO))
+
+        authentication ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
+        var userId = (authentication.principal as Developer).userId
+        var developerDto = developerRepository.findByUserId(userId)?.let {
+            DeveloperFindResponseDTO(
+                userId = it.userId,
+                email = it.email,
+                name = it.name,
+                introduction = it.introduction,
+                gitUrl = it.gitUrl,
+                webSiteUrl = it.webSiteUrl,
+                pictureUrl = it.pictureUrl,
+                point = it.point,
+                popularity = it.popularity,
+            )
+        }
+        // TODO: 로그인 응답 전체적으로 수정 필요..
+        ResponseUtil.setResponse(response)
+        response.writer.print(mapper.writeValueAsString(developerDto))
+        developerDto ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
+
+        response.addHeader(JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(authentication))
+        response.addCookie(
+            Cookie(
+                JwtTokenProvider.REFRESH_TOKEN_NAME,
+                jwtTokenProvider.buildRefreshToken(authentication)
+            )
+        )
+
+        response.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        response.addHeader("Access-Control-Allow-Headers", JwtTokenProvider.ACCESS_TOKEN_NAME);
+        response.addHeader("Access-Control-Max-Age", "1728000");
+
         response.writer.flush()
     }
 

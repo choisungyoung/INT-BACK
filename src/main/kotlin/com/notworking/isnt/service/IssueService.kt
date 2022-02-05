@@ -1,6 +1,7 @@
 package com.notworking.isnt.service
 
 import com.notworking.isnt.model.Issue
+import com.querydsl.core.Tuple
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 
@@ -10,7 +11,7 @@ interface IssueService {
 
     fun findAllIssue(pageable: Pageable): Page<Issue>
 
-    fun findAllIssueByTitleContent(pageable: Pageable, query: String?): Page<Issue>
+    fun findAllIssue(pageable: Pageable, query: String?): Page<Tuple>
 
     fun findAllLatestOrder(): List<Issue>
 

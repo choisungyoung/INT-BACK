@@ -22,12 +22,21 @@ spring:
       ddl-auto: update
     database: mysql
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+
   datasource:
     #url: jdbc:mysql://localhost:3306/INT_DB?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC&&allowPublicKeyRetrieval=true&&validationQuery="select 1"
     url: jdbc:mysql://18.217.155.120:3306/INT_DB?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC&&allowPublicKeyRetrieval=true&&validationQuery="select 1"
     username: INT_ADMIN
     password: aa12345^
     driver-class-name: com.mysql.cj.jdbc.Driver
+
+  access-token:
+    secret: Y2hsdGpkZHVkZmJnaHdsc2ludGFjY2Vzc3Rva2Vuc2VjcmV0Y2hsdGpkZHVkZmJnaHdsc2ludGFjY2Vzc3Rva2Vuc2VjcmV0  #chltjddudfbghwlsintaccesstokensecretchltjddudfbghwlsintaccesstokensecret #개발
+    expiration-time: 30
+  refresh-token:
+    secret: ZmJnaHdsc2NobHRqZGR1ZGludHJlZmVzaHRva2Vuc2VjcmV0ZmJnaHdsc2NobHRqZGR1ZGludHJlZmVzaHRva2Vuc2VjcmV0  #fbghwlschltjddudintrefeshtokensecretfbghwlschltjddudintrefeshtokensecret  #개발
+    expiration-time: 4320         #3일
+
   security:
     oauth2:
       client:

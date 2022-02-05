@@ -10,6 +10,7 @@ import javax.transaction.Transactional
 
 private val log = KotlinLogging.logger {}
 
+@Disabled
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 @Transactional
 @SpringBootTest
