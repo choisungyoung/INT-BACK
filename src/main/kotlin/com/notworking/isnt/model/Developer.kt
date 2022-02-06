@@ -15,9 +15,10 @@ data class Developer(
     var id: Long?,
     @Column(unique = true)
     var userId: String,
+    @Column(unique = true)
+    var name: String,
     var pwd: String,
     var email: String,
-    var name: String,
     var introduction: String?,
 
     var gitUrl: String?,

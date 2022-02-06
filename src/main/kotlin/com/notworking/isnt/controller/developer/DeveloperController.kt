@@ -1,5 +1,6 @@
 package com.notworking.isnt.controller.developer
 
+import com.notworking.isnt.controller.developer.dto.DeveloperCheckResponseDTO
 import com.notworking.isnt.controller.developer.dto.DeveloperFindResponseDTO
 import com.notworking.isnt.controller.developer.dto.DeveloperSaveRequestDTO
 import com.notworking.isnt.controller.developer.dto.DeveloperUpdateRequestDTO
@@ -16,9 +17,9 @@ import kotlin.streams.toList
 class DeveloperController(var developerService: DeveloperService) {
 
     /** 사용자 조회 */
-    @GetMapping("/{userId}")
-    fun find(@PathVariable userId: String): ResponseEntity<DeveloperFindResponseDTO> {
-        var dto: DeveloperFindResponseDTO? = developerService.findDeveloperByUserId(userId)?.let {
+    @GetMapping("/{name}")
+    fun find(@PathVariable name: String): ResponseEntity<DeveloperFindResponseDTO> {
+        var dto: DeveloperFindResponseDTO? = developerService.findDeveloperByName(name)?.let {
             DeveloperFindResponseDTO(
                 userId = it.userId,
                 email = it.email,
@@ -75,12 +76,25 @@ class DeveloperController(var developerService: DeveloperService) {
         return ResponseEntity.ok().build()
     }
 
-
     /** 사용자 삭제 */
     @DeleteMapping("/{email}")
     fun delete(@PathVariable email: String): ResponseEntity<Void> {
         developerService.deleteDeveloper(email)
 
         return ResponseEntity.ok().build()
+    }
+
+    /** 사용자 닉네임 중복체크 */
+    @GetMapping("/checkName/{name}")
+    fun checkName(@PathVariable name: String): ResponseEntity<DeveloperCheckResponseDTO> {
+        return ResponseEntity.ok()
+            .body(DeveloperCheckResponseDTO(duplicateYn = developerService.existDeveloperByName(name)))
+    }
+
+    /** 사용자 아이디 중복체크 */
+    @GetMapping("/checkUserId/{userId}")
+    fun checkUserId(@PathVariable userId: String): ResponseEntity<DeveloperCheckResponseDTO> {
+        return ResponseEntity.ok()
+            .body(DeveloperCheckResponseDTO(duplicateYn = developerService.existDeveloperByUserId(userId)))
     }
 }

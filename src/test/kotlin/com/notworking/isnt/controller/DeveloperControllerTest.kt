@@ -42,6 +42,7 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
     private var uri: String = "/api/developer";
 
     private val beforeDeveloperId: String = "developerBeforeTest"
+    private val beforeDeveloperName: String = "developerBeforeTestName"
     private val saveDeveloperId: String = "developerSaveTest"
 
     private val findDeveloperId: String = "developerBeforeTest"
@@ -52,7 +53,7 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
             userId = saveDeveloperId,
             email = "saveDeveloperEmail@naver.com",
             password = "aa12345^",
-            name = "테스터01",
+            name = "saveDeveloperTester",
             introduction = "안녕하세요",
             gitUrl = "test git url",
             webSiteUrl = "test web site url",
@@ -80,7 +81,7 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
                 userId = beforeDeveloperId,
                 email = "beforeEachDeveloperEmail@naver.com",
                 pwd = "aa12345^",
-                name = "test",
+                name = beforeDeveloperName,
                 introduction = "안녕하세요",
                 gitUrl = "test git url",
                 webSiteUrl = "test web site url",
@@ -245,6 +246,50 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
                     pathParameters(
                         parameterWithName("userId").description("유저 아이디")
                     ),
+                )
+            )
+    }
+
+
+    @Test
+    fun testCheckName() {
+
+        mockMvc.perform(
+            RestDocumentationRequestBuilders.get("$uri/checkName/{name}", beforeDeveloperName)
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andDo(MockMvcResultHandlers.print())
+            .andDo(
+                document(
+                    "checkName-developer",
+                    pathParameters(
+                        parameterWithName("name").description("유저 이름")
+                    ),
+                    responseFields(
+                        fieldWithPath("duplicateYn").description("중복여부"),
+                    )
+                )
+            )
+    }
+
+
+    @Test
+    fun testCheckUserId() {
+
+        mockMvc.perform(
+            RestDocumentationRequestBuilders.get("$uri/checkUserId/{userId}", beforeDeveloperId)
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andDo(MockMvcResultHandlers.print())
+            .andDo(
+                document(
+                    "checkUserId-developer",
+                    pathParameters(
+                        parameterWithName("userId").description("유저 아이디")
+                    ),
+                    responseFields(
+                        fieldWithPath("duplicateYn").description("중복여부"),
+                    )
                 )
             )
     }

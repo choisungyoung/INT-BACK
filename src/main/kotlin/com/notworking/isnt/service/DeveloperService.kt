@@ -8,9 +8,15 @@ interface DeveloperService {
 
     fun findAllDeveloper(): List<Developer>
 
+    fun findDeveloperByName(name: String): Developer?
+
     fun findDeveloperByUserId(userId: String): Developer?
 
     fun updateDeveloper(developer: Developer)
 
     fun deleteDeveloper(userId: String)
+
+    fun existDeveloperByUserId(userId: String): Boolean
+
+    fun existDeveloperByName(name: String): Boolean
 }

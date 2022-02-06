@@ -28,6 +28,10 @@ class DeveloperServiceImpl(
         return developerRepository.findAll().toList()
     }
 
+    override fun findDeveloperByName(name: String): Developer? {
+        return developerRepository.findByName(name)
+    }
+
     override fun findDeveloperByUserId(userId: String): Developer? {
         return developerRepository.findByUserId(userId)
     }
@@ -51,4 +55,11 @@ class DeveloperServiceImpl(
         developerRepository.delete(developer)
     }
 
+    override fun existDeveloperByUserId(userId: String): Boolean {
+        return developerRepository.existsByUserId(userId)
+    }
+
+    override fun existDeveloperByName(name: String): Boolean {
+        return developerRepository.existsByName(name)
+    }
 }
