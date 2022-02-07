@@ -33,7 +33,6 @@ data class Developer(
 
     fun update(developer: Developer): Developer? {
         this.email = developer.email
-        this.pwd = developer.pwd
         this.name = developer.name
         this.introduction = developer.introduction
         this.pictureUrl = developer.pictureUrl

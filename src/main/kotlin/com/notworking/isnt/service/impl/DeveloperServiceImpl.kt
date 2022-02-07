@@ -46,6 +46,15 @@ class DeveloperServiceImpl(
     }
 
     @Transactional
+    override fun updatePasswordDeveloper(userId: String, password: String) {
+        var developer: Developer? = developerRepository.findByUserId(userId)
+
+        // null일 경우 예외처리
+        developer ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
+        developer.pwd = passwordEncoder.encode(password)
+    }
+
+    @Transactional
     override fun deleteDeveloper(userId: String) {
         var developer: Developer? = developerRepository.findByUserId(userId)
 

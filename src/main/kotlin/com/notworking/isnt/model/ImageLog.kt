@@ -21,7 +21,6 @@ data class ImageLog(
     // request method
     var requestMethod: String?,
     // request body
-    @Column(length = 1024)
     var requestBody: String?,
     // request header
     var requestHeader: String?,
@@ -32,6 +31,7 @@ data class ImageLog(
     var responseStatus: String? = null
 
     // response body
+    @Column(length = 1024)
     var responseBody: String? = null
 
     // response header

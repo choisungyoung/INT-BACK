@@ -1,9 +1,6 @@
 package com.notworking.isnt.controller.developer
 
-import com.notworking.isnt.controller.developer.dto.DeveloperCheckResponseDTO
-import com.notworking.isnt.controller.developer.dto.DeveloperFindResponseDTO
-import com.notworking.isnt.controller.developer.dto.DeveloperSaveRequestDTO
-import com.notworking.isnt.controller.developer.dto.DeveloperUpdateRequestDTO
+import com.notworking.isnt.controller.developer.dto.*
 import com.notworking.isnt.service.DeveloperService
 import com.notworking.isnt.support.exception.BusinessException
 import com.notworking.isnt.support.type.Error
@@ -72,6 +69,15 @@ class DeveloperController(var developerService: DeveloperService) {
     @PutMapping
     fun update(@RequestBody dto: DeveloperUpdateRequestDTO): ResponseEntity<Void> {
         developerService.updateDeveloper(dto.toModel())
+
+        return ResponseEntity.ok().build()
+    }
+
+    /** 사용자 패스워드 수정 */
+    @PutMapping("/password")
+    fun updatePassword(@RequestBody dto: DeveloperUpdatePasswordRequestDTO): ResponseEntity<Void> {
+
+        developerService.updatePasswordDeveloper(dto.userId, dto.password)
 
         return ResponseEntity.ok().build()
     }

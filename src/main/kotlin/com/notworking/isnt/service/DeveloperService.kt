@@ -14,6 +14,8 @@ interface DeveloperService {
 
     fun updateDeveloper(developer: Developer)
 
+    fun updatePasswordDeveloper(userId: String, password: String)
+
     fun deleteDeveloper(userId: String)
 
     fun existDeveloperByUserId(userId: String): Boolean

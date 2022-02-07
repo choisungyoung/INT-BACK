@@ -87,6 +87,28 @@ include::{snippets}/delete-developer/http-request.adoc[]
 include::{snippets}/delete-developer/http-response.adoc[]
 
 
+[[resources-developer-check-userid]]
+=== developer 아이디 중복확인
+
+==== HTTP request
+include::{snippets}/checkUserId-developer/path-parameters.adoc[]
+include::{snippets}/checkUserId-developer/http-request.adoc[]
+
+==== HTTP response
+include::{snippets}/checkUserId-developer/http-response.adoc[]
+
+
+[[resources-developer-check-name]]
+=== developer 이름 중복확인
+
+==== HTTP request
+include::{snippets}/checkName-developer/path-parameters.adoc[]
+include::{snippets}/checkName-developer/http-request.adoc[]
+
+==== HTTP response
+include::{snippets}/checkName-developer/http-response.adoc[]
+
+
 
 [[resources-issue]]
 == Issue

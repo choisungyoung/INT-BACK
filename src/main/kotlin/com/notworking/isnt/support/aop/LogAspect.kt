@@ -6,6 +6,7 @@ import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.annotation.Around
 import org.aspectj.lang.annotation.Aspect
 import org.slf4j.LoggerFactory
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
 import org.springframework.web.context.request.RequestContextHolder
@@ -18,7 +19,7 @@ class LogAspect(
     var imageLogService: ImageLogService
 ) {
     private val log = LoggerFactory.getLogger(javaClass)
-    private val MAX_LENGTH = 250
+    private val MAX_LENGTH = 1000
 
     @Around("within(@org.springframework.web.bind.annotation.RestController *)")
     @Throws(Throwable::class)
@@ -37,20 +38,24 @@ class LogAspect(
                 buildMethodArguments(joinPoint)
             )
 
-            saveImageLog = imageLogService.saveImageLog(
-                ImageLog(
-                    id = null,
-                    userId = "",
-                    className = joinPoint.target.javaClass.toString(),
-                    methodName = joinPoint.staticPart.signature.name,
-                    requestIp = request.remoteHost,
-                    requestUrl = request.requestURI,
-                    requestMethod = request.method,
-                    requestBody = "",
-                    requestHeader = "",
-                    requestParam = request.queryString,
+            try {
+                saveImageLog = imageLogService.saveImageLog(
+                    ImageLog(
+                        id = null,
+                        userId = "",
+                        className = joinPoint.target.javaClass.toString(),
+                        methodName = joinPoint.staticPart.signature.name,
+                        requestIp = request.remoteAddr,
+                        requestUrl = request.requestURI,
+                        requestMethod = request.method,
+                        requestBody = "",
+                        requestHeader = "",
+                        requestParam = request.queryString,
+                    )
                 )
-            )
+            } catch (e: Exception) {
+
+            }
 
             start = System.currentTimeMillis()
             proceed = joinPoint.proceed() as Object
@@ -59,21 +64,25 @@ class LogAspect(
             log.info("${joinPoint.signature} excuted in ${executionTime}ms")
             return proceed
         } catch (e: Exception) {
-            val response =
-                (RequestContextHolder.currentRequestAttributes() as ServletRequestAttributes).response
+            try {
+                val response =
+                    (RequestContextHolder.currentRequestAttributes() as ServletRequestAttributes).response
 
-            if (saveImageLog != null && response != null) {
-                saveImageLog.responseStatus = response.status.toString()
+                if (saveImageLog != null && response != null) {
+                    saveImageLog.responseStatus = HttpStatus.INTERNAL_SERVER_ERROR.toString()
 
-                if (e.stackTraceToString().length < MAX_LENGTH)
-                    saveImageLog.errorStack = e.stackTraceToString()
-                else {
-                    saveImageLog.errorStack = e.stackTraceToString().substring(0, MAX_LENGTH)
+                    if (e.stackTraceToString().length < MAX_LENGTH)
+                        saveImageLog.errorStack = e.stackTraceToString()
+                    else {
+                        saveImageLog.errorStack = e.stackTraceToString().substring(0, MAX_LENGTH)
+                    }
+
+                    imageLogService.updateImageLog(saveImageLog)
                 }
+            } catch (e: Exception) {
 
-                imageLogService.updateImageLog(saveImageLog)
             }
-            return proceed
+            throw e
         } finally {
             log.debug(
                 "▶▶ END CONTROLLER RESULT : {})", proceed

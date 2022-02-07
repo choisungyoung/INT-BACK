@@ -1,52 +1,39 @@
 package com.notworking.isnt.controller
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import com.notworking.isnt.CommonMvcTest
 import com.notworking.isnt.controller.developer.dto.DeveloperSaveRequestDTO
+import com.notworking.isnt.controller.developer.dto.DeveloperUpdatePasswordRequestDTO
 import com.notworking.isnt.controller.developer.dto.DeveloperUpdateRequestDTO
 import com.notworking.isnt.model.Developer
 import com.notworking.isnt.service.DeveloperService
+import com.notworking.isnt.support.provider.JwtTokenProvider
 import mu.KotlinLogging
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders
 import org.springframework.restdocs.payload.PayloadDocumentation.*
 import org.springframework.restdocs.request.RequestDocumentation.parameterWithName
 import org.springframework.restdocs.request.RequestDocumentation.pathParameters
-import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
-import org.springframework.transaction.annotation.Transactional
 
 
 private val log = KotlinLogging.logger {}
 
-@Transactional
-@SpringBootTest
-@AutoConfigureMockMvc
-@AutoConfigureRestDocs(uriScheme = "https", uriHost = "localhost")
-class DeveloperControllerTest(@Autowired var developerService: DeveloperService) {
-    @Autowired
-    private lateinit var mockMvc: MockMvc
-
-    @Autowired
-    private lateinit var mapper: ObjectMapper
-
+class DeveloperControllerTest(@Autowired var developerService: DeveloperService) : CommonMvcTest() {
     private var uri: String = "/api/developer";
 
     private val beforeDeveloperId: String = "developerBeforeTest"
     private val beforeDeveloperName: String = "developerBeforeTestName"
     private val saveDeveloperId: String = "developerSaveTest"
 
-    private val findDeveloperId: String = "developerBeforeTest"
-    private val notFindDeveloperId: String = "developerNotFoundTest"
+    private val findDeveloperName: String = "developerBeforeTestName"
+    private val notFindDeveloperName: String = "developerNotFoundTestName"
 
     private val saveDTO: DeveloperSaveRequestDTO =
         DeveloperSaveRequestDTO(
@@ -62,7 +49,6 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
         DeveloperUpdateRequestDTO(
             userId = beforeDeveloperId,
             email = "updateDeveloper@naver.com",
-            password = "aa12345^",
             name = "sungyoung",
             introduction = "반갑습니다.",
             gitUrl = "test git url",
@@ -70,6 +56,12 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
             pictureUrl = "testUrl",
             point = 0,
             popularity = 0,
+        )
+
+    private val updatePasswordDeveloperDTO: DeveloperUpdatePasswordRequestDTO =
+        DeveloperUpdatePasswordRequestDTO(
+            userId = beforeDeveloperId,
+            password = "aa12345^^",
         )
 
     @BeforeEach
@@ -170,7 +162,7 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
     fun testFind() {
 
         mockMvc.perform(
-            RestDocumentationRequestBuilders.get("$uri/{userId}", findDeveloperId)
+            RestDocumentationRequestBuilders.get("$uri/{name}", findDeveloperName)
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andDo(MockMvcResultHandlers.print())
@@ -178,7 +170,7 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
                 document(
                     "find-developer",
                     pathParameters(
-                        parameterWithName("userId").description("유저 아이디")
+                        parameterWithName("name").description("유저 이름")
                     ),
                     responseFields(
                         fieldWithPath("userId").description("유저 아이디"),
@@ -198,7 +190,7 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
     @Test
     fun testNotFind() {
         mockMvc.perform(
-            MockMvcRequestBuilders.get("$uri/{userId}", notFindDeveloperId)
+            MockMvcRequestBuilders.get("$uri/{name}", notFindDeveloperName)
         )
             .andExpect(MockMvcResultMatchers.status().isBadRequest)
             .andDo(MockMvcResultHandlers.print())
@@ -219,7 +211,6 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
                     requestFields(
                         fieldWithPath("userId").description("유저 아이디"),
                         fieldWithPath("email").description("이메일"),
-                        fieldWithPath("password").description("패스워드"),
                         fieldWithPath("name").description("이름"),
                         fieldWithPath("introduction").description("소개"),
                         fieldWithPath("gitUrl").description("작성자 깃주소"),
@@ -227,6 +218,29 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
                         fieldWithPath("pictureUrl").description("사진경로"),
                         fieldWithPath("point").description("점수"),
                         fieldWithPath("popularity").description("인기도")
+                    )
+                )
+            )
+    }
+
+    @Test
+    fun testUpdatePassword() {
+        mockMvc.perform(
+            RestDocumentationRequestBuilders.put("${uri}/password")
+                .content(mapper.writeValueAsString(updatePasswordDeveloperDTO))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(
+                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeDeveloperId)
+                )
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andDo(MockMvcResultHandlers.print())
+            .andDo(
+                document(
+                    "update-password-developer",
+                    requestFields(
+                        fieldWithPath("userId").description("아이디"),
+                        fieldWithPath("password").description("패스워드"),
                     )
                 )
             )

@@ -9,8 +9,6 @@ data class DeveloperUpdateRequestDTO(
     @field:NotEmpty
     var email: String,
     @field:NotEmpty
-    var password: String,
-    @field:NotEmpty
     var name: String,
     var introduction: String?,
     var gitUrl: String?,
@@ -23,7 +21,7 @@ data class DeveloperUpdateRequestDTO(
         id = null,
         userId = this.userId,
         email = this.email,
-        pwd = this.password,
+        pwd = "",
         name = this.name,
         introduction = this.introduction,
         gitUrl = this.gitUrl,
