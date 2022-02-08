@@ -13,6 +13,7 @@ data class DeveloperUpdateRequestDTO(
     var introduction: String?,
     var gitUrl: String?,
     var webSiteUrl: String?,
+    var groupName: String?,
     var pictureUrl: String?,
     var point: Int? = 0,
     var popularity: Int? = 0
@@ -26,6 +27,7 @@ data class DeveloperUpdateRequestDTO(
         introduction = this.introduction,
         gitUrl = this.gitUrl,
         webSiteUrl = this.webSiteUrl,
+        groupName = this.groupName,
         pictureUrl = this.pictureUrl,
         point = this.point,
         popularity = this.popularity

@@ -24,6 +24,7 @@ class DeveloperController(var developerService: DeveloperService) {
                 introduction = it.introduction,
                 gitUrl = it.gitUrl,
                 webSiteUrl = it.webSiteUrl,
+                groupName = it.groupName,
                 pictureUrl = it.pictureUrl,
                 point = it.point,
                 popularity = it.popularity
@@ -46,6 +47,7 @@ class DeveloperController(var developerService: DeveloperService) {
                     introduction = dev.introduction,
                     gitUrl = dev.gitUrl,
                     webSiteUrl = dev.webSiteUrl,
+                    groupName = dev.groupName,
                     pictureUrl = dev.pictureUrl,
                     point = dev.point,
                     popularity = dev.popularity
@@ -67,10 +69,23 @@ class DeveloperController(var developerService: DeveloperService) {
 
     /** 사용자 수정 */
     @PutMapping
-    fun update(@RequestBody dto: DeveloperUpdateRequestDTO): ResponseEntity<Void> {
-        developerService.updateDeveloper(dto.toModel())
+    fun update(@RequestBody dto: DeveloperUpdateRequestDTO): ResponseEntity<DeveloperFindResponseDTO> {
+        var dto: DeveloperFindResponseDTO? = developerService.updateDeveloper(dto.toModel())?.let {
+            DeveloperFindResponseDTO(
+                userId = it.userId,
+                email = it.email,
+                name = it.name,
+                introduction = it.introduction,
+                gitUrl = it.gitUrl,
+                webSiteUrl = it.webSiteUrl,
+                groupName = it.groupName,
+                pictureUrl = it.pictureUrl,
+                point = it.point,
+                popularity = it.popularity
+            )
+        }
 
-        return ResponseEntity.ok().build()
+        return ResponseEntity.ok().body(dto)
     }
 
     /** 사용자 패스워드 수정 */

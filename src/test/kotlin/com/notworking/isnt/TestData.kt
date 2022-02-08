@@ -39,6 +39,7 @@ class TestData(
                 introduction = "안녕하세요",
                 gitUrl = "test git url",
                 webSiteUrl = "test web site url",
+                groupName = "test group",
                 pictureUrl = "testUrl",
                 point = 0,
                 popularity = 0,
@@ -83,6 +84,28 @@ class TestData(
             ),
             "test@naver.com",
             mutableListOf("spring", "test", "junit")
+        )
+    }
+
+    @Disabled
+    @Test
+    @Rollback(value = false)
+    fun saveWithdrawalDeveloperTest() {
+        developerService.saveDeveloper(
+            Developer(
+                id = null,
+                userId = "withdrawalDeveloper",
+                email = "withdrawalDeveloper@notworking.com",
+                pwd = "aa12345^",
+                name = "탈퇴회원",
+                introduction = "탈퇴회원 표시용 계정",
+                gitUrl = "",
+                webSiteUrl = "",
+                groupName = "test group",
+                pictureUrl = "",
+                point = 0,
+                popularity = 0,
+            )
         )
     }
 }

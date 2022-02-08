@@ -66,6 +66,7 @@ class SolutionControllerTest(
                 introduction = "안녕하세요",
                 gitUrl = "test git url",
                 webSiteUrl = "test web site url",
+                groupName = "test group",
                 pictureUrl = "testUrl",
                 point = 0,
                 popularity = 0,

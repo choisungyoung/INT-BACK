@@ -15,6 +15,7 @@ data class DeveloperSaveRequestDTO(
     var introduction: String?,
     var gitUrl: String?,
     var webSiteUrl: String?,
+    var groupName: String?,
 ) {
     fun toModel(): Developer = Developer(
         id = null,
@@ -25,6 +26,7 @@ data class DeveloperSaveRequestDTO(
         introduction = this.introduction,
         gitUrl = this.gitUrl,
         webSiteUrl = this.webSiteUrl,
+        groupName = this.groupName,
         pictureUrl = "",    // TODO : 따로 넣기
         point = 0,
         popularity = 0

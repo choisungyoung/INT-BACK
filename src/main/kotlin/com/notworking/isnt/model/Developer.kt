@@ -23,6 +23,7 @@ data class Developer(
 
     var gitUrl: String?,
     var webSiteUrl: String?,
+    var groupName: String?,
 
     var pictureUrl: String?,
     var point: Int?,
@@ -36,6 +37,7 @@ data class Developer(
         this.name = developer.name
         this.introduction = developer.introduction
         this.pictureUrl = developer.pictureUrl
+        this.groupName = developer.groupName
         this.point = developer.point
         this.popularity = developer.popularity
 

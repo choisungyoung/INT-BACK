@@ -12,7 +12,7 @@ interface DeveloperService {
 
     fun findDeveloperByUserId(userId: String): Developer?
 
-    fun updateDeveloper(developer: Developer)
+    fun updateDeveloper(developer: Developer): Developer?
 
     fun updatePasswordDeveloper(userId: String, password: String)
 

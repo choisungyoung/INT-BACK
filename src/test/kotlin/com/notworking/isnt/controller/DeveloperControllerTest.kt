@@ -44,6 +44,7 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
             introduction = "안녕하세요",
             gitUrl = "test git url",
             webSiteUrl = "test web site url",
+            groupName = "test group",
         )
     private val updateDeveloperDTO: DeveloperUpdateRequestDTO =
         DeveloperUpdateRequestDTO(
@@ -53,6 +54,7 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
             introduction = "반갑습니다.",
             gitUrl = "test git url",
             webSiteUrl = "test web site url",
+            groupName = "test group",
             pictureUrl = "testUrl",
             point = 0,
             popularity = 0,
@@ -77,6 +79,7 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
                 introduction = "안녕하세요",
                 gitUrl = "test git url",
                 webSiteUrl = "test web site url",
+                groupName = "test group",
                 pictureUrl = "testUrl",
                 point = 0,
                 popularity = 0,
@@ -115,6 +118,7 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
                         fieldWithPath("introduction").description("소개"),
                         fieldWithPath("gitUrl").description("작성자 깃주소"),
                         fieldWithPath("webSiteUrl").description("작성자 웹사이트(블로그) 주소"),
+                        fieldWithPath("groupName").description("소속"),
                     )
                 )
 
@@ -150,6 +154,7 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
                         fieldWithPath("[].introduction").description("소개"),
                         fieldWithPath("[].gitUrl").description("작성자 깃주소"),
                         fieldWithPath("[].webSiteUrl").description("작성자 웹사이트(블로그) 주소"),
+                        fieldWithPath("[].groupName").description("소속"),
                         fieldWithPath("[].pictureUrl").description("사진경로"),
                         fieldWithPath("[].point").description("점수"),
                         fieldWithPath("[].popularity").description("인기도"),
@@ -179,6 +184,7 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
                         fieldWithPath("introduction").description("소개"),
                         fieldWithPath("gitUrl").description("작성자 깃주소"),
                         fieldWithPath("webSiteUrl").description("작성자 웹사이트(블로그) 주소"),
+                        fieldWithPath("groupName").description("소속"),
                         fieldWithPath("pictureUrl").description("사진경로"),
                         fieldWithPath("point").description("점수"),
                         fieldWithPath("popularity").description("인기도"),
@@ -215,6 +221,7 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
                         fieldWithPath("introduction").description("소개"),
                         fieldWithPath("gitUrl").description("작성자 깃주소"),
                         fieldWithPath("webSiteUrl").description("작성자 웹사이트(블로그) 주소"),
+                        fieldWithPath("groupName").description("소속"),
                         fieldWithPath("pictureUrl").description("사진경로"),
                         fieldWithPath("point").description("점수"),
                         fieldWithPath("popularity").description("인기도")

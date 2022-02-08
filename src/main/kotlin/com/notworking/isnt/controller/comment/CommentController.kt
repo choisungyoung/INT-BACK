@@ -48,6 +48,7 @@ class CommentController(var commentService: CommentService) {
                         introduction = entity.developer.introduction,
                         gitUrl = entity.developer.gitUrl,
                         webSiteUrl = entity.developer.webSiteUrl,
+                        groupName = entity.developer.groupName,
                         pictureUrl = entity.developer.pictureUrl,
                         point = entity.developer.point,
                         popularity = entity.developer.popularity

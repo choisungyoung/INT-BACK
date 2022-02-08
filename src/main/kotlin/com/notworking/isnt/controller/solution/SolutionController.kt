@@ -53,6 +53,7 @@ class SolutionController(var solutionService: SolutionService) {
                         introduction = e.developer.introduction,
                         gitUrl = e.developer.gitUrl,
                         webSiteUrl = e.developer.webSiteUrl,
+                        groupName = e.developer.groupName,
                         pictureUrl = e.developer.pictureUrl,
                         point = e.developer.point,
                         popularity = e.developer.popularity
@@ -69,6 +70,7 @@ class SolutionController(var solutionService: SolutionService) {
                                 introduction = it.developer.introduction,
                                 gitUrl = it.developer.gitUrl,
                                 webSiteUrl = it.developer.webSiteUrl,
+                                groupName = it.developer.groupName,
                                 pictureUrl = it.developer.pictureUrl,
                                 point = it.developer.point,
                                 popularity = it.developer.popularity

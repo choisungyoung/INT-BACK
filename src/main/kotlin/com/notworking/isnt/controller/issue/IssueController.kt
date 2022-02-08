@@ -50,6 +50,7 @@ class IssueController(
                     introduction = it.developer.introduction,
                     gitUrl = it.developer.gitUrl,
                     webSiteUrl = it.developer.webSiteUrl,
+                    groupName = it.developer.groupName,
                     pictureUrl = it.developer.pictureUrl,
                     point = it.developer.point,
                     popularity = it.developer.popularity
@@ -67,6 +68,7 @@ class IssueController(
                             introduction = it.developer.introduction,
                             gitUrl = it.developer.gitUrl,
                             webSiteUrl = it.developer.webSiteUrl,
+                            groupName = it.developer.groupName,
                             pictureUrl = it.developer.pictureUrl,
                             point = it.developer.point,
                             popularity = it.developer.popularity
@@ -83,6 +85,7 @@ class IssueController(
                                     introduction = it.developer.introduction,
                                     gitUrl = it.developer.gitUrl,
                                     webSiteUrl = it.developer.webSiteUrl,
+                                    groupName = it.developer.groupName,
                                     pictureUrl = it.developer.pictureUrl,
                                     point = it.developer.point,
                                     popularity = it.developer.popularity
@@ -142,6 +145,7 @@ class IssueController(
                     introduction = issue.developer.introduction,
                     gitUrl = issue.developer.gitUrl,
                     webSiteUrl = issue.developer.webSiteUrl,
+                    groupName = issue.developer.groupName,
                     pictureUrl = issue.developer.pictureUrl,
                     point = issue.developer.point,
                     popularity = issue.developer.popularity

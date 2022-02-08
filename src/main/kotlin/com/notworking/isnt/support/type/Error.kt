@@ -21,6 +21,7 @@ enum class Error(
     DEVELOPER_INPUT_INVALID(HttpStatus.BAD_REQUEST.value(), "DEV001", "사용자 정보가 유효하지 않습니다."),
     DEVELOPER_EMAIL_DUPLICATION(HttpStatus.BAD_REQUEST.value(), "DEV002", "이미 존재하는 이메일입니다."),
     DEVELOPER_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "DEV003", "존재하지 않는 사용자입니다."),
+    WITHDRAWAL_DEVELOPER_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "DEV004", "탈퇴회원 표시를 위한 계정이 없습니다."),
 
     // Issue
     ISSUE_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "ISU001", "존재하지 않는 이슈입니다."),

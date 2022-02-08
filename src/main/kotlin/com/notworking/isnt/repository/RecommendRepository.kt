@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository
 @Repository
 interface RecommendRepository : JpaRepository<Recommend, Long> {
     fun findAllBySolutionAndDeveloper(solution: Solution, developer: Developer): Recommend?
+
+    fun findAllByDeveloper(developer: Developer): List<Recommend>
 }

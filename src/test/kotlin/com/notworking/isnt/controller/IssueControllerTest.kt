@@ -74,6 +74,7 @@ class IssueControllerTest(
                 gitUrl = "test git url",
                 webSiteUrl = "test web site url",
                 pictureUrl = "before testUrl",
+                groupName = "test group",
                 point = 0,
                 popularity = 0,
             )
