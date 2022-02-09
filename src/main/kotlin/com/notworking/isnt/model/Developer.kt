@@ -37,9 +37,11 @@ data class Developer(
         this.name = developer.name
         this.introduction = developer.introduction
         this.pictureUrl = developer.pictureUrl
-        this.groupName = developer.groupName
         this.point = developer.point
         this.popularity = developer.popularity
+        this.gitUrl = developer.gitUrl
+        this.webSiteUrl = developer.webSiteUrl
+        this.groupName = developer.groupName
 
         this.role = developer.role
         this.modifiedDate = LocalDateTime.now()

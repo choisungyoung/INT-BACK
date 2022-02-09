@@ -43,6 +43,7 @@ class CustomAuthenticationSuccessHandler(
                 introduction = it.introduction,
                 gitUrl = it.gitUrl,
                 webSiteUrl = it.webSiteUrl,
+                groupName = it.groupName,
                 pictureUrl = it.pictureUrl,
                 point = it.point,
                 popularity = it.popularity,

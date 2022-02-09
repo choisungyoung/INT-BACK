@@ -73,6 +73,8 @@ include::{snippets}/update-developer/request-body.adoc[]
 include::{snippets}/update-developer/http-request.adoc[]
 
 ==== HTTP response
+include::{snippets}/update-developer/response-fields.adoc[]
+include::{snippets}/update-developer/response-body.adoc[]
 include::{snippets}/update-developer/http-response.adoc[]
 
 
