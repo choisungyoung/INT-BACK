@@ -69,7 +69,7 @@ class IssueControllerTest(
                 userId = beforeSaveIssueUserId,
                 email = "beforeSaveIssueEmail@naver.com",
                 pwd = "aa12345^",
-                name = "before test",
+                name = "issueTester",
                 introduction = "안녕하세요",
                 gitUrl = "test git url",
                 webSiteUrl = "test web site url",

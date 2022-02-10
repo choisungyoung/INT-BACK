@@ -35,7 +35,7 @@ class CommonControllerTest(
                 userId = beforeSaveUserId,
                 email = beforeSaveEmail,
                 pwd = "aa12345^",
-                name = "test",
+                name = "commonTester",
                 introduction = "안녕하세요",
                 gitUrl = "test git url",
                 webSiteUrl = "test web site url",

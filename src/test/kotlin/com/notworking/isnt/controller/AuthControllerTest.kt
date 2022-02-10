@@ -48,7 +48,7 @@ class AuthControllerTest() : CommonMvcTest() {
                 userId = loginDto.username,
                 email = "loginEmail@naver.com",
                 pwd = loginDto.password,
-                name = "sungyoung",
+                name = "loginTester",
                 introduction = "안녕하세요",
                 gitUrl = "test git url",
                 webSiteUrl = "test web site url",

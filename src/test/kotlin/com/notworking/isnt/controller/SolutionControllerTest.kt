@@ -62,7 +62,7 @@ class SolutionControllerTest(
                 userId = beforeSaveSolutionUserId,
                 email = "beforeSaveSolutionEmail@naver.com",
                 pwd = "aa12345^",
-                name = "test",
+                name = "solutionTester",
                 introduction = "안녕하세요",
                 gitUrl = "test git url",
                 webSiteUrl = "test web site url",

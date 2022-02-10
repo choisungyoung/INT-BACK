@@ -50,7 +50,7 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
         DeveloperUpdateRequestDTO(
             userId = beforeDeveloperId,
             email = "updateDeveloper@naver.com",
-            name = "sungyoung",
+            name = "saveDeveloperTester",
             introduction = "반갑습니다.",
             gitUrl = "test git url",
             webSiteUrl = "test web site url",

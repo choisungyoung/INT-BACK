@@ -23,6 +23,14 @@ class DeveloperServiceImpl(
     @Transactional
     override fun saveDeveloper(developer: Developer) {
         developer.let {
+            // 아이디 중복 체크
+            if (developerRepository.existsByUserId(developer.userId)) {
+                throw BusinessException(Error.DEVELOPER_USERID_DUPLICATION)
+            }
+            // 이름 중복 체크
+            if (developerRepository.existsByName(developer.name)) {
+                throw BusinessException(Error.DEVELOPER_NAME_DUPLICATION)
+            }
             it.pwd = passwordEncoder.encode(it.pwd)
             developerRepository.save(it)
         }
@@ -44,6 +52,10 @@ class DeveloperServiceImpl(
     override fun updateDeveloper(newDeveloper: Developer): Developer? {
         var developer: Developer? = newDeveloper.userId?.let { developerRepository.findByUserId(it) }
 
+        // 이름 중복 체크
+        if (developerRepository.existsByName(newDeveloper.name)) {
+            throw BusinessException(Error.DEVELOPER_NAME_DUPLICATION)
+        }
         // null일 경우 예외처리
         developer ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
         developer.update(newDeveloper)
