@@ -51,8 +51,8 @@ class SolutionRepositorySupport(
     fun findSolutionByIssueId(pageable: Pageable, issueId: Long): Page<Solution> {
         var result = query.selectFrom(solution)
             .distinct()
-            .where(issue.id.eq(issueId))
-            .orderBy(solution.createdDate.asc())
+            .where(solution.issue.id.eq(issueId))
+            .orderBy(solution.adoptYn.desc(), solution.createdDate.asc())
             .offset(pageable.offset)
             .limit(pageable.pageSize.toLong())
             .fetchResults()

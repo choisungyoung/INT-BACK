@@ -25,8 +25,6 @@ import kotlin.streams.toList
 @RestController
 class SolutionController(var solutionService: SolutionService) {
 
-    var userId = "test" // TODO: Authentication 시큐리티 객체에서 받아오는 것으로 수정
-
     /** 솔루션 최신순 목록 조회 */
     @GetMapping("/list/{issueId}")
     fun findList(
@@ -75,8 +73,7 @@ class SolutionController(var solutionService: SolutionService) {
                                 point = it.developer.point,
                                 popularity = it.developer.popularity
                             ),
-
-                            )
+                        )
                     }.toList(),
                     e.adoptYn,
                     e.getModifiedDate()
@@ -84,6 +81,56 @@ class SolutionController(var solutionService: SolutionService) {
             }.toList()
 
         return ResponseEntity.ok().body(PageImpl<SolutionFindResponseDTO>(list, pageable, page.totalElements))
+    }
+
+    /** 솔루션 저장 */
+    @GetMapping("/{id}")
+    fun find(@PathVariable id: Long): ResponseEntity<SolutionFindResponseDTO> {
+
+        var solution = solutionService.findSolution(id)
+        solution ?: throw BusinessException(Error.SOLUTION_NOT_FOUND)
+
+        return ResponseEntity.ok().body(
+            SolutionFindResponseDTO(
+                solution.id!!,
+                solution.content,
+                solution.docType.code,
+                solution.recommendationCount,
+                DeveloperFindResponseDTO(
+                    userId = solution.developer.userId,
+                    email = solution.developer.email,
+                    name = solution.developer.name,
+                    introduction = solution.developer.introduction,
+                    gitUrl = solution.developer.gitUrl,
+                    webSiteUrl = solution.developer.webSiteUrl,
+                    groupName = solution.developer.groupName,
+                    pictureUrl = solution.developer.pictureUrl,
+                    point = solution.developer.point,
+                    popularity = solution.developer.popularity
+                ),
+                solution.comments.stream().map {
+                    CommentFindResponseDTO(
+                        id = it.id!!,
+                        content = it.content,
+                        modifiedDate = it.getModifiedDate(),
+                        developer = DeveloperFindResponseDTO(
+                            userId = it.developer.userId,
+                            email = it.developer.email,
+                            name = it.developer.name,
+                            introduction = it.developer.introduction,
+                            gitUrl = it.developer.gitUrl,
+                            webSiteUrl = it.developer.webSiteUrl,
+                            groupName = it.developer.groupName,
+                            pictureUrl = it.developer.pictureUrl,
+                            point = it.developer.point,
+                            popularity = it.developer.popularity
+                        ),
+                    )
+                }.toList(),
+                solution.adoptYn,
+                solution.getModifiedDate()
+            )
+        )
     }
 
     /** 솔루션 저장 */
@@ -117,14 +164,20 @@ class SolutionController(var solutionService: SolutionService) {
     /** 솔루션 추천  */
     @PutMapping("/recommend/{id}")
     fun recommend(@PathVariable id: Long): ResponseEntity<Void> {
-        solutionService.recommendSolution(id, userId)
+        var user = SecurityContextHolder.getContext().authentication.principal as User?
+        user ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
+
+        solutionService.recommendSolution(id, user.username)
         return ResponseEntity.ok().build()
     }
 
     /** 솔루션 채택  */
     @PutMapping("/adopt/{id}")
     fun adopt(@PathVariable id: Long): ResponseEntity<Boolean> {
-        var adoptYn = solutionService.adoptSolution(id, userId)
+        var user = SecurityContextHolder.getContext().authentication.principal as User?
+        user ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
+
+        var adoptYn = solutionService.adoptSolution(id, user.username)
         return ResponseEntity.ok().body(adoptYn)
     }
 }

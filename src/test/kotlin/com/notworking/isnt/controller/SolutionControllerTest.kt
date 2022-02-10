@@ -160,6 +160,56 @@ class SolutionControllerTest(
     }
 
     @Test
+    fun testFind() {
+
+        mockMvc.perform(
+            RestDocumentationRequestBuilders
+                .get("$uri/{id}", beforeSaveSolutionId)
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andDo(MockMvcResultHandlers.print())
+            .andDo(
+                document(
+                    "find-solution",
+                    pathParameters(
+                        parameterWithName("id").description("고유번호")
+                    ),
+                    responseFields(
+                        fieldWithPath("id").description("고유번호"),
+                        fieldWithPath("content").description("내용"),
+                        fieldWithPath("docType").description("문서유형 ('TEXT', 'MARK_DOWN')"),
+                        fieldWithPath("recommendationCount").description("추천수"),
+                        fieldWithPath("adoptYn").description("채택여부"),
+                        fieldWithPath("developer.userId").description("작성자 아이디"),
+                        fieldWithPath("developer.email").description("작성자 이메일"),
+                        fieldWithPath("developer.name").description("작성자 이름"),
+                        fieldWithPath("developer.introduction").description("작성자 소개"),
+                        fieldWithPath("developer.gitUrl").description("작성자 깃주소"),
+                        fieldWithPath("developer.webSiteUrl").description("작성자 웹사이트(블로그) 주소"),
+                        fieldWithPath("developer.groupName").description("작성자 소속"),
+                        fieldWithPath("developer.pictureUrl").description("작성자 사진경로"),
+                        fieldWithPath("developer.point").description("작성자 점수"),
+                        fieldWithPath("developer.popularity").description("작성자 인기도"),
+                        fieldWithPath("comment.[].id").description("코멘트 고유 아이디"),
+                        fieldWithPath("comment.[].content").description("코멘트 내용"),
+                        fieldWithPath("comment.[].modifiedDate").description("코멘트 최종수정일시"),
+                        fieldWithPath("comment.[].developer.userId").description("작성자 아이디"),
+                        fieldWithPath("comment.[].developer.email").description("코멘트 작성자 이메일"),
+                        fieldWithPath("comment.[].developer.name").description("코멘트 작성자 이름"),
+                        fieldWithPath("comment.[].developer.introduction").description("코멘트 작성자 소개"),
+                        fieldWithPath("comment.[].developer.gitUrl").description("코멘트 작성자 깃주소"),
+                        fieldWithPath("comment.[].developer.webSiteUrl").description("코멘트 작성자 웹사이트(블로그) 주소"),
+                        fieldWithPath("comment.[].developer.groupName").description("코멘트 작성자 소속"),
+                        fieldWithPath("comment.[].developer.pictureUrl").description("코멘트 작성자 사진경로"),
+                        fieldWithPath("comment.[].developer.point").description("코멘트 작성자 포인트"),
+                        fieldWithPath("comment.[].developer.popularity").description("코멘트 작성자 인기도"),
+                        fieldWithPath("modifiedDate").description("최종수정일시"),
+                    )
+                )
+            )
+    }
+
+    @Test
     fun testFindList() {
 
         mockMvc.perform(

@@ -4,6 +4,19 @@ import com.notworking.isnt.support.type.DocType
 import java.time.LocalDateTime
 import javax.persistence.*
 
+/*
+@NamedEntityGraph(
+    name = "Solution.withComment",
+    attributeNodes = [
+        NamedAttributeNode("comments", subgraph = "comments"),
+    ],
+    subgraphs = [NamedSubgraph(
+        name = "comments",
+        attributeNodes = [
+            NamedAttributeNode("developer")
+        ]
+    )]
+)*/
 @Entity
 @Table(name = "INT_SOLUTION")
 data class Solution(
@@ -27,7 +40,7 @@ data class Solution(
     @JoinColumn(name = "ISSUE_ID")
     var issue: Issue? = null
 
-    @OneToMany(mappedBy = "solution", cascade = [CascadeType.ALL])
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "solution", cascade = [CascadeType.ALL])
     var comments: MutableList<Comment> = ArrayList()
 
     fun update(issue: Solution): Solution? {

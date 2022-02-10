@@ -80,7 +80,6 @@ class SolutionServiceImpl(
         // 없는 작성자일 경우
         developer ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
 
-
         // 이슈 조회
         var issue = issueRepository.findById(issueId).get()
         solution.developer = developer
@@ -97,7 +96,9 @@ class SolutionServiceImpl(
         }
 
         solution ?: throw BusinessException(Error.SOLUTION_NOT_FOUND)
+
         solution.update(newSolution)
+        solution.adoptYn = false    // 수정하면 언채택되도록
     }
 
     @Transactional
@@ -147,11 +148,15 @@ class SolutionServiceImpl(
         var solution = solutionRepository.findById(solutionId).orElseThrow {
             throw BusinessException(Error.SOLUTION_NOT_FOUND)
         }
-        if (solution.developer.id != solutionId) {
-            // throw BusinessException(Error.SOLUTION_NOT_DEVELOPER)
-            // TODO: 로그인 되면 주석제거하기
+        if (solution.developer.userId != userId) {
+            throw BusinessException(Error.SOLUTION_NOT_DEVELOPER)
         }
-        // 이미 채택된 솔루션이 있는지 확인?
+        solution.issue ?: throw BusinessException(Error.ISSUE_NOT_FOUND)
+
+        // 이미채택된 솔루션 채택 취소
+        solutionRepository.findAllByIssueAndAdoptYn(solution.issue!!, true).forEach {
+            it.adoptYn = false
+        }
 
         // 채택 토글
         solution.adoptYn = !solution.adoptYn

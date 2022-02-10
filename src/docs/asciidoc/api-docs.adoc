@@ -183,6 +183,19 @@ include::{snippets}/save-solution/http-request.adoc[]
 ==== HTTP response
 include::{snippets}/save-solution/http-response.adoc[]
 
+
+[[resources-solution-find]]
+=== solution 조회
+==== HTTP request
+include::{snippets}/find-solution/path-parameters.adoc[]
+include::{snippets}/find-solution/http-request.adoc[]
+
+==== HTTP response
+include::{snippets}/find-solution/response-fields.adoc[]
+include::{snippets}/find-solution/response-body.adoc[]
+include::{snippets}/find-solution/http-response.adoc[]
+
+
 [[resources-solution-list]]
 === solution 목록조회
 ==== HTTP request
