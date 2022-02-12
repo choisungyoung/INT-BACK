@@ -27,6 +27,7 @@ enum class Error(
 
     // Issue
     ISSUE_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "ISU001", "존재하지 않는 이슈입니다."),
+    ISSUE_NOT_DEVELOPER(HttpStatus.BAD_REQUEST.value(), "SLT002", "이슈 작성자가 아닙니다."),
 
     // Solution
     SOLUTION_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "SLT001", "존재하지 않는 솔루션입니다."),

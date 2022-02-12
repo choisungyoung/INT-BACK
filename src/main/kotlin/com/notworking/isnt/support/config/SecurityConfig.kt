@@ -20,6 +20,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource
+import org.springframework.web.filter.CorsFilter
 
 
 @Configurable
@@ -54,6 +57,19 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
         return authProvider
     }
 
+
+    @Bean
+    fun corsFilter(): CorsFilter? {
+        val source = UrlBasedCorsConfigurationSource()
+        val config = CorsConfiguration()
+        config.allowCredentials = true
+        config.addAllowedOriginPattern("*") // e.g. http://domain1.com
+        config.addAllowedHeader("*")
+        config.addAllowedMethod("*")
+        source.registerCorsConfiguration("/**", config)
+        return CorsFilter(source)
+    }
+
     override fun configure(web: WebSecurity) {
         web.ignoring()
             .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
@@ -74,7 +90,8 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
 
     override fun configure(http: HttpSecurity?) {
 
-        http?.csrf()?.disable()
+        http?.addFilter(corsFilter())
+            ?.csrf()?.disable()
             ?.headers()
             ?.frameOptions()
             ?.disable()

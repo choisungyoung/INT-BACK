@@ -51,13 +51,15 @@ class DeveloperServiceImpl(
     @Transactional
     override fun updateDeveloper(newDeveloper: Developer): Developer? {
         var developer: Developer? = newDeveloper.userId?.let { developerRepository.findByUserId(it) }
+        developer ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
+
+        var dupDeveloper = developerRepository.findByName(newDeveloper.name)
 
         // 이름 중복 체크
-        if (developerRepository.existsByName(newDeveloper.name)) {
+        if (!(dupDeveloper == null || dupDeveloper.id == developer.id)) {
             throw BusinessException(Error.DEVELOPER_NAME_DUPLICATION)
         }
         // null일 경우 예외처리
-        developer ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
         developer.update(newDeveloper)
 
         return developer

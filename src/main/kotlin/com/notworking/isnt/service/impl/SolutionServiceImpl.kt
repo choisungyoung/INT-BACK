@@ -148,10 +148,12 @@ class SolutionServiceImpl(
         var solution = solutionRepository.findById(solutionId).orElseThrow {
             throw BusinessException(Error.SOLUTION_NOT_FOUND)
         }
-        if (solution.developer.userId != userId) {
+
+        solution.issue ?: throw BusinessException(Error.ISSUE_NOT_FOUND)
+
+        if (solution.issue!!.developer.userId != userId) {
             throw BusinessException(Error.SOLUTION_NOT_DEVELOPER)
         }
-        solution.issue ?: throw BusinessException(Error.ISSUE_NOT_FOUND)
 
         // 이미채택된 솔루션 채택 취소
         solutionRepository.findAllByIssueAndAdoptYn(solution.issue!!, true).forEach {

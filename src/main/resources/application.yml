@@ -4,6 +4,13 @@ server:
     encoding:
       charset: UTF-8
       force: true
+  ssl:
+    enabled: true
+    key-store: classpath:keystore.p12
+    key-store-password: aa12345^
+    key-store-type: PKCS12
+    key-alias: bns-ssl
+
 logging:
   config: classpath:logback-spring.xml
 
