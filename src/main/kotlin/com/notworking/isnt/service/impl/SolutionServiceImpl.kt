@@ -152,16 +152,19 @@ class SolutionServiceImpl(
         solution.issue ?: throw BusinessException(Error.ISSUE_NOT_FOUND)
 
         if (solution.issue!!.developer.userId != userId) {
+            // 이슈 작성자가 아닐 경우
             throw BusinessException(Error.SOLUTION_NOT_DEVELOPER)
         }
 
         // 이미채택된 솔루션 채택 취소
         solutionRepository.findAllByIssueAndAdoptYn(solution.issue!!, true).forEach {
+            it.developer.point = it.developer.point!!.minus(10) // 채택 취소되면 포인트 마이너스
             it.adoptYn = false
         }
 
         // 채택 토글
         solution.adoptYn = !solution.adoptYn
+        solution.developer.point = solution.developer.point!!.plus(10) // 채택 취소되면 포인트 마이너스
 
         return solution.adoptYn
     }

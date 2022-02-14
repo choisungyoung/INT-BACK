@@ -173,7 +173,7 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
             .andDo(MockMvcResultHandlers.print())
             .andDo(
                 document(
-                    "find-developer",
+                    "follow-developer",
                     pathParameters(
                         parameterWithName("name").description("유저 이름")
                     ),
@@ -188,6 +188,7 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
                         fieldWithPath("pictureUrl").description("사진경로"),
                         fieldWithPath("point").description("점수"),
                         fieldWithPath("popularity").description("인기도"),
+                        fieldWithPath("followers").description("팔로우"),
                     )
                 )
             )
@@ -323,6 +324,27 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
                     responseFields(
                         fieldWithPath("duplicateYn").description("중복여부"),
                     )
+                )
+            )
+    }
+
+    @Test
+    fun testFollow() {
+
+        mockMvc.perform(
+            RestDocumentationRequestBuilders.put("$uri/follow/{userId}", "test")
+                .header(
+                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeDeveloperId)
+                )
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andDo(MockMvcResultHandlers.print())
+            .andDo(
+                document(
+                    "follow-developer",
+                    pathParameters(
+                        parameterWithName("userId").description("유저 아이디")
+                    ),
                 )
             )
     }

@@ -21,4 +21,8 @@ interface DeveloperService {
     fun existDeveloperByUserId(userId: String): Boolean
 
     fun existDeveloperByName(name: String): Boolean
+
+    fun followDeveloper(fromUserId: String, toUserId: String)
+
+    fun findFollowersByUserId(userId: String): Int
 }

@@ -110,6 +110,16 @@ include::{snippets}/checkName-developer/http-request.adoc[]
 ==== HTTP response
 include::{snippets}/checkName-developer/http-response.adoc[]
 
+[[resources-developer-follow]]
+=== developer 팔로우
+
+==== HTTP request
+include::{snippets}/follow-developer/path-parameters.adoc[]
+include::{snippets}/follow-developer/http-request.adoc[]
+
+==== HTTP response
+include::{snippets}/follow-developer/http-response.adoc[]
+
 
 
 [[resources-issue]]

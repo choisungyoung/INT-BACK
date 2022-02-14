@@ -1,6 +1,7 @@
 package com.notworking.isnt.service.impl
 
 import com.notworking.isnt.model.Developer
+import com.notworking.isnt.model.Follow
 import com.notworking.isnt.repository.*
 import com.notworking.isnt.service.DeveloperService
 import com.notworking.isnt.support.exception.BusinessException
@@ -16,6 +17,7 @@ class DeveloperServiceImpl(
     val solutionRepository: SolutionRepository,
     val commentRepository: CommentRepository,
     val recommendRepository: RecommendRepository,
+    val followRepository: FollowRepository,
     val passwordEncoder: PasswordEncoder
 ) :
     DeveloperService {
@@ -109,5 +111,34 @@ class DeveloperServiceImpl(
 
     override fun existDeveloperByName(name: String): Boolean {
         return developerRepository.existsByName(name)
+    }
+
+    @Transactional
+    override fun followDeveloper(fromUserId: String, toUserId: String) {
+        var fromDeveloper = findDeveloperByUserId(toUserId) ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
+        var toDeveloper = findDeveloperByUserId(toUserId) ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
+
+        var follow = followRepository.findAllByFromDeveloperAndToDeveloper(fromDeveloper, toDeveloper)
+
+        // 이미 팔로우 돼있는지 확인
+        if (follow == null) {
+            follow = Follow(null)
+
+            follow.fromDeveloper = fromDeveloper
+            follow.toDeveloper = toDeveloper
+
+            followRepository.save(follow)
+        } else {
+            followRepository.delete(follow)
+        }
+    }
+
+    override fun findFollowersByUserId(userId: String): Int {
+        var developer: Developer? = developerRepository.findByUserId(userId)
+
+        // 사용자가 null일 경우 예외처리
+        developer ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
+
+        return followRepository.countByToDeveloper(developer)
     }
 }

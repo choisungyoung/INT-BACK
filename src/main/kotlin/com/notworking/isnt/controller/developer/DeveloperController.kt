@@ -5,6 +5,8 @@ import com.notworking.isnt.service.DeveloperService
 import com.notworking.isnt.support.exception.BusinessException
 import com.notworking.isnt.support.type.Error
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.core.userdetails.User
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 import kotlin.streams.toList
@@ -15,9 +17,9 @@ class DeveloperController(var developerService: DeveloperService) {
 
     /** 사용자 조회 */
     @GetMapping("/{name}")
-    fun find(@PathVariable name: String): ResponseEntity<DeveloperFindResponseDTO> {
-        var dto: DeveloperFindResponseDTO? = developerService.findDeveloperByName(name)?.let {
-            DeveloperFindResponseDTO(
+    fun find(@PathVariable name: String): ResponseEntity<DeveloperFindDetailResponseDTO> {
+        var dto: DeveloperFindDetailResponseDTO? = developerService.findDeveloperByName(name)?.let {
+            DeveloperFindDetailResponseDTO(
                 userId = it.userId,
                 email = it.email,
                 name = it.name,
@@ -27,7 +29,8 @@ class DeveloperController(var developerService: DeveloperService) {
                 groupName = it.groupName,
                 pictureUrl = it.pictureUrl,
                 point = it.point,
-                popularity = it.popularity
+                popularity = it.popularity,
+                followers = developerService.findFollowersByUserId(it.userId)
             )
         }
         //존재하지 않을 경우 에러처리
@@ -98,9 +101,9 @@ class DeveloperController(var developerService: DeveloperService) {
     }
 
     /** 사용자 삭제 */
-    @DeleteMapping("/{email}")
-    fun delete(@PathVariable email: String): ResponseEntity<Void> {
-        developerService.deleteDeveloper(email)
+    @DeleteMapping("/{userId}")
+    fun delete(@PathVariable userId: String): ResponseEntity<Void> {
+        developerService.deleteDeveloper(userId)
 
         return ResponseEntity.ok().build()
     }
@@ -117,5 +120,18 @@ class DeveloperController(var developerService: DeveloperService) {
     fun checkUserId(@PathVariable userId: String): ResponseEntity<DeveloperCheckResponseDTO> {
         return ResponseEntity.ok()
             .body(DeveloperCheckResponseDTO(duplicateYn = developerService.existDeveloperByUserId(userId)))
+    }
+
+
+    /** 사용자 팔로우 */
+    @PutMapping("/follow/{userId}")
+    fun follow(@PathVariable userId: String): ResponseEntity<Void> {
+
+        var user = SecurityContextHolder.getContext().authentication.principal as User?
+        user ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
+
+        developerService.followDeveloper(user.username, userId)
+
+        return ResponseEntity.ok().build()
     }
 }

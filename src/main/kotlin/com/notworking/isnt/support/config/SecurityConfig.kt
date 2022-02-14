@@ -81,7 +81,7 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
             .antMatchers(HttpMethod.GET, "/api/issue/**")
             .antMatchers(HttpMethod.GET, "/api/solution/**")
             .antMatchers(HttpMethod.GET, "/api/comment/**")
-            .antMatchers("/api/developer/**")
+            .antMatchers(HttpMethod.GET, "/api/developer/**")
             .antMatchers("/api/auth/login")
 
 
