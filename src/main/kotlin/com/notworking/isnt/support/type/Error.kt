@@ -16,6 +16,7 @@ enum class Error(
     AUTH_INPUT_INVALID(HttpStatus.BAD_REQUEST.value(), "ATH001", "로그인 입력값이 유효하지 않습니다."),
     AUTH_FAILED(HttpStatus.UNAUTHORIZED.value(), "ATH002", "이메일 혹은 패스워드가 틀렸습니다."),
     AUTH_INVALID_TOKEN(HttpStatus.UNAUTHORIZED.value(), "ATH003", "인증 토큰이 유효하지 않습니다."),
+    AUTH_NOT_FOUND_TOKEN(HttpStatus.UNAUTHORIZED.value(), "ATH004", "인증 토큰이 존재하지 않습니다."),
 
     // Developer
     DEVELOPER_INPUT_INVALID(HttpStatus.BAD_REQUEST.value(), "DEV001", "사용자 정보가 유효하지 않습니다."),

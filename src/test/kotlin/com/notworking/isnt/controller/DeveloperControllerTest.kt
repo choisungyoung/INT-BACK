@@ -209,6 +209,9 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
             RestDocumentationRequestBuilders.put(uri)
                 .content(mapper.writeValueAsString(updateDeveloperDTO))
                 .contentType(MediaType.APPLICATION_JSON)
+                .header(
+                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeDeveloperId)
+                )
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andDo(MockMvcResultHandlers.print())
@@ -271,6 +274,9 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
 
         mockMvc.perform(
             RestDocumentationRequestBuilders.delete("$uri/{userId}", beforeDeveloperId)
+                .header(
+                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeDeveloperId)
+                )
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andDo(MockMvcResultHandlers.print())

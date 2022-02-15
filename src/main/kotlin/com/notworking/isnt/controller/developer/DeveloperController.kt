@@ -112,14 +112,14 @@ class DeveloperController(var developerService: DeveloperService) {
     @GetMapping("/checkName/{name}")
     fun checkName(@PathVariable name: String): ResponseEntity<DeveloperCheckResponseDTO> {
         return ResponseEntity.ok()
-            .body(DeveloperCheckResponseDTO(duplicateYn = developerService.existDeveloperByName(name)))
+            .body(DeveloperCheckResponseDTO(duplicateYn = developerService.existsDeveloperByName(name)))
     }
 
     /** 사용자 아이디 중복체크 */
     @GetMapping("/checkUserId/{userId}")
     fun checkUserId(@PathVariable userId: String): ResponseEntity<DeveloperCheckResponseDTO> {
         return ResponseEntity.ok()
-            .body(DeveloperCheckResponseDTO(duplicateYn = developerService.existDeveloperByUserId(userId)))
+            .body(DeveloperCheckResponseDTO(duplicateYn = developerService.existsDeveloperByUserId(userId)))
     }
 
 

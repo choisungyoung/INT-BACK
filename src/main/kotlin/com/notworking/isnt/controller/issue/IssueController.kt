@@ -1,9 +1,11 @@
 package com.notworking.isnt.controller.issue
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.notworking.isnt.controller.developer.dto.DeveloperFindIssueResponseDTO
 import com.notworking.isnt.controller.developer.dto.DeveloperFindResponseDTO
 import com.notworking.isnt.controller.issue.dto.*
 import com.notworking.isnt.model.Issue
+import com.notworking.isnt.service.DeveloperService
 import com.notworking.isnt.service.IssueService
 import com.notworking.isnt.service.SolutionService
 import com.notworking.isnt.support.exception.BusinessException
@@ -26,12 +28,21 @@ import kotlin.streams.toList
 @RestController
 class IssueController(
     var issueService: IssueService,
-    var solutionService: SolutionService
+    var solutionService: SolutionService,
+    var developerService: DeveloperService
 ) {
 
     /** 이슈 조회 */
     @GetMapping("/{id}")
     fun find(@PathVariable id: Long): ResponseEntity<IssueDetailFindResponseDTO> {
+
+        var username: String? = null
+        if (SecurityContextHolder.getContext().authentication != null) {
+            var user = SecurityContextHolder.getContext().authentication.principal as User?
+            username = user?.username
+        }
+
+
         var dto: IssueDetailFindResponseDTO? = issueService.findIssue(id)?.let {
             IssueDetailFindResponseDTO(
                 it.id!!,
@@ -43,7 +54,7 @@ class IssueController(
                 it.hashtags.stream().map {
                     it.name
                 }.toList(),
-                DeveloperFindResponseDTO(
+                DeveloperFindIssueResponseDTO(
                     userId = it.developer.userId,
                     email = it.developer.email,
                     name = it.developer.name,
@@ -53,7 +64,8 @@ class IssueController(
                     groupName = it.developer.groupName,
                     pictureUrl = it.developer.pictureUrl,
                     point = it.developer.point,
-                    popularity = it.developer.popularity
+                    popularity = it.developer.popularity,
+                    followYn = developerService.existsFollowByUserId(username, it.developer.userId)
                 ),
                 it.solutions.stream().map {
                     SolutionFindResponseDTO(

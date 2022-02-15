@@ -350,6 +350,7 @@ class IssueControllerTest(
                         fieldWithPath("developer.pictureUrl").description("작성자 사진경로"),
                         fieldWithPath("developer.point").description("작성자 점수"),
                         fieldWithPath("developer.popularity").description("작성자 인기도"),
+                        fieldWithPath("developer.followYn").description("작성자 팔로우 여부"),
                         fieldWithPath("modifiedDate").description("최종수정일시"),
                         fieldWithPath("solutions.[].id").description("고유번호"),
                         fieldWithPath("solutions.[].content").description("내용"),

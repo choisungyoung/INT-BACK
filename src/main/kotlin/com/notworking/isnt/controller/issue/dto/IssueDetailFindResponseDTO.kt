@@ -1,6 +1,6 @@
 package com.notworking.isnt.controller.issue.dto
 
-import com.notworking.isnt.controller.developer.dto.DeveloperFindResponseDTO
+import com.notworking.isnt.controller.developer.dto.DeveloperFindIssueResponseDTO
 
 data class IssueDetailFindResponseDTO(
     var id: Long,
@@ -11,7 +11,7 @@ data class IssueDetailFindResponseDTO(
     var recommendationCount: Long,
     var hashtags: List<String>,
 
-    var developer: DeveloperFindResponseDTO,
+    var developer: DeveloperFindIssueResponseDTO,
     var solutions: List<SolutionFindResponseDTO>,
     var modifiedDate: String
 )

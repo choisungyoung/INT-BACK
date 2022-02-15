@@ -105,11 +105,11 @@ class DeveloperServiceImpl(
         developerRepository.delete(developer)
     }
 
-    override fun existDeveloperByUserId(userId: String): Boolean {
+    override fun existsDeveloperByUserId(userId: String): Boolean {
         return developerRepository.existsByUserId(userId)
     }
 
-    override fun existDeveloperByName(name: String): Boolean {
+    override fun existsDeveloperByName(name: String): Boolean {
         return developerRepository.existsByName(name)
     }
 
@@ -140,5 +140,13 @@ class DeveloperServiceImpl(
         developer ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
 
         return followRepository.countByToDeveloper(developer)
+    }
+
+    override fun existsFollowByUserId(fromUserId: String?, toUserId: String?): Boolean {
+
+        fromUserId ?: return false
+        toUserId ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
+
+        return followRepository.existsByFromDeveloperUserIdAndToDeveloperUserId(fromUserId, toUserId)
     }
 }

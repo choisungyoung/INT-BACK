@@ -20,9 +20,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
-import org.springframework.web.cors.CorsConfiguration
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource
-import org.springframework.web.filter.CorsFilter
 
 
 @Configurable
@@ -58,17 +55,20 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
     }
 
 
-    @Bean
+    /*@Bean
     fun corsFilter(): CorsFilter? {
         val source = UrlBasedCorsConfigurationSource()
         val config = CorsConfiguration()
         config.allowCredentials = true
-        config.addAllowedOriginPattern("*") // e.g. http://domain1.com
+        //config.addAllowedOriginPattern("*") // e.g. http://domain1.com
         config.addAllowedHeader("*")
+        config.addAllowedOrigin("http://localhost:3000")
         config.addAllowedMethod("*")
         source.registerCorsConfiguration("/**", config)
         return CorsFilter(source)
-    }
+    }*/
+     */
+
 
     override fun configure(web: WebSecurity) {
         web.ignoring()
@@ -82,6 +82,7 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
             .antMatchers(HttpMethod.GET, "/api/solution/**")
             .antMatchers(HttpMethod.GET, "/api/comment/**")
             .antMatchers(HttpMethod.GET, "/api/developer/**")
+            .antMatchers(HttpMethod.POST, "/api/developer/**")
             .antMatchers("/api/auth/login")
 
 
@@ -90,7 +91,7 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
 
     override fun configure(http: HttpSecurity?) {
 
-        http?.addFilter(corsFilter())
+        http//?.addFilter(corsFilter())
             ?.csrf()?.disable()
             ?.headers()
             ?.frameOptions()

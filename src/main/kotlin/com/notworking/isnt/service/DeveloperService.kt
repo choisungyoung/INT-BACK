@@ -18,11 +18,13 @@ interface DeveloperService {
 
     fun deleteDeveloper(userId: String)
 
-    fun existDeveloperByUserId(userId: String): Boolean
+    fun existsDeveloperByUserId(userId: String): Boolean
 
-    fun existDeveloperByName(name: String): Boolean
+    fun existsDeveloperByName(name: String): Boolean
 
     fun followDeveloper(fromUserId: String, toUserId: String)
 
     fun findFollowersByUserId(userId: String): Int
+
+    fun existsFollowByUserId(fromUserId: String?, toUserId: String?): Boolean
 }

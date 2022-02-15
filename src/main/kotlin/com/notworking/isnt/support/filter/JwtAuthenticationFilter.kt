@@ -1,6 +1,7 @@
 package com.notworking.isnt.support.filter
 
 import com.notworking.isnt.controller.dto.ErrorResponse
+import com.notworking.isnt.support.exception.BusinessException
 import com.notworking.isnt.support.provider.JwtTokenProvider
 import com.notworking.isnt.support.type.Error
 import com.notworking.isnt.support.util.ResponseUtil
@@ -31,19 +32,26 @@ class JwtAuthenticationFilter(
         val token: String? = jwtTokenProvider.resolveToken(servletRequest as HttpServletRequest)
 
         try {
-            if (token != null && jwtTokenProvider.validateAccessToken(token)) {   // token 검증
+            if (token == null) {
+                throw BusinessException(Error.AUTH_NOT_FOUND_TOKEN)
+            }
+
+            if (jwtTokenProvider.validateAccessToken(token)) {   // token 검증
                 // TODO : getAuthentication access랑 refresh 메소드 나누거나 validateAccessToken validateRefreshToken합치거나 해야함
                 val auth: Authentication = jwtTokenProvider.getAuthentication(token) // 인증 객체 생성
                 SecurityContextHolder.getContext().authentication = auth // SecurityContextHolder에 인증 객체 저장
             } else {
-                if ("/api/auth/login".equals(servletRequest.requestURI)) {
-                    // 로그인이 security filter를 사용하므로 예외처리..
-                } else {
-                    throw IllegalArgumentException()
-                }
+                throw IllegalArgumentException()
             }
         } catch (e: Exception) {
-            var error = Error.AUTH_INVALID_TOKEN
+            var error: Error? = null
+
+            error = if (e is BusinessException) {
+                e.error
+            } else {
+                Error.AUTH_INVALID_TOKEN
+            }
+
             val errorResponse = ErrorResponse(
                 code = error.code,
                 title = "토큰 에러",
