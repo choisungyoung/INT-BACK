@@ -206,9 +206,6 @@ class IssueControllerTest(
             .andDo(
                 document(
                     "find-issue-temp",
-                    pathParameters(
-                        parameterWithName("userId").description("사용자 아이디 헤더에 있으면 없어도됨")
-                    ),
                     responseFields(
                         fieldWithPath("id").description("고유번호"),
                         fieldWithPath("title").description("제목"),

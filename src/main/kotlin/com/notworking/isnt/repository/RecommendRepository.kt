@@ -11,4 +11,6 @@ interface RecommendRepository : JpaRepository<Recommend, Long> {
     fun findAllBySolutionAndDeveloper(solution: Solution, developer: Developer): Recommend?
 
     fun findAllByDeveloper(developer: Developer): List<Recommend>
+
+    fun deleteAllBySolution(solution: Solution)
 }

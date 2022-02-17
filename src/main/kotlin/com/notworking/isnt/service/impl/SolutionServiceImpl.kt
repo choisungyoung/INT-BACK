@@ -109,6 +109,7 @@ class SolutionServiceImpl(
 
         //코멘트 조회
         solution.comments = commentRepository.findAllBySolutionId(id)
+        recommendRepository.deleteAllBySolution(solution)   // 추천 삭제
         solutionRepository.delete(solution) //코멘트도 전의되어 삭제
     }
 

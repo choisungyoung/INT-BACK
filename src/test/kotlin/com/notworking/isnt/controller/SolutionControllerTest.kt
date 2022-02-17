@@ -95,6 +95,7 @@ class SolutionControllerTest(
             beforeSaveIssueId
         ).id!!
 
+        solutionService.recommendSolution(beforeSaveSolutionId, beforeSaveSolutionUserId)
         commentService.saveComment(
             Comment(
                 id = null,

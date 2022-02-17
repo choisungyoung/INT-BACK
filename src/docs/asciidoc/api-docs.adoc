@@ -169,13 +169,26 @@ include::{snippets}/update-issue/http-request.adoc[]
 include::{snippets}/update-issue/http-response.adoc[]
 
 
+[[resources-issue-create]]
+=== issue 임시 저장
+==== HTTP request
+include::{snippets}/save-issue-temp/request-fields.adoc[]
+include::{snippets}/save-issue-temp/http-request.adoc[]
+
+==== HTTP response
+include::{snippets}/save-issue-temp/http-response.adoc[]
+
+
 [[resources-issue-find]]
 === issue 임시 저장 조회
 
 ==== HTTP request
-include::{snippets}/find-issue/path-parameters.adoc[]
-include::{snippets}/find-issue/http-request.adoc[]
+include::{snippets}/find-issue-temp/http-request.adoc[]
 
+==== HTTP response
+include::{snippets}/find-issue-temp/response-fields.adoc[]
+include::{snippets}/find-issue-temp/response-body.adoc[]
+include::{snippets}/find-issue-temp/http-response.adoc[]
 
 
 [[resources-issue-delete]]
