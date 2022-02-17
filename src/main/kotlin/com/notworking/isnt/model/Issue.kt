@@ -14,8 +14,7 @@ data class Issue(
     @Lob
     var content: String,
     var docType: DocType,
-
-    ) : BaseTimeEntity() {
+) : BaseTimeEntity() {
 
     var hits: Long = 0
     var recommendationCount: Long = 0
@@ -26,7 +25,7 @@ data class Issue(
 
     @OneToMany(mappedBy = "issue", cascade = [CascadeType.ALL])
     var solutions: MutableList<Solution> = ArrayList()
-    
+
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "issue", cascade = [CascadeType.ALL])
     var hashtags: MutableList<Hashtag> = ArrayList()
 

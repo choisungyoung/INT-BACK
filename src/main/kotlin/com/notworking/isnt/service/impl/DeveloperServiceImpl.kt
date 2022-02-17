@@ -115,7 +115,7 @@ class DeveloperServiceImpl(
 
     @Transactional
     override fun followDeveloper(fromUserId: String, toUserId: String) {
-        var fromDeveloper = findDeveloperByUserId(toUserId) ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
+        var fromDeveloper = findDeveloperByUserId(fromUserId) ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
         var toDeveloper = findDeveloperByUserId(toUserId) ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
 
         var follow = followRepository.findAllByFromDeveloperAndToDeveloper(fromDeveloper, toDeveloper)

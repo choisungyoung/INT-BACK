@@ -1,6 +1,7 @@
 package com.notworking.isnt.service
 
 import com.notworking.isnt.model.Issue
+import com.notworking.isnt.model.IssueTemp
 import com.querydsl.core.Tuple
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -17,7 +18,11 @@ interface IssueService {
 
     fun findIssue(id: Long): Issue?
 
+    fun findIssueTemp(userId: String): IssueTemp?
+
     fun saveIssue(issue: Issue, userId: String, hashtags: List<String>?): Issue
+
+    fun saveIssueTemp(issueTemp: IssueTemp, userId: String): IssueTemp
 
     fun updateIssue(issue: Issue, hashtags: List<String>?)
 

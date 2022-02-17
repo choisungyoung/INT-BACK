@@ -34,14 +34,10 @@ class IssueController(
 
     /** 이슈 조회 */
     @GetMapping("/{id}")
-    fun find(@PathVariable id: Long): ResponseEntity<IssueDetailFindResponseDTO> {
-
-        var username: String? = null
-        if (SecurityContextHolder.getContext().authentication != null) {
-            var user = SecurityContextHolder.getContext().authentication.principal as User?
-            username = user?.username
-        }
-
+    fun find(
+        @PathVariable id: Long,
+        @RequestHeader("userId") userId: String?
+    ): ResponseEntity<IssueDetailFindResponseDTO> {
 
         var dto: IssueDetailFindResponseDTO? = issueService.findIssue(id)?.let {
             IssueDetailFindResponseDTO(
@@ -65,7 +61,7 @@ class IssueController(
                     pictureUrl = it.developer.pictureUrl,
                     point = it.developer.point,
                     popularity = it.developer.popularity,
-                    followYn = developerService.existsFollowByUserId(username, it.developer.userId)
+                    followYn = developerService.existsFollowByUserId(userId, it.developer.userId)
                 ),
                 it.solutions.stream().map {
                     SolutionFindResponseDTO(
@@ -118,6 +114,30 @@ class IssueController(
         return ResponseEntity.ok().body(dto)
     }
 
+    /** 이슈 임시저장 조회 */
+    @GetMapping("/temp")
+    fun findIssueTemp(
+        //@PathVariable("userId") pathUserId: String?,
+        @RequestHeader("userId") userId: String?
+    ): ResponseEntity<IssueTempFindResponseDTO> {
+        
+        //존재하지 않을 경우 빈값 리턴
+        userId ?: return ResponseEntity.ok().build()
+
+        var dto: IssueTempFindResponseDTO? = issueService.findIssueTemp(userId)?.let {
+            IssueTempFindResponseDTO(
+                it.id!!,
+                it.title,
+                it.content,
+                it.docType.code,
+            )
+        }
+
+        //존재하지 않을 경우 빈값 리턴
+        dto ?: return ResponseEntity.ok().build()
+        return ResponseEntity.ok().body(dto)
+    }
+
     /** 이슈 최신순 목록 조회 */
     @GetMapping("/list/latest")
     fun findList(
@@ -127,7 +147,7 @@ class IssueController(
             sort = ["createdDate"],
             direction = Sort.Direction.DESC
         ) pageable: Pageable,
-        @RequestParam(required = false) query: String?
+        @RequestParam(required = false) query: String?,
     ): ResponseEntity<Map<String, Object>> {
         var page: Page<Tuple> = issueService.findAllIssue(pageable, query)
         var list: List<IssueFindResponseDTO> = page.map {
@@ -182,6 +202,17 @@ class IssueController(
         user ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
 
         issueService.saveIssue(dto.toModel(), user.username, dto.hashtags)
+
+        return ResponseEntity.ok().build()
+    }
+
+    /** 이슈 임시 저장 */
+    @PostMapping("temp")
+    fun saveIssueTemp(@Valid @RequestBody dto: IssueTempSaveRequestDTO): ResponseEntity<Void> {
+        var user = SecurityContextHolder.getContext().authentication.principal as User?
+        user ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
+
+        issueService.saveIssueTemp(dto.toModel(), user.username)
 
         return ResponseEntity.ok().build()
     }

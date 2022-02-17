@@ -169,6 +169,15 @@ include::{snippets}/update-issue/http-request.adoc[]
 include::{snippets}/update-issue/http-response.adoc[]
 
 
+[[resources-issue-find]]
+=== issue 임시 저장 조회
+
+==== HTTP request
+include::{snippets}/find-issue/path-parameters.adoc[]
+include::{snippets}/find-issue/http-request.adoc[]
+
+
+
 [[resources-issue-delete]]
 === issue 삭제
 

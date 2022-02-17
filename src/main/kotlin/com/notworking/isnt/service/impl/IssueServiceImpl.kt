@@ -2,8 +2,10 @@ package com.notworking.isnt.service.impl
 
 import com.notworking.isnt.model.Hashtag
 import com.notworking.isnt.model.Issue
+import com.notworking.isnt.model.IssueTemp
 import com.notworking.isnt.repository.HashtagRepository
 import com.notworking.isnt.repository.IssueRepository
+import com.notworking.isnt.repository.IssueTempRepository
 import com.notworking.isnt.repository.support.IssueRepositorySupport
 import com.notworking.isnt.service.DeveloperService
 import com.notworking.isnt.service.IssueService
@@ -21,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional
 class IssueServiceImpl(
     val issueRepository: IssueRepository,
     val issueRepositorySupport: IssueRepositorySupport,
+    val issueTempRepository: IssueTempRepository,
     val solutionService: SolutionService,
     val developerService: DeveloperService,
     val hashtagRepository: HashtagRepository,
@@ -70,6 +73,14 @@ class IssueServiceImpl(
     }
 
     @Transactional
+    override fun findIssueTemp(userId: String): IssueTemp {
+        //이슈 조회
+        var issueTemp = issueTempRepository.findByDeveloperUserId(userId)
+
+        return issueTemp
+    }
+
+    @Transactional
     override fun saveIssue(issue: Issue, userId: String, hashtags: List<String>?): Issue {
         var developer = developerService.findDeveloperByUserId(userId)
 
@@ -86,6 +97,21 @@ class IssueServiceImpl(
         }
 
         issueRepository.save(issue)
+        issueTempRepository.deleteAllByDeveloper(developer)     //임시저장 이슈 삭제
+
+        return issue
+    }
+
+    @Transactional
+    override fun saveIssueTemp(issue: IssueTemp, userId: String): IssueTemp {
+        var developer = developerService.findDeveloperByUserId(userId)
+
+        // 없는 작성자일 경우
+        developer ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
+        // 작성사 등록
+        issue.developer = developer
+
+        issueTempRepository.save(issue)
 
         return issue
     }

@@ -2,6 +2,7 @@ package com.notworking.isnt.controller
 
 import com.notworking.isnt.CommonMvcTest
 import com.notworking.isnt.controller.issue.dto.IssueSaveRequestDTO
+import com.notworking.isnt.controller.issue.dto.IssueTempSaveRequestDTO
 import com.notworking.isnt.controller.issue.dto.IssueUpdateRequestDTO
 import com.notworking.isnt.model.Comment
 import com.notworking.isnt.model.Developer
@@ -50,6 +51,12 @@ class IssueControllerTest(
         content = "test content",
         docType = DocType.TEXT.code,
         mutableListOf("save test")
+    )
+
+    private val saveIssueTempDto = IssueTempSaveRequestDTO(
+        title = "Temp Test Title",
+        content = "temp test content",
+        docType = DocType.TEXT.code,
     )
 
     private val updateDto = IssueUpdateRequestDTO(
@@ -159,6 +166,54 @@ class IssueControllerTest(
                         fieldWithPath("content").description("이슈 내용"),
                         fieldWithPath("docType").description("문서유형 ('TEXT', 'MARK_DOWN')"),
                         fieldWithPath("hashtags.[]").description("해시태그 리스트"),
+                    )
+                )
+
+            )
+    }
+
+    @Test
+    fun testSaveIssueTemp() {
+        mockMvc.perform(
+            RestDocumentationRequestBuilders.post("$uri/temp")
+                .content(mapper.writeValueAsString(saveIssueTempDto))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(
+                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeSaveIssueUserId)
+                )
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andDo(MockMvcResultHandlers.print())
+            .andDo(
+                document(
+                    "save-issue-temp",
+                    requestFields(
+                        fieldWithPath("title").description("이슈 제목"),
+                        fieldWithPath("content").description("이슈 내용"),
+                        fieldWithPath("docType").description("문서유형 ('TEXT', 'MARK_DOWN')"),
+                    )
+                )
+
+            )
+
+
+        mockMvc.perform(
+            RestDocumentationRequestBuilders.get("$uri/temp")
+                .header("userId", beforeSaveIssueUserId)
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andDo(MockMvcResultHandlers.print())
+            .andDo(
+                document(
+                    "find-issue-temp",
+                    pathParameters(
+                        parameterWithName("userId").description("사용자 아이디 헤더에 있으면 없어도됨")
+                    ),
+                    responseFields(
+                        fieldWithPath("id").description("고유번호"),
+                        fieldWithPath("title").description("제목"),
+                        fieldWithPath("content").description("내용"),
+                        fieldWithPath("docType").description("문서유형 ('TEXT', 'MARK_DOWN')"),
                     )
                 )
 
@@ -323,6 +378,7 @@ class IssueControllerTest(
 
         mockMvc.perform(
             RestDocumentationRequestBuilders.get("$uri/{id}", beforeSaveIssueId)
+                .header("userId", "tjddud")
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andDo(MockMvcResultHandlers.print())
