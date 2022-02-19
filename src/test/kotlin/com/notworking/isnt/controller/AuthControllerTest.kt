@@ -11,6 +11,7 @@ import org.junit.jupiter.api.MethodOrderer
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestMethodOrder
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.MediaType
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders
@@ -27,6 +28,9 @@ class AuthControllerTest() : CommonMvcTest() {
 
     @Autowired
     lateinit var developerService: DeveloperService
+
+    @Value("\${spring.security.oauth2.client.registration.github.clientId}") // depth가 존재하는 값은 .으로 구분해서 값을 매핑
+    lateinit var gitHubClientId: String
 
     var loginDto = AuthLoginRequestDTO(
         "testLogin",
@@ -58,6 +62,37 @@ class AuthControllerTest() : CommonMvcTest() {
                 popularity = 0,
             )
         )
+    }
+
+    @Test
+    fun testLoginGitHub() {
+        val uri: String = "https://github.com/login/oauth/authorize?client_id=$gitHubClientId"
+        var objectMapper = ObjectMapper()
+        mockMvc.perform(
+            RestDocumentationRequestBuilders.post(uri)
+                .content(mapper.writeValueAsString(loginDto))
+                .contentType(MediaType.APPLICATION_JSON)
+
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andDo(MockMvcResultHandlers.print())
+            .andDo(
+                document(
+                    "login-github",
+                    responseFields(
+                        fieldWithPath("userId").description("유저아이디"),
+                        fieldWithPath("email").description("이메일"),
+                        fieldWithPath("name").description("이름"),
+                        fieldWithPath("introduction").description("소개"),
+                        fieldWithPath("gitUrl").description("작성자 깃주소"),
+                        fieldWithPath("webSiteUrl").description("작성자 웹사이트(블로그) 주소"),
+                        fieldWithPath("groupName").description("소속"),
+                        fieldWithPath("pictureUrl").description("사진경로"),
+                        fieldWithPath("point").description("점수"),
+                        fieldWithPath("popularity").description("인기도"),
+                    )
+                )
+            )
     }
 
     @Test

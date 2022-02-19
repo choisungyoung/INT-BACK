@@ -1,5 +1,6 @@
 package com.notworking.isnt.support.config
 
+import com.notworking.isnt.service.GitOAuth2UserService
 import com.notworking.isnt.service.UserCustomService
 import com.notworking.isnt.support.filter.JwtAuthenticationFilter
 import com.notworking.isnt.support.handler.CustomAuthenticationFailureHandler
@@ -37,6 +38,9 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
 
     @Autowired
     lateinit var jwtTokenProvider: JwtTokenProvider
+
+    @Autowired
+    lateinit var gitOAuth2UserService: GitOAuth2UserService
 
 
     @Bean
@@ -76,6 +80,8 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
 
             .antMatchers("/docs/**")
             .antMatchers("/error")
+            .antMatchers("/githubLogin.html")
+            .antMatchers("/login/oauth/authorize")
 
             .antMatchers(HttpMethod.OPTIONS, "/api/**")
             .antMatchers(HttpMethod.GET, "/api/issue/**")
@@ -101,21 +107,26 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
             ?.antMatchers("/resources/**")?.permitAll()
             ?.antMatchers(HttpMethod.GET, "/api/**")?.permitAll()
             //?.anyRequest()?.permitAll()
-            ?.and()
-            /*
-        ?.formLogin()
-        ?.usernameParameter("username")
-        ?.passwordParameter("password")
-        ?.permitAll()
-        ?.loginPage("/login")
-        ?.loginProcessingUrl("/api/auth/login")
-        ?.successHandler(customAuthenticationSuccessHandler)
-        ?.failureHandler(customAuthenticationFailureHandler)
-        ?.and()*/
+            ?.and() // 로그아웃 기능 설정 진입점, 로그아웃 성공 시 /로 이동
             ?.addFilterBefore(
                 JwtAuthenticationFilter(jwtTokenProvider),
                 UsernamePasswordAuthenticationFilter::class.java
             )
+            ?.oauth2Login()
+            ?.userInfoEndpoint()
+            ?.userService(gitOAuth2UserService)
+            ?.and()
+
+        /*
+    ?.formLogin()
+    ?.usernameParameter("username")
+    ?.passwordParameter("password")
+    ?.permitAll()
+    ?.loginPage("/login")
+    ?.loginProcessingUrl("/api/auth/login")
+    ?.successHandler(customAuthenticationSuccessHandler)
+    ?.failureHandler(customAuthenticationFailureHandler)
+    ?.and()*/
 
         /*
     ?.and()

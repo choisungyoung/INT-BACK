@@ -50,8 +50,8 @@ spring:
       client:
         registration:
           github:
-            clientId: 0b7da71d12ae9a16a2e0
-            clientSecret: 93e76a3cf476cd4715658d693517404f8cbb828c
+            clientId: b5f8bca0d18c51b13e4d
+            clientSecret: 76980e44be84febf540306362d80313ddb9e0daa
 
 ---
 spring:
