@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface IssueTempRepository : JpaRepository<IssueTemp, Long> {
-    fun findByDeveloperUserId(developerUserId: String): IssueTemp
+    fun findByDeveloperUserId(developerUserId: String): IssueTemp?
     fun deleteAllByDeveloper(developer: Developer)
 }

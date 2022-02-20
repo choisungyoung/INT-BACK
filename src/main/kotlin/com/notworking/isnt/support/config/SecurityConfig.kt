@@ -78,10 +78,16 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
         web.ignoring()
             .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
 
+            //.antMatchers("/")
             .antMatchers("/docs/**")
             .antMatchers("/error")
             .antMatchers("/githubLogin.html")
-            .antMatchers("/login/oauth/authorize")
+            //.antMatchers("/login/oauth2/code/github")
+            .antMatchers("/api/auth/login")
+            .antMatchers("/api/auth/github/loginSuccess")
+
+            //.antMatchers("/login/oauth2/code/github")
+
 
             .antMatchers(HttpMethod.OPTIONS, "/api/**")
             .antMatchers(HttpMethod.GET, "/api/issue/**")
@@ -89,7 +95,6 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
             .antMatchers(HttpMethod.GET, "/api/comment/**")
             .antMatchers(HttpMethod.GET, "/api/developer/**")
             .antMatchers(HttpMethod.POST, "/api/developer/**")
-            .antMatchers("/api/auth/login")
 
 
         //.mvcMatchers("/api/auth/login") // login이 security filter를 사용하므로 WebSecurity ignore하면 안됨
@@ -113,6 +118,10 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
                 UsernamePasswordAuthenticationFilter::class.java
             )
             ?.oauth2Login()
+            //?.redirectionEndpoint()
+            //?.baseUri("/oauth2/redirect")
+            //?.and()
+            ?.defaultSuccessUrl("/api/auth/github/loginSuccess")
             ?.userInfoEndpoint()
             ?.userService(gitOAuth2UserService)
             ?.and()

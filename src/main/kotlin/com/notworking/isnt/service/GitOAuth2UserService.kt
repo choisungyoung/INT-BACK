@@ -10,13 +10,15 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User
 import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.stereotype.Service
+import javax.servlet.http.HttpSession
 
 /**
  * OAuth2 응답 처리를 위한 서비스
  */
 @Service
 class GitOAuth2UserService(
-    val developerRepository: DeveloperRepository
+    val developerRepository: DeveloperRepository,
+    val httpSession: HttpSession
 ) : OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
     /**
@@ -42,10 +44,12 @@ class GitOAuth2UserService(
                 gitUrl = (attributes["url"] ?: "") as String,
                 webSiteUrl = (attributes["blog"] ?: "") as String,
                 groupName = (attributes["company"] ?: "") as String,
-                pictureUrl = (attributes["avatar_url"] ?: "") as String,
+                pictureUrl = (attributes["html_url"] ?: "") as String,
                 0,
                 0,
             )
+
+            developerRepository.save(developer)
         }
 
         // primary key를 의미
@@ -54,6 +58,9 @@ class GitOAuth2UserService(
             .userInfoEndpoint
             .userNameAttributeName
         // val member: Member = memberService.saveMember(m)
+
+        httpSession.setAttribute("user", developer)// /api/auth/github/loginSuccess  에서 사용할 세션
+
         return DefaultOAuth2User(
             setOf(SimpleGrantedAuthority(developer!!.role.key)),
             attributes, userNameAttributeName

@@ -22,7 +22,7 @@ interface IssueService {
 
     fun saveIssue(issue: Issue, userId: String, hashtags: List<String>?): Issue
 
-    fun saveIssueTemp(issueTemp: IssueTemp, userId: String): IssueTemp
+    fun saveIssueTemp(issueTemp: IssueTemp, userId: String): IssueTemp?
 
     fun updateIssue(issue: Issue, hashtags: List<String>?)
 

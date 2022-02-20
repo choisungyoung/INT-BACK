@@ -20,7 +20,12 @@ import javax.servlet.http.HttpServletResponse
 
 class JwtAuthenticationFilter(
     var jwtTokenProvider: JwtTokenProvider
+
 ) : GenericFilterBean() {
+    var whiteList: List<String> = listOf(
+        "/",
+        "/api/auth/loginSuccess/github",
+    )
 
     // Request로 들어오는 Jwt Token의 유효성을 검증하는 filter를 filterChain에 등록합니다.
     @Throws(IOException::class, ServletException::class)
@@ -33,15 +38,19 @@ class JwtAuthenticationFilter(
 
         try {
             if (token == null) {
-                throw BusinessException(Error.AUTH_NOT_FOUND_TOKEN)
-            }
-
-            if (jwtTokenProvider.validateAccessToken(token)) {   // token 검증
-                // TODO : getAuthentication access랑 refresh 메소드 나누거나 validateAccessToken validateRefreshToken합치거나 해야함
-                val auth: Authentication = jwtTokenProvider.getAuthentication(token) // 인증 객체 생성
-                SecurityContextHolder.getContext().authentication = auth // SecurityContextHolder에 인증 객체 저장
+                if (whiteList.contains(servletRequest.requestURI)) {
+                    logger.debug("whiteList url : $servletRequest.requestURI")
+                } else {
+                    throw BusinessException(Error.AUTH_NOT_FOUND_TOKEN)
+                }
             } else {
-                throw IllegalArgumentException()
+                if (jwtTokenProvider.validateAccessToken(token)) {   // token 검증
+                    // TODO : getAuthentication access랑 refresh 메소드 나누거나 validateAccessToken validateRefreshToken합치거나 해야함
+                    val auth: Authentication = jwtTokenProvider.getAuthentication(token) // 인증 객체 생성
+                    SecurityContextHolder.getContext().authentication = auth // SecurityContextHolder에 인증 객체 저장
+                } else {
+                    throw IllegalArgumentException()
+                }
             }
         } catch (e: Exception) {
             var error: Error? = null

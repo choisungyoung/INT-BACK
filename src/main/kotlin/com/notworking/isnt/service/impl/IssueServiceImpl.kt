@@ -73,7 +73,7 @@ class IssueServiceImpl(
     }
 
     @Transactional
-    override fun findIssueTemp(userId: String): IssueTemp {
+    override fun findIssueTemp(userId: String): IssueTemp? {
         //이슈 조회
         var issueTemp = issueTempRepository.findByDeveloperUserId(userId)
 
@@ -111,6 +111,7 @@ class IssueServiceImpl(
         // 작성사 등록
         issue.developer = developer
 
+        issueTempRepository.deleteAllByDeveloper(developer)
         issueTempRepository.save(issue)
 
         return issue

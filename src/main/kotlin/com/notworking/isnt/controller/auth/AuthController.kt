@@ -62,4 +62,5 @@ class AuthController(
 
         return ResponseEntity.ok().body(developerDto)
     }
+
 }
