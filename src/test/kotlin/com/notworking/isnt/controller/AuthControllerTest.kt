@@ -65,37 +65,6 @@ class AuthControllerTest() : CommonMvcTest() {
     }
 
     @Test
-    fun testLoginGitHub() {
-        val uri: String = "https://github.com/login/oauth/authorize?client_id=$gitHubClientId"
-        var objectMapper = ObjectMapper()
-        mockMvc.perform(
-            RestDocumentationRequestBuilders.post(uri)
-                .content(mapper.writeValueAsString(loginDto))
-                .contentType(MediaType.APPLICATION_JSON)
-
-        )
-            .andExpect(MockMvcResultMatchers.status().isOk)
-            .andDo(MockMvcResultHandlers.print())
-            .andDo(
-                document(
-                    "login-github",
-                    responseFields(
-                        fieldWithPath("userId").description("유저아이디"),
-                        fieldWithPath("email").description("이메일"),
-                        fieldWithPath("name").description("이름"),
-                        fieldWithPath("introduction").description("소개"),
-                        fieldWithPath("gitUrl").description("작성자 깃주소"),
-                        fieldWithPath("webSiteUrl").description("작성자 웹사이트(블로그) 주소"),
-                        fieldWithPath("groupName").description("소속"),
-                        fieldWithPath("pictureUrl").description("사진경로"),
-                        fieldWithPath("point").description("점수"),
-                        fieldWithPath("popularity").description("인기도"),
-                    )
-                )
-            )
-    }
-
-    @Test
     fun testLoginSuccess() {
         val uri: String = "/api/auth/login"
         var objectMapper = ObjectMapper()

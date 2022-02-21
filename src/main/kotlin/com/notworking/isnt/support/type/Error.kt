@@ -25,6 +25,8 @@ enum class Error(
     WITHDRAWAL_DEVELOPER_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "DEV004", "탈퇴회원 표시를 위한 계정이 없습니다."),
     DEVELOPER_USERID_DUPLICATION(HttpStatus.BAD_REQUEST.value(), "DEV005", "이미 존재하는 아이디입니다."),
     DEVELOPER_NAME_DUPLICATION(HttpStatus.BAD_REQUEST.value(), "DEV006", "이미 존재하는 닉네임입니다."),
+    DEVELOPER_SELF_FOLLOW(HttpStatus.BAD_REQUEST.value(), "DEV007", "자신을 팔로우할 수 없습니다."),
+    DEVELOPER_USER_ID_HAS_NOT_HEADER(HttpStatus.BAD_REQUEST.value(), "DEV008", "헤더에 유저아이디가 필요합니다."),
 
     // Issue
     ISSUE_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "ISU001", "존재하지 않는 이슈입니다."),

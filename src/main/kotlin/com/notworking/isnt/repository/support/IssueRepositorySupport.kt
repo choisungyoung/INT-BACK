@@ -63,7 +63,6 @@ class IssueRepositorySupport(
             builder.and(issue.title.contains(searchQuery).or(issue.content.contains(searchQuery)))
         }
 
-        var subIssue = QIssue("subIssue")
         var result = query.selectDistinct(
             issue,
             select(solution.id.count()).from(solution).where(solution.issue.eq(issue)),
@@ -78,4 +77,27 @@ class IssueRepositorySupport(
 
         return PageImpl(result.results, pageable, result.total)
     }
+
+    fun findAllIssuePageByUserId(pageable: Pageable, userId: String?): Page<Tuple> {
+        val builder = BooleanBuilder()
+
+        if (userId != null) {
+            builder.and(issue.developer.userId.eq(userId))
+        }
+
+        var result = query.selectDistinct(
+            issue,
+            select(solution.id.count()).from(solution).where(solution.issue.eq(issue)),
+            select(solution.id.count()).from(solution).where(solution.issue.eq(issue).and(solution.adoptYn.isTrue)),
+        )
+            .from(issue)
+            .where(builder)
+            .orderBy(issue.createdDate.desc())
+            .offset(pageable.offset)
+            .limit(pageable.pageSize.toLong())
+            .fetchResults()
+
+        return PageImpl(result.results, pageable, result.total)
+    }
+
 }

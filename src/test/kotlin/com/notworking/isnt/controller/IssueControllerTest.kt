@@ -371,6 +371,70 @@ class IssueControllerTest(
     }
 
     @Test
+    fun testFindListMyIssue() {
+
+        mockMvc.perform(
+            RestDocumentationRequestBuilders
+                .get("$uri/list/myIssue")
+                .param("page", "0")
+                .param("size", "5")
+                .header("userId", beforeSaveIssueUserId)
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andDo(MockMvcResultHandlers.print())
+            .andDo(
+                document(
+                    "find-issue-list-myIssue",
+                    requestParameters(
+                        parameterWithName("page").description("조회 페이지"),
+                        parameterWithName("size").description("조회 페이지 사이즈"),
+                    ),
+                    responseFields(
+                        fieldWithPath("content.[].id").description("고유번호"),
+                        fieldWithPath("content.[].title").description("제목"),
+                        fieldWithPath("content.[].content").description("내용"),
+                        fieldWithPath("content.[].docType").description("문서유형 ('TEXT', 'MARK_DOWN')"),
+                        fieldWithPath("content.[].hits").description("조회수"),
+                        fieldWithPath("content.[].recommendationCount").description("추천수"),
+                        fieldWithPath("content.[].solutionCount").description("솔루션 수"),
+                        fieldWithPath("content.[].adoptYn").description("채택여부"),
+                        fieldWithPath("content.[].hashtags.[]").description("해시태그 리스트"),
+                        fieldWithPath("content.[].developer.userId").description("작성자 아이디"),
+                        fieldWithPath("content.[].developer.email").description("작성자 이메일"),
+                        fieldWithPath("content.[].developer.name").description("작성자 이름"),
+                        fieldWithPath("content.[].developer.introduction").description("작성자 소개"),
+                        fieldWithPath("content.[].developer.gitUrl").description("작성자 깃주소"),
+                        fieldWithPath("content.[].developer.webSiteUrl").description("작성자 웹사이트(블로그) 주소"),
+                        fieldWithPath("content.[].developer.groupName").description("작성자 소속"),
+                        fieldWithPath("content.[].developer.pictureUrl").description("작성자 사진경로"),
+                        fieldWithPath("content.[].developer.point").description("작성자 점수"),
+                        fieldWithPath("content.[].developer.popularity").description("작성자 인기도"),
+                        fieldWithPath("content.[].modifiedDate").description("최종수정일시"),
+                        fieldWithPath("pageable.sort.unsorted").description("정렬종류"),
+                        fieldWithPath("pageable.sort.sorted").description("정렬종류"),
+                        fieldWithPath("pageable.sort.empty").description("정렬종류"),
+                        fieldWithPath("pageable.pageNumber").description("페이지수"),
+                        fieldWithPath("pageable.pageSize").description("페이지크기"),
+                        fieldWithPath("pageable.offset").description("오프셋"),
+                        fieldWithPath("pageable.unpaged").description("페이지정보 불포함여부"),
+                        fieldWithPath("pageable.paged").description("페이지정보 포함여부"),
+                        fieldWithPath("totalPages").description("총 페이지 수"),
+                        fieldWithPath("totalElements").description("총 요소 수"),
+                        fieldWithPath("last").description("마지막 여부"),
+                        fieldWithPath("numberOfElements").description("요소 수"),
+                        fieldWithPath("first").description("첫 여부"),
+                        fieldWithPath("sort.unsorted").description("정렬여부"),
+                        fieldWithPath("sort.sorted").description("정렬여부"),
+                        fieldWithPath("sort.empty").description("정렬존재여부"),
+                        fieldWithPath("size").description("크기"),
+                        fieldWithPath("number").description("번째"),
+                        fieldWithPath("empty").description("존재여부"),
+                    )
+                )
+            )
+    }
+
+    @Test
     fun testFind() {
 
         mockMvc.perform(

@@ -9,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import javax.servlet.http.HttpServletResponse
 import javax.servlet.http.HttpSession
 
 
@@ -21,11 +22,11 @@ class AuthGitController(
 ) {
     /** refresh token 사용자 조회 */
     @GetMapping("/loginSuccess")
-    fun loginGit(httpSession: HttpSession): String {
+    fun loginGit(httpSession: HttpSession, httpServletResponse: HttpServletResponse): String {
 
         httpSession.getAttribute("user") ?: throw BusinessException(Error.AUTH_FAILED)
         var developer = httpSession.getAttribute("user") as Developer
         httpSession.invalidate()
-        return "redirect:http://localhost:3000/loginSuccess?userId=${developer.userId}"
+        return "redirect:http://localhost:3000/git/success?token=${jwtTokenProvider.buildAccessToken(developer.userId)}"
     }
 }

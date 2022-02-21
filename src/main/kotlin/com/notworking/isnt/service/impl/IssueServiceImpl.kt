@@ -44,6 +44,10 @@ class IssueServiceImpl(
         return issueRepositorySupport.findAllIssuePage(pageable, query)
     }
 
+    override fun findAllIssueByUserId(pageable: Pageable, userId: String?): Page<Tuple> {
+
+        return issueRepositorySupport.findAllIssuePageByUserId(pageable, userId)
+    }
 
     override fun findAllLatestOrder(): List<Issue> {
         return issueRepositorySupport.findWithDeveloper();

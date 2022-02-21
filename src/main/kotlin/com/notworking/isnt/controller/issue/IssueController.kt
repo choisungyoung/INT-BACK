@@ -120,7 +120,7 @@ class IssueController(
         //@PathVariable("userId") pathUserId: String?,
         @RequestHeader("userId") userId: String?
     ): ResponseEntity<IssueTempFindResponseDTO> {
-        
+
         //존재하지 않을 경우 빈값 리턴
         userId ?: return ResponseEntity.ok().build()
 
@@ -193,6 +193,61 @@ class IssueController(
         if (query != null)
             resutlMap.put("query", query as Object) // TODO : Reflection등 이용하는 방법 찾아보기
         return ResponseEntity.ok().body(resutlMap)
+    }
+
+    /** 이슈 최신순 목록 조회 */
+    @GetMapping("/list/myIssue")
+    fun findListMyIssue(
+        @PageableDefault(
+            size = 10,
+            page = 0,
+            sort = ["createdDate"],
+            direction = Sort.Direction.DESC
+        ) pageable: Pageable,
+        @RequestHeader("userId") userId: String?
+    ): ResponseEntity<Page<IssueFindResponseDTO>> {
+
+        //존재하지 않을 경우 빈값 리턴
+        userId ?: throw BusinessException(Error.DEVELOPER_USER_ID_HAS_NOT_HEADER)
+        
+        var page: Page<Tuple> = issueService.findAllIssueByUserId(pageable, userId)
+        var list: List<IssueFindResponseDTO> = page.map {
+            var issue = it.get(0, Issue::class.java)
+            var solutionCount = it.get(1, Long::class.java)
+            var adoptYn: Boolean = it.get(2, Long::class.java)!! > 0
+
+            issue ?: throw BusinessException(Error.ISSUE_NOT_FOUND)
+            solutionCount = solutionCount ?: 0
+
+            IssueFindResponseDTO(
+                issue.id!!,
+                issue.title,
+                issue.content,
+                issue.docType.code,
+                issue.hits,
+                issue.recommendationCount,
+                solutionCount,
+                adoptYn,
+                issue.hashtags.stream().map {
+                    it.name
+                }.toList(),
+                DeveloperFindResponseDTO(
+                    userId = issue.developer.userId,
+                    email = issue.developer.email,
+                    name = issue.developer.name,
+                    introduction = issue.developer.introduction,
+                    gitUrl = issue.developer.gitUrl,
+                    webSiteUrl = issue.developer.webSiteUrl,
+                    groupName = issue.developer.groupName,
+                    pictureUrl = issue.developer.pictureUrl,
+                    point = issue.developer.point,
+                    popularity = issue.developer.popularity
+                ),
+                issue.getModifiedDate()
+            )
+        }.toList()
+
+        return ResponseEntity.ok().body(PageImpl(list, pageable, page.totalElements))
     }
 
     /** 이슈 저장 */

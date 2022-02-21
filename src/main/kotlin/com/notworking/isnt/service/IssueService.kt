@@ -14,6 +14,8 @@ interface IssueService {
 
     fun findAllIssue(pageable: Pageable, query: String?): Page<Tuple>
 
+    fun findAllIssueByUserId(pageable: Pageable, userId: String?): Page<Tuple>
+    
     fun findAllLatestOrder(): List<Issue>
 
     fun findIssue(id: Long): Issue?
