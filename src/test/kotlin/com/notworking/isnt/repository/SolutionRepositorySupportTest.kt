@@ -6,16 +6,25 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.domain.PageRequest
+import org.springframework.transaction.annotation.Transactional
 
 @Disabled
 @SpringBootTest
+@Transactional
 internal class SolutionRepositorySupportTest(
     @Autowired var solutionRepositorySupport: SolutionRepositorySupport,
 ) {
 
     @Test
-    fun findIssueJoinSolution() {
-        var soltuion = solutionRepositorySupport.findSolutionByIssueId(PageRequest.of(0, 10), 29)
+    fun findIssueJoinSolutionByIssueId() {
+        var soltuion = solutionRepositorySupport.findSolutionByIssueId(PageRequest.of(0, 5), 5976)
+
+        System.out.println(soltuion)
+    }
+
+    @Test
+    fun findIssueJoinSolutionByUserId() {
+        var soltuion = solutionRepositorySupport.findSolutionByUserId(PageRequest.of(0, 10), "")
         System.out.println(soltuion)
     }
 

@@ -2,6 +2,7 @@ package com.notworking.isnt.repository.support
 
 import com.notworking.isnt.model.Comment
 import com.notworking.isnt.model.QComment.comment
+import com.notworking.isnt.model.QDeveloper.developer
 import com.notworking.isnt.model.QIssue.issue
 import com.notworking.isnt.model.QSolution.solution
 import com.notworking.isnt.model.Solution
@@ -50,8 +51,35 @@ class SolutionRepositorySupport(
      * */
     fun findSolutionByIssueId(pageable: Pageable, issueId: Long): Page<Solution> {
         var result = query.selectFrom(solution)
+            .leftJoin(solution.comments, comment)
+            .fetchJoin()
+            .leftJoin(solution.developer, developer)
+            .fetchJoin()
+            .leftJoin(solution.issue, issue)
+            .fetchJoin()
             .distinct()
             .where(solution.issue.id.eq(issueId))
+            .orderBy(solution.adoptYn.desc(), solution.createdDate.asc())
+            .offset(pageable.offset)
+            .limit(pageable.pageSize.toLong())
+            .fetchResults()
+
+        return PageImpl<Solution>(result.results, pageable, result.total)
+    }
+
+    /**
+     * 최신순 솔루션 조회
+     * */
+    fun findSolutionByUserId(pageable: Pageable, userId: String): Page<Solution> {
+        var result = query.selectFrom(solution)
+            .leftJoin(solution.comments, comment)
+            .fetchJoin()
+            .leftJoin(solution.developer, developer)
+            .fetchJoin()
+            .leftJoin(solution.issue, issue)
+            .fetchJoin()
+            .distinct()
+            .where(solution.developer.userId.eq(userId))
             .orderBy(solution.adoptYn.desc(), solution.createdDate.asc())
             .offset(pageable.offset)
             .limit(pageable.pageSize.toLong())

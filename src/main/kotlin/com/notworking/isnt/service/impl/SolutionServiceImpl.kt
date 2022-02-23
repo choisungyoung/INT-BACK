@@ -12,7 +12,6 @@ import com.notworking.isnt.service.SolutionService
 import com.notworking.isnt.support.exception.BusinessException
 import com.notworking.isnt.support.type.Error
 import org.springframework.data.domain.Page
-import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -44,18 +43,12 @@ class SolutionServiceImpl(
         return solutionRepository.findAll()
     }
 
-    override fun findAllSolution(pageable: Pageable, issueId: Long): Page<Solution> {
+    override fun findAllSolutionByIssueId(pageable: Pageable, issueId: Long): Page<Solution> {
         return solutionRepositorySupport.findSolutionByIssueId(pageable, issueId)
     }
 
-    override fun findAllSolutionWithComment(pageable: Pageable, issueId: Long): Page<Solution> {
-        var page: Page<Solution> = solutionRepositorySupport.findSolutionByIssueId(pageable, issueId);
-
-        for (solution in page.content) {
-            solution.comments = commentRepository.findAllBySolutionId(solutionId = solution.id!!)
-        }
-
-        return PageImpl<Solution>(page.content, pageable, page.totalElements)
+    override fun findAllSolutionByUserId(pageable: Pageable, userId: String): Page<Solution> {
+        return solutionRepositorySupport.findSolutionByUserId(pageable, userId);
     }
 
     override fun findSolutionCount(issueId: Long): Long {

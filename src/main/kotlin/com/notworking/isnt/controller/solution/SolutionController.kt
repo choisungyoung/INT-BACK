@@ -36,7 +36,65 @@ class SolutionController(var solutionService: SolutionService) {
         ) pageable: Pageable,
         @PathVariable issueId: Long
     ): ResponseEntity<Page<SolutionFindResponseDTO>> {
-        var page: Page<Solution> = solutionService.findAllSolutionWithComment(pageable, issueId)
+        var page: Page<Solution> = solutionService.findAllSolutionByIssueId(pageable, issueId)
+        var list: List<SolutionFindResponseDTO> = page.stream()
+            .map { e ->
+                SolutionFindResponseDTO(
+                    e.id!!,
+                    e.content,
+                    e.docType.code,
+                    e.recommendationCount,
+                    DeveloperFindResponseDTO(
+                        userId = e.developer.userId,
+                        email = e.developer.email,
+                        name = e.developer.name,
+                        introduction = e.developer.introduction,
+                        gitUrl = e.developer.gitUrl,
+                        webSiteUrl = e.developer.webSiteUrl,
+                        groupName = e.developer.groupName,
+                        pictureUrl = e.developer.pictureUrl,
+                        point = e.developer.point,
+                        popularity = e.developer.popularity
+                    ),
+                    e.comments.stream().map {
+                        CommentFindResponseDTO(
+                            id = it.id!!,
+                            content = it.content,
+                            modifiedDate = it.getModifiedDate(),
+                            developer = DeveloperFindResponseDTO(
+                                userId = it.developer.userId,
+                                email = it.developer.email,
+                                name = it.developer.name,
+                                introduction = it.developer.introduction,
+                                gitUrl = it.developer.gitUrl,
+                                webSiteUrl = it.developer.webSiteUrl,
+                                groupName = it.developer.groupName,
+                                pictureUrl = it.developer.pictureUrl,
+                                point = it.developer.point,
+                                popularity = it.developer.popularity
+                            ),
+                        )
+                    }.toList(),
+                    e.adoptYn,
+                    e.getModifiedDate()
+                )
+            }.toList()
+
+        return ResponseEntity.ok().body(PageImpl<SolutionFindResponseDTO>(list, pageable, page.totalElements))
+    }
+
+    /** 솔루션 최신순 목록 조회 */
+    @GetMapping("/list/mySolution")
+    fun findListMySolution(
+        @PageableDefault(
+            size = 10,
+            page = 0,
+            sort = ["createdDate"],
+            direction = Sort.Direction.ASC
+        ) pageable: Pageable,
+        @RequestHeader("userId") userId: String
+    ): ResponseEntity<Page<SolutionFindResponseDTO>> {
+        var page: Page<Solution> = solutionService.findAllSolutionByUserId(pageable, userId)
         var list: List<SolutionFindResponseDTO> = page.stream()
             .map { e ->
                 SolutionFindResponseDTO(

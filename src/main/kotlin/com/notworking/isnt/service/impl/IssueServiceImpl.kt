@@ -59,7 +59,7 @@ class IssueServiceImpl(
         var issue = issueRepository.findById(id).orElseThrow { BusinessException(Error.ISSUE_NOT_FOUND) }
 
         // 솔루션 조회, 첫 10개
-        issue.solutions = solutionService.findAllSolutionWithComment(
+        issue.solutions = solutionService.findAllSolutionByIssueId(
             PageRequest.of(
                 0,
                 10
@@ -69,9 +69,6 @@ class IssueServiceImpl(
         // 조회수 증가
         // TODO: 방문기록 확인하는 로직 추가하기
         issue.increaseHit()
-
-        // 해시태그조회
-        issue.hashtags = hashtagRepository.findAllByIssueId(issue.id)
 
         return issue
     }

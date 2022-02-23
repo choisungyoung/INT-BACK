@@ -108,6 +108,9 @@ class SolutionControllerTest(
         // 수정 테스트케이스 id 설정
         updateDto.id = beforeSaveSolutionId;
         saveDto.issueId = beforeSaveIssueId;
+
+        //solutionService.findAllSolutionByIssueId(PageRequest.of(0, 5), beforeSaveIssueId)
+        //commentService.findAllComment(PageRequest.of(0, 5), beforeSaveSolutionId)
     }
 
     @AfterEach
@@ -224,6 +227,79 @@ class SolutionControllerTest(
             .andDo(
                 document(
                     "find-solution-list",
+                    requestParameters(
+                        parameterWithName("page").description("조회 페이지"),
+                        parameterWithName("size").description("조회 페이지 사이즈")
+                    ),
+                    responseFields(
+                        fieldWithPath("content.[].id").description("고유번호"),
+                        fieldWithPath("content.[].content").description("내용"),
+                        fieldWithPath("content.[].docType").description("문서유형 ('TEXT', 'MARK_DOWN')"),
+                        fieldWithPath("content.[].recommendationCount").description("추천수"),
+                        fieldWithPath("content.[].adoptYn").description("채택여부"),
+                        fieldWithPath("content.[].developer.userId").description("작성자 아이디"),
+                        fieldWithPath("content.[].developer.email").description("작성자 이메일"),
+                        fieldWithPath("content.[].developer.name").description("작성자 이름"),
+                        fieldWithPath("content.[].developer.introduction").description("작성자 소개"),
+                        fieldWithPath("content.[].developer.gitUrl").description("작성자 깃주소"),
+                        fieldWithPath("content.[].developer.webSiteUrl").description("작성자 웹사이트(블로그) 주소"),
+                        fieldWithPath("content.[].developer.groupName").description("작성자 소속"),
+                        fieldWithPath("content.[].developer.pictureUrl").description("작성자 사진경로"),
+                        fieldWithPath("content.[].developer.point").description("작성자 점수"),
+                        fieldWithPath("content.[].developer.popularity").description("작성자 인기도"),
+                        fieldWithPath("content.[].comment.[].id").description("코멘트 고유 아이디"),
+                        fieldWithPath("content.[].comment.[].content").description("코멘트 내용"),
+                        fieldWithPath("content.[].comment.[].modifiedDate").description("코멘트 최종수정일시"),
+                        fieldWithPath("content.[].comment.[].developer.userId").description("작성자 아이디"),
+                        fieldWithPath("content.[].comment.[].developer.email").description("코멘트 작성자 이메일"),
+                        fieldWithPath("content.[].comment.[].developer.name").description("코멘트 작성자 이름"),
+                        fieldWithPath("content.[].comment.[].developer.introduction").description("코멘트 작성자 소개"),
+                        fieldWithPath("content.[].comment.[].developer.gitUrl").description("코멘트 작성자 깃주소"),
+                        fieldWithPath("content.[].comment.[].developer.webSiteUrl").description("코멘트 작성자 웹사이트(블로그) 주소"),
+                        fieldWithPath("content.[].comment.[].developer.groupName").description("코멘트 작성자 소속"),
+                        fieldWithPath("content.[].comment.[].developer.pictureUrl").description("코멘트 작성자 사진경로"),
+                        fieldWithPath("content.[].comment.[].developer.point").description("코멘트 작성자 포인트"),
+                        fieldWithPath("content.[].comment.[].developer.popularity").description("코멘트 작성자 인기도"),
+                        fieldWithPath("content.[].modifiedDate").description("최종수정일시"),
+                        fieldWithPath("pageable.sort.unsorted").description("정렬종류"),
+                        fieldWithPath("pageable.sort.sorted").description("정렬종류"),
+                        fieldWithPath("pageable.sort.empty").description("정렬종류"),
+                        fieldWithPath("pageable.pageNumber").description("페이지수"),
+                        fieldWithPath("pageable.pageSize").description("페이지크기"),
+                        fieldWithPath("pageable.offset").description("오프셋"),
+                        fieldWithPath("pageable.unpaged").description("페이지정보 불포함여부"),
+                        fieldWithPath("pageable.paged").description("페이지정보 포함여부"),
+                        fieldWithPath("totalPages").description("총 페이지 수"),
+                        fieldWithPath("totalElements").description("총 요소 수"),
+                        fieldWithPath("last").description("마지막 여부"),
+                        fieldWithPath("numberOfElements").description("요소 수"),
+                        fieldWithPath("first").description("첫 여부"),
+                        fieldWithPath("sort.unsorted").description("정렬여부"),
+                        fieldWithPath("sort.sorted").description("정렬여부"),
+                        fieldWithPath("sort.empty").description("정렬존재여부"),
+                        fieldWithPath("size").description("크기"),
+                        fieldWithPath("number").description("번째"),
+                        fieldWithPath("empty").description("존재여부"),
+                    )
+                )
+            )
+    }
+
+    @Test
+    fun testFindListMySolution() {
+
+        mockMvc.perform(
+            RestDocumentationRequestBuilders
+                .get("$uri/list/mySolution")
+                .param("page", "0")
+                .param("size", "5")
+                .header("userId", beforeSaveSolutionUserId)
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andDo(MockMvcResultHandlers.print())
+            .andDo(
+                document(
+                    "find-solution-list-my-solution",
                     requestParameters(
                         parameterWithName("page").description("조회 페이지"),
                         parameterWithName("size").description("조회 페이지 사이즈")

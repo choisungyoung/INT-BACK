@@ -45,7 +45,7 @@ class CommentServiceImpl(
 
         comment.developer = developer   // 댓글 작성자 정보 추가
         comment.solution = solution
-
+        solution.comments.add(comment)
         commentRepository.save(comment)
         return comment
     }

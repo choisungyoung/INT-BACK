@@ -10,9 +10,9 @@ interface SolutionService {
 
     fun findAllSolution(): List<Solution>
 
-    fun findAllSolutionWithComment(pageable: Pageable, issueId: Long): Page<Solution>
+    fun findAllSolutionByUserId(pageable: Pageable, userId: String): Page<Solution>
 
-    fun findAllSolution(pageable: Pageable, issueId: Long): Page<Solution>
+    fun findAllSolutionByIssueId(pageable: Pageable, issueId: Long): Page<Solution>
 
     fun findAllSolution(issueId: Long): List<Solution>
 
