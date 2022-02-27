@@ -1,19 +1,18 @@
 package com.notworking.isnt.controller.auth
 
+import com.notworking.isnt.controller.auth.dto.AuthChecAuthNumkResponseDTO
 import com.notworking.isnt.controller.auth.dto.AuthLoginResponseDTO
 import com.notworking.isnt.controller.issue.dto.AuthLoginRequestDTO
 import com.notworking.isnt.model.Developer
 import com.notworking.isnt.service.DeveloperService
+import com.notworking.isnt.service.MailService
 import com.notworking.isnt.support.exception.BusinessException
 import com.notworking.isnt.support.provider.JwtTokenProvider
 import com.notworking.isnt.support.type.Error
 import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletResponse
 import javax.validation.Valid
@@ -24,7 +23,8 @@ import javax.validation.Valid
 class AuthController(
     var developerService: DeveloperService,
     var authenticationManager: AuthenticationManager,
-    var jwtTokenProvider: JwtTokenProvider
+    var jwtTokenProvider: JwtTokenProvider,
+    var mailService: MailService
 ) {
     /** refresh token 사용자 조회 */
     @PostMapping("/login")
@@ -63,4 +63,25 @@ class AuthController(
         return ResponseEntity.ok().body(developerDto)
     }
 
+
+    /** 인증메일 발송 */
+    @GetMapping("/sendAuthMail/{userId}")
+    fun sendAuthMail(@PathVariable userId: String): ResponseEntity<Void> {
+        mailService.sendAuthMail(userId)
+        return ResponseEntity.ok().build()
+    }
+
+    /** 인증번호 확인 */
+    @GetMapping("/checkAuthNum/{userId}")
+    fun checkAuthNum(
+        @PathVariable userId: String,
+        @RequestParam authNum: Int
+    ): ResponseEntity<AuthChecAuthNumkResponseDTO> {
+        var successYn = developerService.checkAuthNumByUserId(userId, authNum)
+        return ResponseEntity.ok().body(
+            AuthChecAuthNumkResponseDTO(
+                successYn = successYn
+            )
+        )
+    }
 }

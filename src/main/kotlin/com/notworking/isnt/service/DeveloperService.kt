@@ -27,4 +27,6 @@ interface DeveloperService {
     fun findFollowersByUserId(userId: String): Int
 
     fun existsFollowByUserId(fromUserId: String?, toUserId: String?): Boolean
+    
+    fun checkAuthNumByUserId(userId: String, authNum: Int): Boolean
 }

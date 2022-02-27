@@ -13,7 +13,9 @@ import kotlin.streams.toList
 
 @RequestMapping("/api/developer")
 @RestController
-class DeveloperController(var developerService: DeveloperService) {
+class DeveloperController(
+    var developerService: DeveloperService,
+) {
 
     /** 사용자 조회 */
     @GetMapping("/{name}")
@@ -134,4 +136,6 @@ class DeveloperController(var developerService: DeveloperService) {
 
         return ResponseEntity.ok().build()
     }
+
+
 }

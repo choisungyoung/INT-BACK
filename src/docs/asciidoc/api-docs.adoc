@@ -27,6 +27,26 @@ include::{snippets}/refreshtoken/http-request.adoc[]
 include::{snippets}/refreshtoken/http-response.adoc[]
 include::{snippets}/refreshtoken/response-fields.adoc[]
 
+[[resources-authentication-request-authnum]]
+=== request auth numbeer
+==== HTTP request
+include::{snippets}/auth-request-authNum/http-request.adoc[]
+include::{snippets}/auth-request-authNum/path-parameters.adoc[]
+
+==== HTTP response
+include::{snippets}/auth-request-authNum/http-response.adoc[]
+
+
+[[resources-authentication-check-authnum]]
+=== request auth number
+==== HTTP request
+include::{snippets}/auth-check-authNum/http-request.adoc[]
+include::{snippets}/auth-check-authNum/request-parameters.adoc
+include::{snippets}/auth-check-authNum/path-parameters.adoc[]
+
+==== HTTP response
+include::{snippets}/auth-check-authNum/http-response.adoc[]
+include::{snippets}/auth-check-authNum/response-fields.adoc[]
 
 
 

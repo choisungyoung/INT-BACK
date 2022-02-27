@@ -83,8 +83,7 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
             .antMatchers("/error")
             .antMatchers("/githubLogin.html")
             //.antMatchers("/login/oauth2/code/github")
-            .antMatchers("/api/auth/login")
-            .antMatchers("/api/auth/github/loginSuccess")
+            .antMatchers("/api/auth/**")
 
             //.antMatchers("/login/oauth2/code/github")
 

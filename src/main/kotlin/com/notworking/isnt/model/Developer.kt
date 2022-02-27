@@ -28,8 +28,10 @@ data class Developer(
     var pictureUrl: String?,
     var point: Int?,
     var popularity: Int?,
-) : UserDetails, BaseTimeEntity() {
 
+    ) : UserDetails, BaseTimeEntity() {
+
+    var authNum: Int = 0
     var role: Role = Role.USER
 
     fun update(developer: Developer): Developer? {

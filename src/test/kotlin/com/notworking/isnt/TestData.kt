@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional
 
 private val log = KotlinLogging.logger {}
 
+
 @Transactional
 @SpringBootTest
 class TestData(

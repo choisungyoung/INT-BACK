@@ -5,6 +5,8 @@ import com.notworking.isnt.CommonMvcTest
 import com.notworking.isnt.controller.issue.dto.AuthLoginRequestDTO
 import com.notworking.isnt.model.Developer
 import com.notworking.isnt.service.DeveloperService
+import com.notworking.isnt.support.exception.BusinessException
+import com.notworking.isnt.support.type.Error
 import mu.KotlinLogging
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.MethodOrderer
@@ -17,6 +19,7 @@ import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders
 import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
+import org.springframework.restdocs.request.RequestDocumentation.*
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
@@ -107,6 +110,59 @@ class AuthControllerTest() : CommonMvcTest() {
         )
             .andExpect(MockMvcResultMatchers.status().isUnauthorized)
             .andDo(MockMvcResultHandlers.print())
+    }
+
+    @Test
+    fun testSendAuthmail() {
+        val uri = "/api/auth/sendAuthMail"
+
+        mockMvc.perform(
+            RestDocumentationRequestBuilders.get("$uri/{userId}", "tjddud")
+
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andDo(MockMvcResultHandlers.print())
+            .andDo(
+                document(
+                    "auth-request-authNum",
+                    pathParameters(
+                        parameterWithName("userId").description("유저아이디")
+                    ),
+
+                    )
+            )
+    }
+
+    @Test
+    fun testCheckAuthNum() {
+
+        var userId = "tjddud"
+        var developer = developerService.findDeveloperByUserId(userId)
+        developer ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
+        val uri = "/api/auth/checkAuthNum"
+
+        mockMvc.perform(
+            RestDocumentationRequestBuilders.get("$uri/{userId}", userId)
+                .param("authNum", developer.authNum.toString())
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andDo(MockMvcResultHandlers.print())
+            .andDo(
+                document(
+                    "auth-check-authNum",
+
+                    requestParameters(
+                        parameterWithName("authNum").description("인증번호"),
+                    ),
+                    pathParameters(
+                        parameterWithName("userId").description("유저아이디")
+                    ),
+
+                    responseFields(
+                        fieldWithPath("successYn").description("인증 성공 여부"),
+                    )
+                    )
+            )
     }
 
     /*

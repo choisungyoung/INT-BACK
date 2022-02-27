@@ -150,4 +150,21 @@ class DeveloperServiceImpl(
 
         return followRepository.existsByFromDeveloperUserIdAndToDeveloperUserId(fromUserId, toUserId)
     }
+
+    override fun checkAuthNumByUserId(userId: String, authNum: Int): Boolean {
+
+        var developer = findDeveloperByUserId(userId)
+        developer ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
+
+        if (developer.authNum == 0) {
+            throw BusinessException(Error.DEVELOPER_HAS_NOT_AUTH_NUM)
+        }
+
+        if (developer.authNum == authNum) {
+            developer.authNum = 0
+            return true
+        }
+
+        return false
+    }
 }
