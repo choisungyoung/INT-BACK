@@ -151,6 +151,7 @@ class DeveloperServiceImpl(
         return followRepository.existsByFromDeveloperUserIdAndToDeveloperUserId(fromUserId, toUserId)
     }
 
+    @Transactional
     override fun checkAuthNumByUserId(userId: String, authNum: Int): Boolean {
 
         var developer = findDeveloperByUserId(userId)

@@ -28,7 +28,7 @@ include::{snippets}/refreshtoken/http-response.adoc[]
 include::{snippets}/refreshtoken/response-fields.adoc[]
 
 [[resources-authentication-request-authnum]]
-=== request auth numbeer
+=== 인증번호 요청
 ==== HTTP request
 include::{snippets}/auth-request-authNum/http-request.adoc[]
 include::{snippets}/auth-request-authNum/path-parameters.adoc[]
@@ -38,10 +38,10 @@ include::{snippets}/auth-request-authNum/http-response.adoc[]
 
 
 [[resources-authentication-check-authnum]]
-=== request auth number
+=== 인증번호 확인
 ==== HTTP request
 include::{snippets}/auth-check-authNum/http-request.adoc[]
-include::{snippets}/auth-check-authNum/request-parameters.adoc
+include::{snippets}/auth-check-authNum/request-parameters.adoc[]
 include::{snippets}/auth-check-authNum/path-parameters.adoc[]
 
 ==== HTTP response
@@ -189,7 +189,7 @@ include::{snippets}/update-issue/http-request.adoc[]
 include::{snippets}/update-issue/http-response.adoc[]
 
 
-[[resources-issue-create]]
+[[resources-issue-temp]]
 === issue 임시 저장
 ==== HTTP request
 include::{snippets}/save-issue-temp/request-fields.adoc[]
@@ -199,7 +199,7 @@ include::{snippets}/save-issue-temp/http-request.adoc[]
 include::{snippets}/save-issue-temp/http-response.adoc[]
 
 
-[[resources-issue-find]]
+[[resources-issue-find-temp]]
 === issue 임시 저장 조회
 
 ==== HTTP request
