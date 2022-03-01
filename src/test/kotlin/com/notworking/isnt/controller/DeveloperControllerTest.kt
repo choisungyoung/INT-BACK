@@ -1,8 +1,8 @@
 package com.notworking.isnt.controller
 
 import com.notworking.isnt.CommonMvcTest
+import com.notworking.isnt.controller.auth.dto.AuthUpdatePasswordRequestDTO
 import com.notworking.isnt.controller.developer.dto.DeveloperSaveRequestDTO
-import com.notworking.isnt.controller.developer.dto.DeveloperUpdatePasswordRequestDTO
 import com.notworking.isnt.controller.developer.dto.DeveloperUpdateRequestDTO
 import com.notworking.isnt.model.Developer
 import com.notworking.isnt.service.DeveloperService
@@ -60,10 +60,11 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
             popularity = 0,
         )
 
-    private val updatePasswordDeveloperDTO: DeveloperUpdatePasswordRequestDTO =
-        DeveloperUpdatePasswordRequestDTO(
+    private val updatePasswordDeveloperDTO: AuthUpdatePasswordRequestDTO =
+        AuthUpdatePasswordRequestDTO(
             userId = beforeDeveloperId,
             password = "aa12345^^",
+            authNum = 315572
         )
 
     @BeforeEach
@@ -246,28 +247,6 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
             )
     }
 
-    @Test
-    fun testUpdatePassword() {
-        mockMvc.perform(
-            RestDocumentationRequestBuilders.put("${uri}/password")
-                .content(mapper.writeValueAsString(updatePasswordDeveloperDTO))
-                .contentType(MediaType.APPLICATION_JSON)
-                .header(
-                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeDeveloperId)
-                )
-        )
-            .andExpect(MockMvcResultMatchers.status().isOk)
-            .andDo(MockMvcResultHandlers.print())
-            .andDo(
-                document(
-                    "update-password-developer",
-                    requestFields(
-                        fieldWithPath("userId").description("아이디"),
-                        fieldWithPath("password").description("패스워드"),
-                    )
-                )
-            )
-    }
 
     @Test
     fun testDelete() {

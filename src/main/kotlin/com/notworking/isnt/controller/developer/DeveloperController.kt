@@ -75,6 +75,13 @@ class DeveloperController(
     /** 사용자 수정 */
     @PutMapping
     fun update(@RequestBody dto: DeveloperUpdateRequestDTO): ResponseEntity<DeveloperFindResponseDTO> {
+
+        var user = SecurityContextHolder.getContext().authentication.principal as User?
+        user ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
+        if (user.username != dto.userId) {
+            throw BusinessException(Error.DEVELOPER_MODIFY_SELF_ONLY)
+        }
+
         var dto: DeveloperFindResponseDTO? = developerService.updateDeveloper(dto.toModel())?.let {
             DeveloperFindResponseDTO(
                 userId = it.userId,
@@ -93,18 +100,15 @@ class DeveloperController(
         return ResponseEntity.ok().body(dto)
     }
 
-    /** 사용자 패스워드 수정 */
-    @PutMapping("/password")
-    fun updatePassword(@RequestBody dto: DeveloperUpdatePasswordRequestDTO): ResponseEntity<Void> {
-
-        developerService.updatePasswordDeveloper(dto.userId, dto.password)
-
-        return ResponseEntity.ok().build()
-    }
-
     /** 사용자 삭제 */
     @DeleteMapping("/{userId}")
     fun delete(@PathVariable userId: String): ResponseEntity<Void> {
+
+        var user = SecurityContextHolder.getContext().authentication.principal as User?
+        user ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
+        if (user.username != userId) {
+            throw BusinessException(Error.DEVELOPER_MODIFY_SELF_ONLY)
+        }
         developerService.deleteDeveloper(userId)
 
         return ResponseEntity.ok().build()

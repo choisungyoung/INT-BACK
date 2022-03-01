@@ -2,6 +2,7 @@ package com.notworking.isnt.controller.auth
 
 import com.notworking.isnt.controller.auth.dto.AuthChecAuthNumkResponseDTO
 import com.notworking.isnt.controller.auth.dto.AuthLoginResponseDTO
+import com.notworking.isnt.controller.auth.dto.AuthUpdatePasswordRequestDTO
 import com.notworking.isnt.controller.issue.dto.AuthLoginRequestDTO
 import com.notworking.isnt.model.Developer
 import com.notworking.isnt.service.DeveloperService
@@ -83,5 +84,20 @@ class AuthController(
                 successYn = successYn
             )
         )
+    }
+
+    /** 사용자 패스워드 수정 */
+    @PutMapping("/password")
+    fun updatePassword(@RequestBody dto: AuthUpdatePasswordRequestDTO): ResponseEntity<Void> {
+
+        var successYn = developerService.checkAuthNumByUserId(dto.userId, dto.authNum)
+
+        if (!successYn) {   // 인증번호 재확인
+            throw BusinessException(Error.AUTH_INVALID_AUTH_NUM)
+        }
+        
+        developerService.updatePasswordDeveloper(dto.userId, dto.password)
+
+        return ResponseEntity.ok().build()
     }
 }

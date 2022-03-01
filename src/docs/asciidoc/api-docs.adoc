@@ -49,6 +49,15 @@ include::{snippets}/auth-check-authNum/http-response.adoc[]
 include::{snippets}/auth-check-authNum/response-fields.adoc[]
 
 
+[[resources-authentication-check-authnum]]
+=== 인증번호로 패스워드 수정
+==== HTTP request
+include::{snippets}/auth-update-password/http-request.adoc[]
+include::{snippets}/auth-update-password/request-fields.adoc[]
+
+==== HTTP response
+include::{snippets}/auth-update-password/http-response.adoc[]
+
 
 [[resources-developer]]
 == Developer
@@ -165,6 +174,19 @@ include::{snippets}/find-issue-list-latest/response-fields.adoc[]
 include::{snippets}/find-issue-list-latest/response-body.adoc[]
 include::{snippets}/find-issue-list-latest/http-response.adoc[]
 
+
+[[resources-issue-list-find-myissue]]
+=== issue 목록조회 (내 이슈 조회)
+==== HTTP request
+include::{snippets}/find-issue-list-myIssue/http-request.adoc[]
+include::{snippets}/find-issue-list-myIssue/request-parameters.adoc[]
+
+==== HTTP response
+include::{snippets}/find-issue-list-myIssue/response-fields.adoc[]
+include::{snippets}/find-issue-list-myIssue/response-body.adoc[]
+include::{snippets}/find-issue-list-myIssue/http-response.adoc[]
+
+
 [[resources-issue-find]]
 === issue 조회
 
@@ -222,7 +244,6 @@ include::{snippets}/delete-issue/http-request.adoc[]
 include::{snippets}/delete-issue/http-response.adoc[]
 
 
-
 [[resources-solution]]
 == Solution
 
@@ -258,6 +279,19 @@ include::{snippets}/find-solution-list/request-parameters.adoc[]
 include::{snippets}/find-solution-list/response-fields.adoc[]
 include::{snippets}/find-solution-list/response-body.adoc[]
 include::{snippets}/find-solution-list/http-response.adoc[]
+
+
+[[resources-solution-list]]
+=== solution 목록조회 (내 솔루션 조회)
+==== HTTP request
+include::{snippets}/find-solution-list-my-solution/http-request.adoc[]
+include::{snippets}/find-solution-list-my-solution/request-parameters.adoc[]
+
+==== HTTP response
+include::{snippets}/find-solution-list-my-solution/response-fields.adoc[]
+include::{snippets}/find-solution-list-my-solution/response-body.adoc[]
+include::{snippets}/find-solution-list-my-solution/http-response.adoc[]
+
 
 [[resources-solution-update]]
 === solution 수정

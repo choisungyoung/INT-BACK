@@ -162,7 +162,6 @@ class DeveloperServiceImpl(
         }
 
         if (developer.authNum == authNum) {
-            developer.authNum = 0
             return true
         }
 

@@ -18,7 +18,8 @@ enum class Error(
     AUTH_INVALID_TOKEN(HttpStatus.UNAUTHORIZED.value(), "ATH003", "인증 토큰이 유효하지 않습니다."),
     AUTH_NOT_FOUND_TOKEN(HttpStatus.UNAUTHORIZED.value(), "ATH004", "인증 토큰이 존재하지 않습니다."),
     AUTH_GIT_HUB(HttpStatus.UNAUTHORIZED.value(), "ATH005", "GitHub인증 사용자입니다."),
-
+    AUTH_INVALID_AUTH_NUM(HttpStatus.UNAUTHORIZED.value(), "ATH003", "인증 번호가 유효하지 않습니다."),
+    
     // Developer
     DEVELOPER_INPUT_INVALID(HttpStatus.BAD_REQUEST.value(), "DEV001", "사용자 정보가 유효하지 않습니다."),
     DEVELOPER_EMAIL_DUPLICATION(HttpStatus.BAD_REQUEST.value(), "DEV002", "이미 존재하는 이메일입니다."),
@@ -29,6 +30,7 @@ enum class Error(
     DEVELOPER_SELF_FOLLOW(HttpStatus.BAD_REQUEST.value(), "DEV007", "자신을 팔로우할 수 없습니다."),
     DEVELOPER_USER_ID_HAS_NOT_HEADER(HttpStatus.BAD_REQUEST.value(), "DEV008", "헤더에 유저아이디가 필요합니다."),
     DEVELOPER_HAS_NOT_AUTH_NUM(HttpStatus.BAD_REQUEST.value(), "DEV009", "인증번호가 발송되지 않은 사용자입니다."),
+    DEVELOPER_MODIFY_SELF_ONLY(HttpStatus.BAD_REQUEST.value(), "DEV010", "사용자 본인만 수정가능합니다."),
 
     // Issue
     ISSUE_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "ISU001", "존재하지 않는 이슈입니다."),

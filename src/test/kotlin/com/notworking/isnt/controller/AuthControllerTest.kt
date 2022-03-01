@@ -2,10 +2,12 @@ package com.notworking.isnt.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.notworking.isnt.CommonMvcTest
+import com.notworking.isnt.controller.auth.dto.AuthUpdatePasswordRequestDTO
 import com.notworking.isnt.controller.issue.dto.AuthLoginRequestDTO
 import com.notworking.isnt.model.Developer
 import com.notworking.isnt.service.DeveloperService
 import com.notworking.isnt.support.exception.BusinessException
+import com.notworking.isnt.support.provider.JwtTokenProvider
 import com.notworking.isnt.support.type.Error
 import mu.KotlinLogging
 import org.junit.jupiter.api.BeforeEach
@@ -17,6 +19,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.MediaType
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders
+import org.springframework.restdocs.payload.PayloadDocumentation
 import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 import org.springframework.restdocs.request.RequestDocumentation.*
@@ -45,6 +48,8 @@ class AuthControllerTest() : CommonMvcTest() {
         "aa12345^^"
     )
 
+    val uri: String = "/api/auth"
+
     @BeforeEach
     fun beforeEach() {
 
@@ -69,10 +74,9 @@ class AuthControllerTest() : CommonMvcTest() {
 
     @Test
     fun testLoginSuccess() {
-        val uri: String = "/api/auth/login"
         var objectMapper = ObjectMapper()
         mockMvc.perform(
-            RestDocumentationRequestBuilders.post(uri)
+            RestDocumentationRequestBuilders.post("$uri/login")
                 .content(mapper.writeValueAsString(loginDto))
                 .contentType(MediaType.APPLICATION_JSON)
 
@@ -100,10 +104,9 @@ class AuthControllerTest() : CommonMvcTest() {
 
     @Test
     fun testLoginFail() {
-        val uri: String = "/api/auth/login"
         var objectMapper = ObjectMapper()
         mockMvc.perform(
-            MockMvcRequestBuilders.post(uri)
+            MockMvcRequestBuilders.post("$uri/login")
                 .content(mapper.writeValueAsString(loginFailDto))
                 .contentType(MediaType.APPLICATION_JSON)
 
@@ -114,10 +117,9 @@ class AuthControllerTest() : CommonMvcTest() {
 
     @Test
     fun testSendAuthmail() {
-        val uri = "/api/auth/sendAuthMail"
 
         mockMvc.perform(
-            RestDocumentationRequestBuilders.get("$uri/{userId}", "tjddud")
+            RestDocumentationRequestBuilders.get("$uri/sendAuthMail/{userId}", "tjddud")
 
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
@@ -139,10 +141,9 @@ class AuthControllerTest() : CommonMvcTest() {
         var userId = "tjddud"
         var developer = developerService.findDeveloperByUserId(userId)
         developer ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
-        val uri = "/api/auth/checkAuthNum"
 
         mockMvc.perform(
-            RestDocumentationRequestBuilders.get("$uri/{userId}", userId)
+            RestDocumentationRequestBuilders.get("$uri/checkAuthNum/{userId}", userId)
                 .param("authNum", developer.authNum.toString())
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
@@ -161,7 +162,38 @@ class AuthControllerTest() : CommonMvcTest() {
                     responseFields(
                         fieldWithPath("successYn").description("인증 성공 여부"),
                     )
+                )
+            )
+    }
+
+    private val updatePasswordDTO: AuthUpdatePasswordRequestDTO =
+        AuthUpdatePasswordRequestDTO(
+            userId = "tjddud",
+            password = "2",
+            authNum = 315572
+        )
+
+    @Test
+    fun testUpdatePassword() {
+        mockMvc.perform(
+            RestDocumentationRequestBuilders.put("${uri}/password")
+                .content(mapper.writeValueAsString(updatePasswordDTO))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(
+                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken("tjddud")
+                )
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andDo(MockMvcResultHandlers.print())
+            .andDo(
+                document(
+                    "auth-update-password",
+                    PayloadDocumentation.requestFields(
+                        fieldWithPath("userId").description("아이디"),
+                        fieldWithPath("password").description("패스워드"),
+                        fieldWithPath("authNum").description("인증번호"),
                     )
+                )
             )
     }
 
