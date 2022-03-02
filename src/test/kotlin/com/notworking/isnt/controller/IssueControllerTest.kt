@@ -470,6 +470,7 @@ class IssueControllerTest(
                         fieldWithPath("developer.followYn").description("작성자 팔로우 여부"),
                         fieldWithPath("modifiedDate").description("최종수정일시"),
                         fieldWithPath("solutions.[].id").description("고유번호"),
+                        fieldWithPath("solutions.[].issueId").description("이슈 아이디"),
                         fieldWithPath("solutions.[].content").description("내용"),
                         fieldWithPath("solutions.[].docType").description("문서유형 ('TEXT', 'MARK_DOWN')"),
                         fieldWithPath("solutions.[].recommendationCount").description("추천수"),

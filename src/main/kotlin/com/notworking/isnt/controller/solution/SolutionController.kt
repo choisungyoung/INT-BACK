@@ -41,6 +41,7 @@ class SolutionController(var solutionService: SolutionService) {
             .map { e ->
                 SolutionFindResponseDTO(
                     e.id!!,
+                    e.issue?.id!!,
                     e.content,
                     e.docType.code,
                     e.recommendationCount,
@@ -83,7 +84,7 @@ class SolutionController(var solutionService: SolutionService) {
         return ResponseEntity.ok().body(PageImpl<SolutionFindResponseDTO>(list, pageable, page.totalElements))
     }
 
-    /** 솔루션 최신순 목록 조회 */
+    /** 내 솔루션 최신순 목록 조회 */
     @GetMapping("/list/mySolution")
     fun findListMySolution(
         @PageableDefault(
@@ -99,6 +100,7 @@ class SolutionController(var solutionService: SolutionService) {
             .map { e ->
                 SolutionFindResponseDTO(
                     e.id!!,
+                    e.issue?.id!!,
                     e.content,
                     e.docType.code,
                     e.recommendationCount,
@@ -151,6 +153,7 @@ class SolutionController(var solutionService: SolutionService) {
         return ResponseEntity.ok().body(
             SolutionFindResponseDTO(
                 solution.id!!,
+                solution.issue?.id!!,
                 solution.content,
                 solution.docType.code,
                 solution.recommendationCount,

@@ -20,6 +20,9 @@ class AuthGitController(
     var authenticationManager: AuthenticationManager,
     var jwtTokenProvider: JwtTokenProvider
 ) {
+    //val redirectBaseUrl = "notworking.kr"
+    val redirectBaseUrl = "localhost:3000"
+
     /** refresh token 사용자 조회 */
     @GetMapping("/loginSuccess")
     fun loginGit(httpSession: HttpSession, httpServletResponse: HttpServletResponse): String {
@@ -27,6 +30,6 @@ class AuthGitController(
         httpSession.getAttribute("user") ?: throw BusinessException(Error.AUTH_FAILED)
         var developer = httpSession.getAttribute("user") as Developer
         httpSession.invalidate()
-        return "redirect:http://notworking.kr/git/success?token=${jwtTokenProvider.buildAccessToken(developer.userId)}"
+        return "redirect:http://$redirectBaseUrl/git/success?token=${jwtTokenProvider.buildAccessToken(developer.userId)}"
     }
 }

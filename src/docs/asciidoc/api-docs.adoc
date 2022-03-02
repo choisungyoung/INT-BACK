@@ -49,7 +49,7 @@ include::{snippets}/auth-check-authNum/http-response.adoc[]
 include::{snippets}/auth-check-authNum/response-fields.adoc[]
 
 
-[[resources-authentication-check-authnum]]
+[[resources-authentication-update-password]]
 === 인증번호로 패스워드 수정
 ==== HTTP request
 include::{snippets}/auth-update-password/http-request.adoc[]
@@ -281,7 +281,7 @@ include::{snippets}/find-solution-list/response-body.adoc[]
 include::{snippets}/find-solution-list/http-response.adoc[]
 
 
-[[resources-solution-list]]
+[[resources-solution-list-mysolution]]
 === solution 목록조회 (내 솔루션 조회)
 ==== HTTP request
 include::{snippets}/find-solution-list-my-solution/http-request.adoc[]

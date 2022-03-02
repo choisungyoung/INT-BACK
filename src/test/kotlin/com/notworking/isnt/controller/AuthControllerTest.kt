@@ -7,7 +7,6 @@ import com.notworking.isnt.controller.issue.dto.AuthLoginRequestDTO
 import com.notworking.isnt.model.Developer
 import com.notworking.isnt.service.DeveloperService
 import com.notworking.isnt.support.exception.BusinessException
-import com.notworking.isnt.support.provider.JwtTokenProvider
 import com.notworking.isnt.support.type.Error
 import mu.KotlinLogging
 import org.junit.jupiter.api.BeforeEach
@@ -179,9 +178,6 @@ class AuthControllerTest() : CommonMvcTest() {
             RestDocumentationRequestBuilders.put("${uri}/password")
                 .content(mapper.writeValueAsString(updatePasswordDTO))
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(
-                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken("tjddud")
-                )
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andDo(MockMvcResultHandlers.print())

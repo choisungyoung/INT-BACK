@@ -66,6 +66,7 @@ class IssueController(
                 it.solutions.stream().map {
                     SolutionFindResponseDTO(
                         it.id!!,
+                        it.issue?.id!!,
                         it.content,
                         it.docType.code,
                         it.recommendationCount,
@@ -209,7 +210,7 @@ class IssueController(
 
         //존재하지 않을 경우 빈값 리턴
         userId ?: throw BusinessException(Error.DEVELOPER_USER_ID_HAS_NOT_HEADER)
-        
+
         var page: Page<Tuple> = issueService.findAllIssueByUserId(pageable, userId)
         var list: List<IssueFindResponseDTO> = page.map {
             var issue = it.get(0, Issue::class.java)

@@ -4,6 +4,7 @@ import com.notworking.isnt.controller.developer.dto.DeveloperFindResponseDTO
 
 data class SolutionFindResponseDTO(
     var id: Long,
+    var issueId: Long,
     var content: String,
     var docType: String,
     var recommendationCount: Long,

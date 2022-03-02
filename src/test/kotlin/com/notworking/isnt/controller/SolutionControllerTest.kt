@@ -180,6 +180,7 @@ class SolutionControllerTest(
                     ),
                     responseFields(
                         fieldWithPath("id").description("고유번호"),
+                        fieldWithPath("issueId").description("이슈 아이디"),
                         fieldWithPath("content").description("내용"),
                         fieldWithPath("docType").description("문서유형 ('TEXT', 'MARK_DOWN')"),
                         fieldWithPath("recommendationCount").description("추천수"),
@@ -234,6 +235,7 @@ class SolutionControllerTest(
                     responseFields(
                         fieldWithPath("content.[].id").description("고유번호"),
                         fieldWithPath("content.[].content").description("내용"),
+                        fieldWithPath("content.[].issueId").description("이슈 아이디"),
                         fieldWithPath("content.[].docType").description("문서유형 ('TEXT', 'MARK_DOWN')"),
                         fieldWithPath("content.[].recommendationCount").description("추천수"),
                         fieldWithPath("content.[].adoptYn").description("채택여부"),
@@ -306,6 +308,7 @@ class SolutionControllerTest(
                     ),
                     responseFields(
                         fieldWithPath("content.[].id").description("고유번호"),
+                        fieldWithPath("content.[].issueId").description("이슈 아이디"),
                         fieldWithPath("content.[].content").description("내용"),
                         fieldWithPath("content.[].docType").description("문서유형 ('TEXT', 'MARK_DOWN')"),
                         fieldWithPath("content.[].recommendationCount").description("추천수"),
