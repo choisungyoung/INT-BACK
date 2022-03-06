@@ -288,14 +288,13 @@ class SolutionControllerTest(
     }
 
     @Test
-    fun testFindListMySolution() {
+    fun testFindListByUserId() {
 
         mockMvc.perform(
             RestDocumentationRequestBuilders
-                .get("$uri/list/mySolution")
+                .get("$uri/list/developer/$beforeSaveSolutionUserId")
                 .param("page", "0")
                 .param("size", "5")
-                .header("userId", beforeSaveSolutionUserId)
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andDo(MockMvcResultHandlers.print())

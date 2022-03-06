@@ -27,7 +27,7 @@ class JwtTokenProvider(
     val BEARER_TYPE = "bearer"
 
     //var ACCESS_TOKEN_EXPIRE_TIME = (30).toLong()  // 30ms
-    var ACCESS_TOKEN_EXPIRE_TIME = (1000 * 60 * 30 * 2 * 24).toLong()  // 1일
+    var ACCESS_TOKEN_EXPIRE_TIME = (1000 * 60 * 30).toLong()  // 30분
     var REFRESH_TOKEN_EXPIRE_TIME = (1000 * 60 * 60 * 24 * 7).toLong()  // 7일
 
     val log = LoggerFactory.getLogger(javaClass)

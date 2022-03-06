@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.domain.PageRequest
+import org.springframework.transaction.annotation.Transactional
 
 @Disabled
 @SpringBootTest
@@ -42,4 +43,19 @@ internal class IssueRepositorySupportTest(
         )
         System.out.println(issue)
     }
+
+    @Disabled
+    @Test
+    @Transactional
+    fun findAllIssuePageTest() {
+        
+        var issue = issueRepositorySupport.findAllIssuePageTest(
+            PageRequest.of(
+                0,
+                10
+            ), null
+        )
+        System.out.println(issue)
+    }
+
 }

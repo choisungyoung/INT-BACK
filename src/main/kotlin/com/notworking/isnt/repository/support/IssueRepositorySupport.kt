@@ -2,7 +2,6 @@ package com.notworking.isnt.repository.support
 
 import com.notworking.isnt.model.Issue
 import com.notworking.isnt.model.QDeveloper.developer
-import com.notworking.isnt.model.QHashtag.hashtag
 import com.notworking.isnt.model.QIssue
 import com.notworking.isnt.model.QIssue.issue
 import com.notworking.isnt.model.QSolution.solution
@@ -70,8 +69,32 @@ class IssueRepositorySupport(
             select(solution.id.count()).from(solution).where(solution.issue.eq(issue).and(solution.adoptYn.isTrue)),
         )
             .from(issue)
-            .leftJoin(issue.hashtags, hashtag)
-            .fetchJoin()
+            //.leftJoin(issue.hashtags, hashtag)
+            //.fetchJoin()
+            .where(builder)
+            .orderBy(issue.createdDate.desc())
+            .offset(pageable.offset)
+            .limit(pageable.pageSize.toLong())
+            .fetchResults()
+
+        return PageImpl(result.results, pageable, result.total)
+    }
+
+    fun findAllIssuePageTest(pageable: Pageable, searchQuery: String?): Page<Tuple> {
+        val builder = BooleanBuilder()
+        if (searchQuery != null) {
+            builder.and(issue.title.contains(searchQuery).or(issue.content.contains(searchQuery)))
+        }
+
+        var result = query.select(
+            issue,
+            select(solution.id.count()).from(solution).where(solution.issue.eq(issue)),
+            select(solution.id.count()).from(solution).where(solution.issue.eq(issue).and(solution.adoptYn.isTrue)),
+        )
+            .from(issue)
+            //.leftJoin(issue.hashtags, hashtag)
+            //.fetchJoin()
+            //.distinct()
             .where(builder)
             .orderBy(issue.createdDate.desc())
             .offset(pageable.offset)

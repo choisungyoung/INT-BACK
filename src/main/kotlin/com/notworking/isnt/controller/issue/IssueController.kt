@@ -196,8 +196,8 @@ class IssueController(
         return ResponseEntity.ok().body(resutlMap)
     }
 
-    /** 이슈 최신순 목록 조회 */
-    @GetMapping("/list/myIssue")
+    /** 사용자별 이슈 최신순 목록 조회 */
+    @GetMapping("/list/developer/{userId}")
     fun findListMyIssue(
         @PageableDefault(
             size = 10,
@@ -205,7 +205,7 @@ class IssueController(
             sort = ["createdDate"],
             direction = Sort.Direction.DESC
         ) pageable: Pageable,
-        @RequestHeader("userId") userId: String?
+        @PathVariable("userId") userId: String?
     ): ResponseEntity<Page<IssueFindResponseDTO>> {
 
         //존재하지 않을 경우 빈값 리턴

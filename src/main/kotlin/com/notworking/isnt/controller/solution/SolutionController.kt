@@ -84,8 +84,8 @@ class SolutionController(var solutionService: SolutionService) {
         return ResponseEntity.ok().body(PageImpl<SolutionFindResponseDTO>(list, pageable, page.totalElements))
     }
 
-    /** 내 솔루션 최신순 목록 조회 */
-    @GetMapping("/list/mySolution")
+    /** 사용자별 솔루션 최신순 목록 조회 */
+    @GetMapping("/list/developer/{userId}")
     fun findListMySolution(
         @PageableDefault(
             size = 10,
@@ -93,8 +93,9 @@ class SolutionController(var solutionService: SolutionService) {
             sort = ["createdDate"],
             direction = Sort.Direction.ASC
         ) pageable: Pageable,
-        @RequestHeader("userId") userId: String
+        @PathVariable("userId") userId: String
     ): ResponseEntity<Page<SolutionFindResponseDTO>> {
+
         var page: Page<Solution> = solutionService.findAllSolutionByUserId(pageable, userId)
         var list: List<SolutionFindResponseDTO> = page.stream()
             .map { e ->

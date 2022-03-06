@@ -96,7 +96,7 @@ class IssueControllerTest(
                 docType = DocType.TEXT
             ),
             beforeSaveIssueUserId,
-            mutableListOf("before test")
+            mutableListOf("before test", "1312", "12123213")
         ).id!!
 
         beforeSaveSolutionId = solutionService.saveSolution(
@@ -371,14 +371,13 @@ class IssueControllerTest(
     }
 
     @Test
-    fun testFindListMyIssue() {
+    fun testFindListByUserId() {
 
         mockMvc.perform(
             RestDocumentationRequestBuilders
-                .get("$uri/list/myIssue")
+                .get("$uri/list/developer/$beforeSaveIssueUserId")
                 .param("page", "0")
                 .param("size", "5")
-                .header("userId", beforeSaveIssueUserId)
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andDo(MockMvcResultHandlers.print())
