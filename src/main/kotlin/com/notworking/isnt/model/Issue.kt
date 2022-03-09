@@ -11,7 +11,7 @@ data class Issue(
     @GeneratedValue
     var id: Long?,
     var title: String,
-    @Lob
+    @Column(columnDefinition = "TEXT")
     var content: String,
     var docType: DocType,
 ) : BaseTimeEntity() {

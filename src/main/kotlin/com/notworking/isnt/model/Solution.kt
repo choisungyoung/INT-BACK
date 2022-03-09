@@ -23,7 +23,7 @@ data class Solution(
     @Id
     @GeneratedValue
     var id: Long?,
-    @Lob
+    @Column(columnDefinition = "TEXT")
     var content: String,
     var docType: DocType,
 

@@ -55,7 +55,7 @@ class TestData(
                     content = "Test content" + i,
                     docType = DocType.TEXT
                 ),
-                "test@naver.com", mutableListOf("spring", "test", "junit")
+                "test", mutableListOf("spring", "test", "junit")
             ).id!!
 
         for (i: Int in 1..24)
@@ -65,7 +65,7 @@ class TestData(
                     content = "Test content" + i,
                     docType = DocType.TEXT,
                 ),
-                "test@naver.com",
+                "test",
                 issueId = issueId
             )
     }
@@ -103,6 +103,23 @@ class TestData(
                 gitUrl = "",
                 webSiteUrl = "",
                 groupName = "test group",
+                pictureUrl = "",
+                point = 0,
+                popularity = 0,
+            )
+        )
+
+        developerService.saveDeveloper(
+            Developer(
+                id = null,
+                userId = "tjddud",
+                email = "tjddud117@naver.com",
+                pwd = "1",
+                name = "최성영",
+                introduction = "운영자입니다.",
+                gitUrl = "",
+                webSiteUrl = "",
+                groupName = "NotWorking Comp",
                 pictureUrl = "",
                 point = 0,
                 popularity = 0,

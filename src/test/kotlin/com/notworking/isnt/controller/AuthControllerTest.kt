@@ -169,7 +169,7 @@ class AuthControllerTest() : CommonMvcTest() {
         AuthUpdatePasswordRequestDTO(
             userId = "tjddud",
             password = "2",
-            authNum = 315572
+            authNum = 123456
         )
 
     @Test

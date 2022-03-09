@@ -239,7 +239,7 @@ class IssueControllerTest(
                 .get("$uri/list/latest")
                 .param("page", "0")
                 .param("size", "5")
-                .param("query", "test")
+                .param("query", "Test")
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andDo(MockMvcResultHandlers.print())

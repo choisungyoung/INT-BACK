@@ -63,8 +63,8 @@ dependencies {
 	implementation( "io.github.microutils:kotlin-logging-jvm:2.1.20")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	//runtimeOnly("com.h2database:h2")
-	runtimeOnly("mysql:mysql-connector-java")
-	//runtimeOnly("org.postgresql:postgresql")
+	//runtimeOnly("mysql:mysql-connector-java")
+	runtimeOnly("org.postgresql:postgresql")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.security:spring-security-test")
 
