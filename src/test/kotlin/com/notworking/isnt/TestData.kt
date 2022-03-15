@@ -30,6 +30,40 @@ class TestData(
     @Rollback(value = false)
     fun saveTestData() {
         var issueId: Long = 0
+
+        developerService.saveDeveloper(
+            Developer(
+                id = null,
+                userId = "withdrawalDeveloper",
+                email = "withdrawalDeveloper@notworking.com",
+                pwd = "aa12345^",
+                name = "탈퇴회원",
+                introduction = "탈퇴회원 표시용 계정",
+                gitUrl = "",
+                webSiteUrl = "",
+                groupName = "test group",
+                pictureUrl = "",
+                point = 0,
+                popularity = 0,
+            )
+        )
+        var tjddud = Developer(
+            id = null,
+            userId = "tjddud",
+            email = "tjddud117@naver.com",
+            pwd = "1",
+            name = "최성영",
+            introduction = "운영자입니다.",
+            gitUrl = "",
+            webSiteUrl = "",
+            groupName = "NotWorking Comp",
+            pictureUrl = "",
+            point = 0,
+            popularity = 0,
+        )
+        tjddud.authNum = 123456
+        developerService.saveDeveloper(tjddud)
+
         developerService.saveDeveloper(
             Developer(
                 id = null,
@@ -88,42 +122,4 @@ class TestData(
         )
     }
 
-    @Disabled
-    @Test
-    @Rollback(value = false)
-    fun saveWithdrawalDeveloperTest() {
-        developerService.saveDeveloper(
-            Developer(
-                id = null,
-                userId = "withdrawalDeveloper",
-                email = "withdrawalDeveloper@notworking.com",
-                pwd = "aa12345^",
-                name = "탈퇴회원",
-                introduction = "탈퇴회원 표시용 계정",
-                gitUrl = "",
-                webSiteUrl = "",
-                groupName = "test group",
-                pictureUrl = "",
-                point = 0,
-                popularity = 0,
-            )
-        )
-
-        developerService.saveDeveloper(
-            Developer(
-                id = null,
-                userId = "tjddud",
-                email = "tjddud117@naver.com",
-                pwd = "1",
-                name = "최성영",
-                introduction = "운영자입니다.",
-                gitUrl = "",
-                webSiteUrl = "",
-                groupName = "NotWorking Comp",
-                pictureUrl = "",
-                point = 0,
-                popularity = 0,
-            )
-        )
-    }
 }

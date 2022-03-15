@@ -14,7 +14,7 @@ class WebMvcConfig : WebMvcConfigurer {
     fun addCorsMappings(registry: CorsRegistry) {
 
         registry.addMapping("/**")
-            .allowedOrigins("http://localhost:3000")
+            .allowedOrigins("http://localhost:3000", "https://www.notworking.kr")
             .exposedHeaders(JwtTokenProvider.ACCESS_TOKEN_NAME, "*")
             .allowCredentials(true)
             //.allowedOrigins("*")

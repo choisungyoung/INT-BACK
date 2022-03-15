@@ -20,8 +20,8 @@ class AuthGitController(
     var authenticationManager: AuthenticationManager,
     var jwtTokenProvider: JwtTokenProvider
 ) {
-    //val redirectBaseUrl = "notworking.kr"
-    val redirectBaseUrl = "localhost:3000"
+    val redirectBaseUrl = "notworking.kr"
+    //val redirectBaseUrl = "localhost:3000"
 
     /** refresh token 사용자 조회 */
     @GetMapping("/loginSuccess")
