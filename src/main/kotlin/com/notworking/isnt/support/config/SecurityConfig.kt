@@ -93,8 +93,6 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
             .antMatchers(HttpMethod.GET, "/api/comment/**")
             .antMatchers(HttpMethod.GET, "/api/developer/**")
             .antMatchers(HttpMethod.POST, "/api/developer/**")
-
-
         //.mvcMatchers("/api/auth/login") // login이 security filter를 사용하므로 WebSecurity ignore하면 안됨
     }
 
