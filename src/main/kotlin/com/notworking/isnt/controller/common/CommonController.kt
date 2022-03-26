@@ -1,6 +1,9 @@
 package com.notworking.isnt.controller.common
 
+import com.notworking.isnt.controller.common.dto.CodeFindResponseDTO
+import com.notworking.isnt.controller.common.dto.InitDataFindResponseDTO
 import com.notworking.isnt.controller.developer.dto.DeveloperFindResponseDTO
+import com.notworking.isnt.service.CodeService
 import com.notworking.isnt.service.DeveloperService
 import com.notworking.isnt.support.exception.BusinessException
 import com.notworking.isnt.support.type.Error
@@ -13,7 +16,12 @@ import org.springframework.web.bind.annotation.RestController
 
 @RequestMapping("/api/common")
 @RestController
-class CommonController(var developerService: DeveloperService) {
+class CommonController(
+    var developerService: DeveloperService,
+    var codeService: CodeService
+) {
+
+    val CAREGORY_CODE = "CATEGORY"
 
     /** refresh token 사용자 조회 */
     @GetMapping("/refreshtoken")
@@ -38,6 +46,26 @@ class CommonController(var developerService: DeveloperService) {
         }
         //존재하지 않을 경우 에러처리
         dto ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
+        return ResponseEntity.ok().body(dto)
+    }
+
+    /** 코드 조회 */
+    @GetMapping("/initData")
+    fun findInitData(): ResponseEntity<InitDataFindResponseDTO> {
+
+        var categoryDto: List<CodeFindResponseDTO>? = codeService.findCodeByCode(CAREGORY_CODE).map {
+            CodeFindResponseDTO(
+                code = it.code,
+                key = it.key,
+                value = it.value
+            )
+        }
+        //존재하지 않을 경우 에러처리
+        categoryDto ?: throw BusinessException(Error.CODE_NOT_FOUND)
+
+        var dto = InitDataFindResponseDTO(
+            categorys = categoryDto
+        )
         return ResponseEntity.ok().body(dto)
     }
 }

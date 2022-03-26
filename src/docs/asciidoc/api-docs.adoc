@@ -6,6 +6,20 @@ endif::[]
 :toclevels: 2
 :sectlinks:
 
+
+[[resources-common]]
+== Common
+
+[[resources-common-initdata]]
+=== 초기 데이터
+==== HTTP request
+include::{snippets}/find-init-data/http-request.adoc[]
+
+==== HTTP response
+include::{snippets}/find-init-data/http-response.adoc[]
+include::{snippets}/find-init-data/response-fields.adoc[]
+
+
 [[resources-authentication]]
 == Authentication
 

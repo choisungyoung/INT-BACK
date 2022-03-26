@@ -15,6 +15,7 @@ import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 import org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 
 private val log = KotlinLogging.logger {}
 
@@ -78,4 +79,25 @@ class CommonControllerTest(
             )
     }
 
+
+    @Test
+    fun testFindIniData() {
+
+        mockMvc.perform(
+            RestDocumentationRequestBuilders
+                .get("$uri/initData")
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andDo(MockMvcResultHandlers.print())
+            .andDo(
+                document(
+                    "find-init-data",
+                    responseFields(
+                        fieldWithPath("categorys.[].code").description("카테고리 코드"),
+                        fieldWithPath("categorys.[].key").description("카테고리 키"),
+                        fieldWithPath("categorys.[].value").description("카테고리 값"),
+                    )
+                )
+            )
+    }
 }

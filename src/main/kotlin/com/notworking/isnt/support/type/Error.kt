@@ -43,5 +43,8 @@ enum class Error(
     // Comment
     COMMENT_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "CMT001", "존재하지 않는 이슈입니다."),
 
+    // Code
+    CODE_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "COD001", "존재하지 않는 코드입니다."),
+
 
 }
