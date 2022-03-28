@@ -13,6 +13,7 @@ data class IssueFindResponseDTO(
     var solutionCount: Long,
     var adoptYn: Boolean,
     var hashtags: List<String>,
+    var category: String?,
 
     var developer: DeveloperFindResponseDTO,
     var modifiedDate: String

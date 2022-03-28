@@ -14,6 +14,7 @@ data class Issue(
     @Column(columnDefinition = "TEXT")
     var content: String,
     var docType: DocType,
+    var category: String?,
 ) : BaseTimeEntity() {
 
     var hits: Long = 0

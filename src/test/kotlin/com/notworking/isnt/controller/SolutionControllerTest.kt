@@ -78,7 +78,8 @@ class SolutionControllerTest(
                 id = null,
                 title = "Before Test Title",
                 content = "Before Test content",
-                docType = DocType.TEXT
+                docType = DocType.TEXT,
+                category = "BACK-END"
             ),
             beforeSaveSolutionUserId,
             mutableListOf("test")

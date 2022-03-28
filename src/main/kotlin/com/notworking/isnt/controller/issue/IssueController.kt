@@ -41,16 +41,17 @@ class IssueController(
 
         var dto: IssueDetailFindResponseDTO? = issueService.findIssue(id)?.let {
             IssueDetailFindResponseDTO(
-                it.id!!,
-                it.title,
-                it.content,
-                it.docType.code,
-                it.hits,
-                it.recommendationCount,
-                it.hashtags.stream().map {
+                id = it.id!!,
+                title = it.title,
+                content = it.content,
+                docType = it.docType.code,
+                hits = it.hits,
+                recommendationCount = it.recommendationCount,
+                hashtags = it.hashtags.stream().map {
                     it.name
                 }.toList(),
-                DeveloperFindIssueResponseDTO(
+                category = it.category,
+                developer = DeveloperFindIssueResponseDTO(
                     userId = it.developer.userId,
                     email = it.developer.email,
                     name = it.developer.name,
@@ -63,14 +64,14 @@ class IssueController(
                     popularity = it.developer.popularity,
                     followYn = developerService.existsFollowByUserId(userId, it.developer.userId)
                 ),
-                it.solutions.stream().map {
+                solutions = it.solutions.stream().map {
                     SolutionFindResponseDTO(
-                        it.id!!,
-                        it.issue?.id!!,
-                        it.content,
-                        it.docType.code,
-                        it.recommendationCount,
-                        DeveloperFindResponseDTO(
+                        id = it.id!!,
+                        issueId = it.issue?.id!!,
+                        content = it.content,
+                        docType = it.docType.code,
+                        recommendationCount = it.recommendationCount,
+                        developer = DeveloperFindResponseDTO(
                             userId = it.developer.userId,
                             email = it.developer.email,
                             name = it.developer.name,
@@ -82,7 +83,7 @@ class IssueController(
                             point = it.developer.point,
                             popularity = it.developer.popularity
                         ),
-                        it.comments.stream().map {
+                        comment = it.comments.stream().map {
                             CommentFindResponseDTO(
                                 id = it.id!!,
                                 content = it.content,
@@ -102,11 +103,11 @@ class IssueController(
 
                                 )
                         }.toList(),
-                        it.adoptYn,
-                        it.getModifiedDate()
+                        adoptYn = it.adoptYn,
+                        modifiedDate = it.getModifiedDate()
                     )
                 }.toList(),
-                it.getModifiedDate()
+                modifiedDate = it.getModifiedDate()
             )
         }
 
@@ -127,10 +128,10 @@ class IssueController(
 
         var dto: IssueTempFindResponseDTO? = issueService.findIssueTemp(userId)?.let {
             IssueTempFindResponseDTO(
-                it.id!!,
-                it.title,
-                it.content,
-                it.docType.code,
+                id = it.id!!,
+                title = it.title,
+                content = it.content,
+                docType = it.docType.code,
             )
         }
 
@@ -160,18 +161,19 @@ class IssueController(
             solutionCount = solutionCount ?: 0
 
             IssueFindResponseDTO(
-                issue.id!!,
-                issue.title,
-                issue.content,
-                issue.docType.code,
-                issue.hits,
-                issue.recommendationCount,
-                solutionCount,
-                adoptYn,
-                issue.hashtags.stream().map {
+                id = issue.id!!,
+                title = issue.title,
+                content = issue.content,
+                docType = issue.docType.code,
+                hits = issue.hits,
+                recommendationCount = issue.recommendationCount,
+                solutionCount = solutionCount,
+                adoptYn = adoptYn,
+                hashtags = issue.hashtags.stream().map {
                     it.name
                 }.toList(),
-                DeveloperFindResponseDTO(
+                category = issue.category,
+                developer = DeveloperFindResponseDTO(
                     userId = issue.developer.userId,
                     email = issue.developer.email,
                     name = issue.developer.name,
@@ -183,11 +185,11 @@ class IssueController(
                     point = issue.developer.point,
                     popularity = issue.developer.popularity
                 ),
-                issue.getModifiedDate()
+                modifiedDate = issue.getModifiedDate()
             )
         }.toList()
 
-        var pageImpl = PageImpl<IssueFindResponseDTO>(list, pageable, page.totalElements)
+        var pageImpl = PageImpl(list, pageable, page.totalElements)
 
         // response에 query 추가
         var resutlMap = ObjectMapper().convertValue(pageImpl, MutableMap::class.java) as MutableMap<String, Object>
@@ -221,18 +223,19 @@ class IssueController(
             solutionCount = solutionCount ?: 0
 
             IssueFindResponseDTO(
-                issue.id!!,
-                issue.title,
-                issue.content,
-                issue.docType.code,
-                issue.hits,
-                issue.recommendationCount,
-                solutionCount,
-                adoptYn,
-                issue.hashtags.stream().map {
+                id = issue.id!!,
+                title = issue.title,
+                content = issue.content,
+                docType = issue.docType.code,
+                hits = issue.hits,
+                recommendationCount = issue.recommendationCount,
+                solutionCount = solutionCount,
+                adoptYn = adoptYn,
+                hashtags = issue.hashtags.stream().map {
                     it.name
                 }.toList(),
-                DeveloperFindResponseDTO(
+                category = issue.category,
+                developer = DeveloperFindResponseDTO(
                     userId = issue.developer.userId,
                     email = issue.developer.email,
                     name = issue.developer.name,
@@ -244,7 +247,7 @@ class IssueController(
                     point = issue.developer.point,
                     popularity = issue.developer.popularity
                 ),
-                issue.getModifiedDate()
+                modifiedDate = issue.getModifiedDate()
             )
         }.toList()
 

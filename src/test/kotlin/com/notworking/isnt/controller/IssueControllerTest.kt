@@ -50,7 +50,8 @@ class IssueControllerTest(
         title = "Test Title",
         content = "test content",
         docType = DocType.TEXT.code,
-        mutableListOf("save test")
+        hashtags = mutableListOf("save test"),
+        category = "BACK-END"
     )
 
     private val saveIssueTempDto = IssueTempSaveRequestDTO(
@@ -64,7 +65,8 @@ class IssueControllerTest(
         title = "Update Test Title",
         content = "update test content",
         docType = DocType.MARK_DOWN.code,
-        mutableListOf("update test")
+        mutableListOf("update test"),
+        category = "BACK-END"
     )
 
     @BeforeEach
@@ -93,7 +95,8 @@ class IssueControllerTest(
                 id = null,
                 title = "Before Test Title",
                 content = "Before Test content",
-                docType = DocType.TEXT
+                docType = DocType.TEXT,
+                category = "BACK-END"
             ),
             beforeSaveIssueUserId,
             mutableListOf("before test", "1312", "12123213")
@@ -166,6 +169,7 @@ class IssueControllerTest(
                         fieldWithPath("content").description("이슈 내용"),
                         fieldWithPath("docType").description("문서유형 ('TEXT', 'MARK_DOWN')"),
                         fieldWithPath("hashtags.[]").description("해시태그 리스트"),
+                        fieldWithPath("category").description("카테고리"),
                     )
                 )
 
@@ -261,6 +265,7 @@ class IssueControllerTest(
                         fieldWithPath("content.[].solutionCount").description("솔루션 수"),
                         fieldWithPath("content.[].adoptYn").description("채택여부"),
                         fieldWithPath("content.[].hashtags.[]").description("해시태그 리스트"),
+                        fieldWithPath("content.[].category").description("카테고리"),
                         fieldWithPath("content.[].developer.userId").description("작성자 아이디"),
                         fieldWithPath("content.[].developer.email").description("작성자 이메일"),
                         fieldWithPath("content.[].developer.name").description("작성자 이름"),
@@ -307,7 +312,8 @@ class IssueControllerTest(
                     id = null,
                     title = "Pagenation Test Title" + i,
                     content = "Pagenation Test content" + i,
-                    docType = DocType.TEXT
+                    docType = DocType.TEXT,
+                    category = "BACK-END"
                 ),
                 beforeSaveIssueUserId,
                 mutableListOf("test")
@@ -334,6 +340,7 @@ class IssueControllerTest(
                         fieldWithPath("content.[].solutionCount").description("솔루션 수"),
                         fieldWithPath("content.[].adoptYn").description("채택여부"),
                         fieldWithPath("content.[].hashtags.[]").description("해시태그 리스트"),
+                        fieldWithPath("content.[].category").description("카테고리"),
                         fieldWithPath("content.[].developer.email").description("작성자 이메일"),
                         fieldWithPath("content.[].developer.name").description("작성자 이름"),
                         fieldWithPath("content.[].developer.introduction").description("작성자 소개"),
@@ -398,6 +405,7 @@ class IssueControllerTest(
                         fieldWithPath("content.[].solutionCount").description("솔루션 수"),
                         fieldWithPath("content.[].adoptYn").description("채택여부"),
                         fieldWithPath("content.[].hashtags.[]").description("해시태그 리스트"),
+                        fieldWithPath("content.[].category").description("카테고리"),
                         fieldWithPath("content.[].developer.userId").description("작성자 아이디"),
                         fieldWithPath("content.[].developer.email").description("작성자 이메일"),
                         fieldWithPath("content.[].developer.name").description("작성자 이름"),
@@ -456,6 +464,7 @@ class IssueControllerTest(
                         fieldWithPath("hits").description("조회수"),
                         fieldWithPath("recommendationCount").description("추천수"),
                         fieldWithPath("hashtags.[]").description("해시태그 리스트"),
+                        fieldWithPath("category").description("카테고리"),
                         fieldWithPath("developer.userId").description("작성자 아이디"),
                         fieldWithPath("developer.email").description("작성자 이메일"),
                         fieldWithPath("developer.name").description("작성자 이름"),
@@ -533,6 +542,7 @@ class IssueControllerTest(
                         fieldWithPath("content").description("이슈 내용"),
                         fieldWithPath("docType").description("문서유형 ('TEXT', 'MARK_DOWN')"),
                         fieldWithPath("hashtags.[]").description("해시태그 리스트"),
+                        fieldWithPath("category").description("카테고리"),
                     )
                 )
             )

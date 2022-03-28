@@ -87,7 +87,8 @@ class TestData(
                     id = null,
                     title = "Test Title" + i,
                     content = "Test content" + i,
-                    docType = DocType.TEXT
+                    docType = DocType.TEXT,
+                    category = "BACK-END"
                 ),
                 "test", mutableListOf("spring", "test", "junit")
             ).id!!
@@ -115,7 +116,8 @@ class TestData(
                 content = """Test content
                 <h2>TEST</h2><h2>우리도이제 이런 툴이 생겻어</h2><div data-language=\"javascript\" class=\"toastui-editor-ww-code-block-highlighting\"><pre class=\"language-javascript\"><code data-language=\"javascript\" class=\"language-javascript\"><span class=\"token keyword\">const</span> a <span class=\"token operator\">=</span> <span class=\"token punctuation\">[</span><span class=\"token string\">'1'</span><span class=\"token punctuation\">,</span><span class=\"token string\">'2'</span><span class=\"token punctuation\">,</span><span class=\"token string\">'3'</span><span class=\"token punctuation\">]</span></code></pre></div>
                 """.trimMargin(),
-                docType = DocType.TEXT
+                docType = DocType.TEXT,
+                category = "BACK-END"
             ),
             "test@naver.com",
             mutableListOf("spring", "test", "junit")

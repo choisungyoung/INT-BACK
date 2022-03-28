@@ -20,7 +20,13 @@ internal class HashtagRepositorySupportTest(
     @Test
     fun saveHashtagTest() {
         var hashtags = mutableListOf<String>("test1", "test2", "test3")
-        var issue = Issue(null, "hashcode test", "hashcode content test", DocType.TEXT)
+        var issue = Issue(
+            id = null,
+            title = "hashcode test",
+            content = "hashcode content test",
+            docType = DocType.TEXT,
+            category = "BACK-END"
+        )
 
         hashtags.forEach {
             // 해시태그 추가
