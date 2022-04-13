@@ -37,7 +37,7 @@ class SolutionControllerTest(
 ) : CommonMvcTest() {
     private var uri: String = "/api/solution"
 
-    private val beforeSaveSolutionUserId = "solutionTester"
+    private val beforeSaveSolutionEmail = "beforeSaveSolutionEmail@naver.com"
     private var beforeSaveSolutionId: Long = 0
     private var beforeSaveIssueId: Long = 0
 
@@ -59,8 +59,7 @@ class SolutionControllerTest(
         developerService.saveDeveloper(
             Developer(
                 id = null,
-                userId = beforeSaveSolutionUserId,
-                email = "beforeSaveSolutionEmail@naver.com",
+                email = beforeSaveSolutionEmail,
                 pwd = "aa12345^",
                 name = "solutionTester",
                 introduction = "안녕하세요",
@@ -81,7 +80,7 @@ class SolutionControllerTest(
                 docType = DocType.TEXT,
                 category = "BACK-END"
             ),
-            beforeSaveSolutionUserId,
+            beforeSaveSolutionEmail,
             mutableListOf("test")
         ).id!!
 
@@ -92,17 +91,17 @@ class SolutionControllerTest(
                 content = "Before Test content",
                 docType = DocType.TEXT
             ),
-            beforeSaveSolutionUserId,
+            beforeSaveSolutionEmail,
             beforeSaveIssueId
         ).id!!
 
-        solutionService.recommendSolution(beforeSaveSolutionId, beforeSaveSolutionUserId)
+        solutionService.recommendSolution(beforeSaveSolutionId, beforeSaveSolutionEmail)
         commentService.saveComment(
             Comment(
                 id = null,
                 content = "test comment",
             ),
-            beforeSaveSolutionUserId,
+            beforeSaveSolutionEmail,
             beforeSaveSolutionId
         )
 
@@ -132,7 +131,7 @@ class SolutionControllerTest(
                 .content(mapper.writeValueAsString(saveDto))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(
-                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeSaveSolutionUserId)
+                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeSaveSolutionEmail)
                 )
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
@@ -157,7 +156,7 @@ class SolutionControllerTest(
                 .content("{\"content\":\"\",\"docType\":\"TEXT\",\"issueId\":135}")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(
-                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeSaveSolutionUserId)
+                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeSaveSolutionEmail)
                 )
         )
             .andExpect(MockMvcResultMatchers.status().isBadRequest)
@@ -186,7 +185,6 @@ class SolutionControllerTest(
                         fieldWithPath("docType").description("문서유형 ('TEXT', 'MARK_DOWN')"),
                         fieldWithPath("recommendationCount").description("추천수"),
                         fieldWithPath("adoptYn").description("채택여부"),
-                        fieldWithPath("developer.userId").description("작성자 아이디"),
                         fieldWithPath("developer.email").description("작성자 이메일"),
                         fieldWithPath("developer.name").description("작성자 이름"),
                         fieldWithPath("developer.introduction").description("작성자 소개"),
@@ -199,7 +197,6 @@ class SolutionControllerTest(
                         fieldWithPath("comment.[].id").description("코멘트 고유 아이디"),
                         fieldWithPath("comment.[].content").description("코멘트 내용"),
                         fieldWithPath("comment.[].modifiedDate").description("코멘트 최종수정일시"),
-                        fieldWithPath("comment.[].developer.userId").description("작성자 아이디"),
                         fieldWithPath("comment.[].developer.email").description("코멘트 작성자 이메일"),
                         fieldWithPath("comment.[].developer.name").description("코멘트 작성자 이름"),
                         fieldWithPath("comment.[].developer.introduction").description("코멘트 작성자 소개"),
@@ -240,7 +237,6 @@ class SolutionControllerTest(
                         fieldWithPath("content.[].docType").description("문서유형 ('TEXT', 'MARK_DOWN')"),
                         fieldWithPath("content.[].recommendationCount").description("추천수"),
                         fieldWithPath("content.[].adoptYn").description("채택여부"),
-                        fieldWithPath("content.[].developer.userId").description("작성자 아이디"),
                         fieldWithPath("content.[].developer.email").description("작성자 이메일"),
                         fieldWithPath("content.[].developer.name").description("작성자 이름"),
                         fieldWithPath("content.[].developer.introduction").description("작성자 소개"),
@@ -253,7 +249,6 @@ class SolutionControllerTest(
                         fieldWithPath("content.[].comment.[].id").description("코멘트 고유 아이디"),
                         fieldWithPath("content.[].comment.[].content").description("코멘트 내용"),
                         fieldWithPath("content.[].comment.[].modifiedDate").description("코멘트 최종수정일시"),
-                        fieldWithPath("content.[].comment.[].developer.userId").description("작성자 아이디"),
                         fieldWithPath("content.[].comment.[].developer.email").description("코멘트 작성자 이메일"),
                         fieldWithPath("content.[].comment.[].developer.name").description("코멘트 작성자 이름"),
                         fieldWithPath("content.[].comment.[].developer.introduction").description("코멘트 작성자 소개"),
@@ -289,11 +284,11 @@ class SolutionControllerTest(
     }
 
     @Test
-    fun testFindListByUserId() {
+    fun testFindListByEmail() {
 
         mockMvc.perform(
             RestDocumentationRequestBuilders
-                .get("$uri/list/developer/$beforeSaveSolutionUserId")
+                .get("$uri/list/developer/$beforeSaveSolutionEmail")
                 .param("page", "0")
                 .param("size", "5")
         )
@@ -313,7 +308,6 @@ class SolutionControllerTest(
                         fieldWithPath("content.[].docType").description("문서유형 ('TEXT', 'MARK_DOWN')"),
                         fieldWithPath("content.[].recommendationCount").description("추천수"),
                         fieldWithPath("content.[].adoptYn").description("채택여부"),
-                        fieldWithPath("content.[].developer.userId").description("작성자 아이디"),
                         fieldWithPath("content.[].developer.email").description("작성자 이메일"),
                         fieldWithPath("content.[].developer.name").description("작성자 이름"),
                         fieldWithPath("content.[].developer.introduction").description("작성자 소개"),
@@ -326,7 +320,6 @@ class SolutionControllerTest(
                         fieldWithPath("content.[].comment.[].id").description("코멘트 고유 아이디"),
                         fieldWithPath("content.[].comment.[].content").description("코멘트 내용"),
                         fieldWithPath("content.[].comment.[].modifiedDate").description("코멘트 최종수정일시"),
-                        fieldWithPath("content.[].comment.[].developer.userId").description("작성자 아이디"),
                         fieldWithPath("content.[].comment.[].developer.email").description("코멘트 작성자 이메일"),
                         fieldWithPath("content.[].comment.[].developer.name").description("코멘트 작성자 이름"),
                         fieldWithPath("content.[].comment.[].developer.introduction").description("코멘트 작성자 소개"),
@@ -368,7 +361,7 @@ class SolutionControllerTest(
                 .content(mapper.writeValueAsString(updateDto))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(
-                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeSaveSolutionUserId)
+                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeSaveSolutionEmail)
                 )
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
@@ -392,7 +385,7 @@ class SolutionControllerTest(
             RestDocumentationRequestBuilders
                 .delete("$uri/{id}", beforeSaveSolutionId)
                 .header(
-                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeSaveSolutionUserId)
+                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeSaveSolutionEmail)
                 )
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
@@ -413,7 +406,7 @@ class SolutionControllerTest(
             RestDocumentationRequestBuilders
                 .put("$uri/recommend/{id}", beforeSaveSolutionId)
                 .header(
-                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeSaveSolutionUserId)
+                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeSaveSolutionEmail)
                 )
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
@@ -435,7 +428,7 @@ class SolutionControllerTest(
             RestDocumentationRequestBuilders
                 .put("$uri/adopt/{id}", beforeSaveSolutionId)
                 .header(
-                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeSaveSolutionUserId)
+                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeSaveSolutionEmail)
                 )
         )
             .andExpect(MockMvcResultMatchers.status().isOk)

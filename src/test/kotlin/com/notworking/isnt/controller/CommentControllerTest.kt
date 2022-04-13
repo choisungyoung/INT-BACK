@@ -38,7 +38,6 @@ class CommentControllerTest(
 
     private var uri: String = "/api/comment"
 
-    private val beforeSaveSolutionUserId = "commentTester"
     private val beforeSaveSolutionEmail = "commentTester@naver.com"
     private var beforeSaveSolutionId: Long = 0
     private var beforeSaveIssueId: Long = 0
@@ -60,7 +59,6 @@ class CommentControllerTest(
         developerService.saveDeveloper(
             Developer(
                 id = null,
-                userId = beforeSaveSolutionUserId,
                 email = beforeSaveSolutionEmail,
                 pwd = "aa12345^",
                 name = "commentTester",
@@ -82,7 +80,7 @@ class CommentControllerTest(
                 docType = DocType.TEXT,
                 category = "BACK-END"
             ),
-            beforeSaveSolutionUserId,
+            beforeSaveSolutionEmail,
             mutableListOf("test")
         ).id!!
 
@@ -93,7 +91,7 @@ class CommentControllerTest(
                 content = "Before Test content",
                 docType = DocType.TEXT
             ),
-            beforeSaveSolutionUserId,
+            beforeSaveSolutionEmail,
             beforeSaveIssueId
         ).id!!
 
@@ -102,7 +100,7 @@ class CommentControllerTest(
                 id = null,
                 content = "test comment",
             ),
-            beforeSaveSolutionUserId,
+            beforeSaveSolutionEmail,
             beforeSaveSolutionId
         ).id!!
 
@@ -129,7 +127,7 @@ class CommentControllerTest(
                 .content(mapper.writeValueAsString(saveDto))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(
-                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeSaveSolutionUserId)
+                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeSaveSolutionEmail)
                 )
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
@@ -153,7 +151,7 @@ class CommentControllerTest(
                 .content("{\"content\":\"\",\"solutionId\":135}")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(
-                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeSaveSolutionUserId)
+                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeSaveSolutionEmail)
                 )
         )
             .andExpect(MockMvcResultMatchers.status().isBadRequest)
@@ -182,7 +180,6 @@ class CommentControllerTest(
                         fieldWithPath("content.[].id").description("코멘트 고유 아이디"),
                         fieldWithPath("content.[].content").description("코멘트 내용"),
                         fieldWithPath("content.[].modifiedDate").description("코멘트 최종수정일시"),
-                        fieldWithPath("content.[].developer.userId").description("코멘트 작성자 아이디"),
                         fieldWithPath("content.[].developer.email").description("코멘트 작성자 이메일"),
                         fieldWithPath("content.[].developer.name").description("코멘트 작성자 이름"),
                         fieldWithPath("content.[].developer.introduction").description("코멘트 작성자 소개"),
@@ -223,7 +220,7 @@ class CommentControllerTest(
                 .content(mapper.writeValueAsString(updateDto))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(
-                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeSaveSolutionUserId)
+                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeSaveSolutionEmail)
                 )
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
@@ -246,7 +243,7 @@ class CommentControllerTest(
             RestDocumentationRequestBuilders
                 .delete("$uri/{id}", beforeSaveCommentId)
                 .header(
-                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeSaveSolutionUserId)
+                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeSaveSolutionEmail)
                 )
         )
             .andExpect(MockMvcResultMatchers.status().isOk)

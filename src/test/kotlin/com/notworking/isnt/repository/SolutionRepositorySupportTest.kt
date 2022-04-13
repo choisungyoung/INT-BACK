@@ -24,7 +24,7 @@ internal class SolutionRepositorySupportTest(
 
     @Test
     fun findIssueJoinSolutionByUserId() {
-        var soltuion = solutionRepositorySupport.findSolutionByUserId(PageRequest.of(0, 10), "")
+        var soltuion = solutionRepositorySupport.findSolutionByEmail(PageRequest.of(0, 10), "")
         System.out.println(soltuion)
     }
 

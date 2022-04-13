@@ -38,16 +38,17 @@ class AuthControllerTest() : CommonMvcTest() {
     lateinit var gitHubClientId: String
 
     var loginDto = AuthLoginRequestDTO(
-        "testLogin",
+        "testLogin@naver.com",
         "aa12345^"
     )
 
     var loginFailDto = AuthLoginRequestDTO(
-        "testLogin",
+        "testLogin@naver.com",
         "aa12345^^"
     )
 
     val uri: String = "/api/auth"
+    var email = "tjddud117@naver.com"
 
     @BeforeEach
     fun beforeEach() {
@@ -56,8 +57,7 @@ class AuthControllerTest() : CommonMvcTest() {
         developerService.saveDeveloper(
             Developer(
                 id = null,
-                userId = loginDto.username,
-                email = "loginEmail@naver.com",
+                email = loginDto.username,
                 pwd = loginDto.password,
                 name = "loginTester",
                 introduction = "안녕하세요",
@@ -86,7 +86,6 @@ class AuthControllerTest() : CommonMvcTest() {
                 document(
                     "login",
                     responseFields(
-                        fieldWithPath("userId").description("유저아이디"),
                         fieldWithPath("email").description("이메일"),
                         fieldWithPath("name").description("이름"),
                         fieldWithPath("introduction").description("소개"),
@@ -118,7 +117,7 @@ class AuthControllerTest() : CommonMvcTest() {
     fun testSendAuthmail() {
 
         mockMvc.perform(
-            RestDocumentationRequestBuilders.get("$uri/sendAuthMail/{userId}", "tjddud")
+            RestDocumentationRequestBuilders.get("$uri/sendAuthMail/{email}", email)
 
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
@@ -127,22 +126,20 @@ class AuthControllerTest() : CommonMvcTest() {
                 document(
                     "auth-request-authNum",
                     pathParameters(
-                        parameterWithName("userId").description("유저아이디")
+                        parameterWithName("email").description("유저이메일")
                     ),
-
-                    )
+                )
             )
     }
 
     @Test
     fun testCheckAuthNum() {
 
-        var userId = "tjddud"
-        var developer = developerService.findDeveloperByUserId(userId)
+        var developer = developerService.findDeveloperByEmail(email)
         developer ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
 
         mockMvc.perform(
-            RestDocumentationRequestBuilders.get("$uri/checkAuthNum/{userId}", userId)
+            RestDocumentationRequestBuilders.get("$uri/checkAuthNum/{email}", email)
                 .param("authNum", developer.authNum.toString())
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
@@ -155,7 +152,7 @@ class AuthControllerTest() : CommonMvcTest() {
                         parameterWithName("authNum").description("인증번호"),
                     ),
                     pathParameters(
-                        parameterWithName("userId").description("유저아이디")
+                        parameterWithName("email").description("유저이메일")
                     ),
 
                     responseFields(
@@ -167,7 +164,7 @@ class AuthControllerTest() : CommonMvcTest() {
 
     private val updatePasswordDTO: AuthUpdatePasswordRequestDTO =
         AuthUpdatePasswordRequestDTO(
-            userId = "tjddud",
+            email = email,
             password = "2",
             authNum = 123456
         )
@@ -185,7 +182,7 @@ class AuthControllerTest() : CommonMvcTest() {
                 document(
                     "auth-update-password",
                     PayloadDocumentation.requestFields(
-                        fieldWithPath("userId").description("아이디"),
+                        fieldWithPath("email").description("이메일"),
                         fieldWithPath("password").description("패스워드"),
                         fieldWithPath("authNum").description("인증번호"),
                     )

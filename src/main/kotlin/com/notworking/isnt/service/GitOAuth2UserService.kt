@@ -37,7 +37,8 @@ class GitOAuth2UserService(
         if (developer == null) {
             developer = Developer(
                 id = null,
-                email = (attributes["email"] ?: "") as String,
+                email = (attributes["id"] ?: "") as String,
+                //email = (attributes["email"] ?: "") as String,
                 name = attributes["login"] as String,
                 pwd = "",
                 introduction = (attributes["bio"] ?: "") as String,

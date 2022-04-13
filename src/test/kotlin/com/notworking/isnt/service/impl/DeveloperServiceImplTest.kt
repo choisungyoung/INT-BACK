@@ -22,8 +22,8 @@ class DeveloperServiceImplTest(@Autowired var developerService: DeveloperService
         lateinit var saveDeveloperList: List<Developer>
         lateinit var updateDeveloperName: String
 
-        lateinit var findDeveloperUserId: String
-        lateinit var notFindDeveloperUserId: String
+        lateinit var findDeveloperEmail: String
+        lateinit var notFindDeveloperEmail: String
 
         @BeforeAll
         @JvmStatic
@@ -31,7 +31,6 @@ class DeveloperServiceImplTest(@Autowired var developerService: DeveloperService
             saveDeveloperList = listOf(
                 Developer(
                     id = null,
-                    userId = "testService01",
                     email = "testService01@naver.com",
                     pwd = "aa12345^",
                     name = "test",
@@ -45,7 +44,6 @@ class DeveloperServiceImplTest(@Autowired var developerService: DeveloperService
                 ),
                 Developer(
                     id = null,
-                    userId = "testService02",
                     email = "testService02@nave.com",
                     pwd = "aa12345^",
                     name = "test",
@@ -58,9 +56,9 @@ class DeveloperServiceImplTest(@Autowired var developerService: DeveloperService
                     popularity = 0,
                 )
             )
-            findDeveloperUserId = "testService01"
+            findDeveloperEmail = "testService01@naver.com"
             updateDeveloperName = "updatetest"
-            notFindDeveloperUserId = "testService03"
+            notFindDeveloperEmail = "testService03@naver.com"
         }
     }
 
@@ -86,14 +84,14 @@ class DeveloperServiceImplTest(@Autowired var developerService: DeveloperService
     @Order(2)
     @Test
     fun testFindDeveloper() {
-        developerService.findDeveloperByUserId(findDeveloperUserId)
+        developerService.findDeveloperByEmail(findDeveloperEmail)
     }
 
     @Order(3)
     @Test
     fun testUpdateDeveloper() {
 
-        var developer: Developer? = developerService.findDeveloperByUserId(findDeveloperUserId)
+        var developer: Developer? = developerService.findDeveloperByEmail(findDeveloperEmail)
         developer?.let {
             it.name = updateDeveloperName
             developerService.updateDeveloper(it)
@@ -103,7 +101,7 @@ class DeveloperServiceImplTest(@Autowired var developerService: DeveloperService
     @Order(4)
     @Test
     fun testDeleteDeveloper() {
-        var developer: Developer? = developerService.findDeveloperByUserId(findDeveloperUserId)
+        var developer: Developer? = developerService.findDeveloperByEmail(findDeveloperEmail)
         developer?.email?.let {
             developerService.deleteDeveloper(it)
         }
@@ -112,7 +110,7 @@ class DeveloperServiceImplTest(@Autowired var developerService: DeveloperService
     @Order(5)
     @Test
     fun testNotFindDeveloper() {
-        var developer: Developer? = developerService.findDeveloperByUserId(notFindDeveloperUserId)
+        var developer: Developer? = developerService.findDeveloperByEmail(notFindDeveloperEmail)
 
         log.debug(developer.toString())
     }

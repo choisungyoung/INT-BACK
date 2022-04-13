@@ -34,7 +34,7 @@ class TestData(
         developerService.saveDeveloper(
             Developer(
                 id = null,
-                userId = "withdrawalDeveloper",
+                //userId = "withdrawalDeveloper",
                 email = "withdrawalDeveloper@notworking.com",
                 pwd = "aa12345^",
                 name = "탈퇴회원",
@@ -49,7 +49,7 @@ class TestData(
         )
         var tjddud = Developer(
             id = null,
-            userId = "tjddud",
+            //userId = "tjddud",
             email = "tjddud117@naver.com",
             pwd = "1",
             name = "최성영",
@@ -67,7 +67,7 @@ class TestData(
         developerService.saveDeveloper(
             Developer(
                 id = null,
-                userId = "test",
+                //userId = "test",
                 email = "test@naver.com",
                 pwd = "aa12345^",
                 name = "test",

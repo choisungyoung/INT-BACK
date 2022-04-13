@@ -22,7 +22,7 @@ interface SolutionService {
 
     fun findSolutionAdoptYn(issueId: Long): Boolean
 
-    fun saveSolution(solution: Solution, userId: String, issueId: Long): Solution
+    fun saveSolution(solution: Solution, email: String, issueId: Long): Solution
 
     fun updateSolution(solution: Solution)
 

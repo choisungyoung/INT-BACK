@@ -11,6 +11,7 @@ import com.notworking.isnt.support.util.ResponseUtil
 import org.springframework.core.env.Environment
 import org.springframework.security.core.Authentication
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler
+import org.springframework.stereotype.Component
 import java.io.IOException
 import javax.servlet.ServletException
 import javax.servlet.http.Cookie
@@ -18,7 +19,7 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 
-//@Component
+@Component
 class CustomAuthenticationSuccessHandler(
     val environment: Environment,
     var developerRepository: DeveloperRepository,

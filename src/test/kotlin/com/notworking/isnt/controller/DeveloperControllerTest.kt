@@ -28,17 +28,16 @@ private val log = KotlinLogging.logger {}
 class DeveloperControllerTest(@Autowired var developerService: DeveloperService) : CommonMvcTest() {
     private var uri: String = "/api/developer";
 
-    private val beforeDeveloperId: String = "developerBeforeTest"
+    private val beforeDeveloperEmail: String = "developerBeforeTest@naver.com"
     private val beforeDeveloperName: String = "developerBeforeTestName"
-    private val saveDeveloperId: String = "developerSaveTest"
+    private val saveDeveloperEmail: String = "developerSaveTest@naver.com"
 
     private val findDeveloperName: String = "developerBeforeTestName"
     private val notFindDeveloperName: String = "developerNotFoundTestName"
 
     private val saveDTO: DeveloperSaveRequestDTO =
         DeveloperSaveRequestDTO(
-            userId = saveDeveloperId,
-            email = "saveDeveloperEmail@naver.com",
+            email = saveDeveloperEmail,
             password = "aa12345^",
             name = "saveDeveloperTester",
             introduction = "안녕하세요",
@@ -48,9 +47,8 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
         )
     private val updateDeveloperDTO: DeveloperUpdateRequestDTO =
         DeveloperUpdateRequestDTO(
-            userId = beforeDeveloperId,
-            email = "updateDeveloper@naver.com",
-            name = "saveDeveloperTester",
+            email = beforeDeveloperEmail,
+            name = "updateDeveloperTester",
             introduction = "반갑습니다.",
             gitUrl = "test git url",
             webSiteUrl = "test web site url",
@@ -62,7 +60,7 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
 
     private val updatePasswordDeveloperDTO: AuthUpdatePasswordRequestDTO =
         AuthUpdatePasswordRequestDTO(
-            userId = beforeDeveloperId,
+            email = beforeDeveloperEmail,
             password = "aa12345^^",
             authNum = 315572
         )
@@ -73,8 +71,7 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
         developerService.saveDeveloper(
             Developer(
                 id = null,
-                userId = beforeDeveloperId,
-                email = "beforeEachDeveloperEmail@naver.com",
+                email = beforeDeveloperEmail,
                 pwd = "aa12345^",
                 name = beforeDeveloperName,
                 introduction = "안녕하세요",
@@ -112,7 +109,6 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
                 document(
                     "save-developer",
                     requestFields(
-                        fieldWithPath("userId").description("유저 아이디"),
                         fieldWithPath("email").description("이메일"),
                         fieldWithPath("password").description("패스워드"),
                         fieldWithPath("name").description("이름"),
@@ -149,7 +145,6 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
                 document(
                     "find-developer-list",
                     responseFields(
-                        fieldWithPath("[].userId").description("유저아이디"),
                         fieldWithPath("[].email").description("이메일"),
                         fieldWithPath("[].name").description("이름"),
                         fieldWithPath("[].introduction").description("소개"),
@@ -179,7 +174,6 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
                         parameterWithName("name").description("유저 이름")
                     ),
                     responseFields(
-                        fieldWithPath("userId").description("유저 아이디"),
                         fieldWithPath("email").description("이메일"),
                         fieldWithPath("name").description("이름"),
                         fieldWithPath("introduction").description("소개"),
@@ -211,7 +205,7 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
                 .content(mapper.writeValueAsString(updateDeveloperDTO))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(
-                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeDeveloperId)
+                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeDeveloperEmail)
                 )
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
@@ -220,7 +214,6 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
                 document(
                     "update-developer",
                     requestFields(
-                        fieldWithPath("userId").description("유저 아이디"),
                         fieldWithPath("email").description("이메일"),
                         fieldWithPath("name").description("이름"),
                         fieldWithPath("introduction").description("소개"),
@@ -232,7 +225,6 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
                         fieldWithPath("popularity").description("인기도")
                     ),
                     responseFields(
-                        fieldWithPath("userId").description("유저 아이디"),
                         fieldWithPath("email").description("이메일"),
                         fieldWithPath("name").description("이름"),
                         fieldWithPath("introduction").description("소개"),
@@ -252,9 +244,9 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
     fun testDelete() {
 
         mockMvc.perform(
-            RestDocumentationRequestBuilders.delete("$uri/{userId}", beforeDeveloperId)
+            RestDocumentationRequestBuilders.delete("$uri/{email}", beforeDeveloperEmail)
                 .header(
-                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeDeveloperId)
+                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeDeveloperEmail)
                 )
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
@@ -263,7 +255,7 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
                 document(
                     "delete-developer",
                     pathParameters(
-                        parameterWithName("userId").description("유저 아이디")
+                        parameterWithName("email").description("유저 이메일")
                     ),
                 )
             )
@@ -293,18 +285,18 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
 
 
     @Test
-    fun testCheckUserId() {
+    fun testCheckEmail() {
 
         mockMvc.perform(
-            RestDocumentationRequestBuilders.get("$uri/checkUserId/{userId}", beforeDeveloperId)
+            RestDocumentationRequestBuilders.get("$uri/checkEmail/{email}", beforeDeveloperEmail)
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andDo(MockMvcResultHandlers.print())
             .andDo(
                 document(
-                    "checkUserId-developer",
+                    "checkEmail-developer",
                     pathParameters(
-                        parameterWithName("userId").description("유저 아이디")
+                        parameterWithName("email").description("유저 이메일")
                     ),
                     responseFields(
                         fieldWithPath("duplicateYn").description("중복여부"),
@@ -317,9 +309,9 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
     fun testFollow() {
 
         mockMvc.perform(
-            RestDocumentationRequestBuilders.put("$uri/follow/{userId}", "test")
+            RestDocumentationRequestBuilders.put("$uri/follow/{email}", "test@naver.com")
                 .header(
-                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeDeveloperId)
+                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeDeveloperEmail)
                 )
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
@@ -328,7 +320,7 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
                 document(
                     "follow-developer",
                     pathParameters(
-                        parameterWithName("userId").description("유저 아이디")
+                        parameterWithName("email").description("유저 이메일")
                     ),
                 )
             )

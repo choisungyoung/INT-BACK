@@ -41,7 +41,7 @@ class IssueControllerTest(
 ) : CommonMvcTest() {
     private var uri: String = "/api/issue"
 
-    private val beforeSaveIssueUserId = "issueTester"
+    private val beforeSaveIssueEmail = "beforeSaveIssueEmail@naver.com"
     private var beforeSaveIssueId: Long = 0
     private var beforeSaveSolutionId: Long = 0
     private val notFindIssueId: Long = -999
@@ -75,8 +75,7 @@ class IssueControllerTest(
         developerService.saveDeveloper(
             Developer(
                 id = null,
-                userId = beforeSaveIssueUserId,
-                email = "beforeSaveIssueEmail@naver.com",
+                email = beforeSaveIssueEmail,
                 pwd = "aa12345^",
                 name = "issueTester",
                 introduction = "안녕하세요",
@@ -98,7 +97,7 @@ class IssueControllerTest(
                 docType = DocType.TEXT,
                 category = "BACK-END"
             ),
-            beforeSaveIssueUserId,
+            beforeSaveIssueEmail,
             mutableListOf("before test", "1312", "12123213")
         ).id!!
 
@@ -108,7 +107,7 @@ class IssueControllerTest(
                 content = "before test solution",
                 docType = DocType.TEXT
             ),
-            beforeSaveIssueUserId,
+            beforeSaveIssueEmail,
             beforeSaveIssueId
         ).id!!
 
@@ -117,7 +116,7 @@ class IssueControllerTest(
                 id = null,
                 content = "test comment"
             ),
-            beforeSaveIssueUserId,
+            beforeSaveIssueEmail,
             beforeSaveSolutionId
         )
 
@@ -156,7 +155,7 @@ class IssueControllerTest(
                 .content(mapper.writeValueAsString(saveDto))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(
-                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeSaveIssueUserId)
+                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeSaveIssueEmail)
                 )
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
@@ -183,7 +182,7 @@ class IssueControllerTest(
                 .content(mapper.writeValueAsString(saveIssueTempDto))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(
-                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeSaveIssueUserId)
+                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeSaveIssueEmail)
                 )
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
@@ -203,7 +202,7 @@ class IssueControllerTest(
 
         mockMvc.perform(
             RestDocumentationRequestBuilders.get("$uri/temp")
-                .header("userId", beforeSaveIssueUserId)
+                .header("email", beforeSaveIssueEmail)
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andDo(MockMvcResultHandlers.print())
@@ -228,7 +227,7 @@ class IssueControllerTest(
                 .content("{\"title\":\"\",\"content\":\"test content\",\"docType\":\"TEXT\"}")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(
-                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeSaveIssueUserId)
+                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeSaveIssueEmail)
                 )
         )
             .andExpect(MockMvcResultMatchers.status().isBadRequest)
@@ -266,7 +265,6 @@ class IssueControllerTest(
                         fieldWithPath("content.[].adoptYn").description("채택여부"),
                         fieldWithPath("content.[].hashtags.[]").description("해시태그 리스트"),
                         fieldWithPath("content.[].category").description("카테고리"),
-                        fieldWithPath("content.[].developer.userId").description("작성자 아이디"),
                         fieldWithPath("content.[].developer.email").description("작성자 이메일"),
                         fieldWithPath("content.[].developer.name").description("작성자 이름"),
                         fieldWithPath("content.[].developer.introduction").description("작성자 소개"),
@@ -315,7 +313,7 @@ class IssueControllerTest(
                     docType = DocType.TEXT,
                     category = "BACK-END"
                 ),
-                beforeSaveIssueUserId,
+                beforeSaveIssueEmail,
                 mutableListOf("test")
             )
         mockMvc.perform(
@@ -378,11 +376,11 @@ class IssueControllerTest(
     }
 
     @Test
-    fun testFindListByUserId() {
+    fun testFindListByEmail() {
 
         mockMvc.perform(
             RestDocumentationRequestBuilders
-                .get("$uri/list/developer/$beforeSaveIssueUserId")
+                .get("$uri/list/developer/$beforeSaveIssueEmail")
                 .param("page", "0")
                 .param("size", "5")
         )
@@ -406,7 +404,6 @@ class IssueControllerTest(
                         fieldWithPath("content.[].adoptYn").description("채택여부"),
                         fieldWithPath("content.[].hashtags.[]").description("해시태그 리스트"),
                         fieldWithPath("content.[].category").description("카테고리"),
-                        fieldWithPath("content.[].developer.userId").description("작성자 아이디"),
                         fieldWithPath("content.[].developer.email").description("작성자 이메일"),
                         fieldWithPath("content.[].developer.name").description("작성자 이름"),
                         fieldWithPath("content.[].developer.introduction").description("작성자 소개"),
@@ -446,7 +443,7 @@ class IssueControllerTest(
 
         mockMvc.perform(
             RestDocumentationRequestBuilders.get("$uri/{id}", beforeSaveIssueId)
-                .header("userId", "tjddud")
+                .header("email", beforeSaveIssueEmail)
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andDo(MockMvcResultHandlers.print())
@@ -465,7 +462,6 @@ class IssueControllerTest(
                         fieldWithPath("recommendationCount").description("추천수"),
                         fieldWithPath("hashtags.[]").description("해시태그 리스트"),
                         fieldWithPath("category").description("카테고리"),
-                        fieldWithPath("developer.userId").description("작성자 아이디"),
                         fieldWithPath("developer.email").description("작성자 이메일"),
                         fieldWithPath("developer.name").description("작성자 이름"),
                         fieldWithPath("developer.introduction").description("작성자 소개"),
@@ -483,7 +479,6 @@ class IssueControllerTest(
                         fieldWithPath("solutions.[].docType").description("문서유형 ('TEXT', 'MARK_DOWN')"),
                         fieldWithPath("solutions.[].recommendationCount").description("추천수"),
                         fieldWithPath("solutions.[].adoptYn").description("채택여부"),
-                        fieldWithPath("solutions.[].developer.userId").description("작성자 아이디"),
                         fieldWithPath("solutions.[].developer.email").description("작성자 이메일"),
                         fieldWithPath("solutions.[].developer.name").description("작성자 이름"),
                         fieldWithPath("solutions.[].developer.introduction").description("작성자 소개"),
@@ -496,7 +491,6 @@ class IssueControllerTest(
                         fieldWithPath("solutions.[].comment.[].id").description("코멘트 고유 아이디"),
                         fieldWithPath("solutions.[].comment.[].content").description("코멘트 내용"),
                         fieldWithPath("solutions.[].comment.[].modifiedDate").description("코멘트 최종수정일시"),
-                        fieldWithPath("solutions.[].comment.[].developer.userId").description("코멘트 작성자 아이디"),
                         fieldWithPath("solutions.[].comment.[].developer.email").description("코멘트 작성자 이메일"),
                         fieldWithPath("solutions.[].comment.[].developer.name").description("코멘트 작성자 이름"),
                         fieldWithPath("solutions.[].comment.[].developer.introduction").description("코멘트 작성자 소개"),
@@ -528,7 +522,7 @@ class IssueControllerTest(
                 .content(mapper.writeValueAsString(updateDto))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(
-                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeSaveIssueUserId)
+                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeSaveIssueEmail)
                 )
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
@@ -555,7 +549,7 @@ class IssueControllerTest(
             RestDocumentationRequestBuilders
                 .delete("$uri/{id}", beforeSaveIssueId)
                 .header(
-                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeSaveIssueUserId)
+                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeSaveIssueEmail)
                 )
         )
             .andExpect(MockMvcResultMatchers.status().isOk)

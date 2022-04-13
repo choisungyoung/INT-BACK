@@ -24,7 +24,6 @@ class CommonControllerTest(
 ) : CommonMvcTest() {
     val uri: String = "/api/common"
 
-    private val beforeSaveUserId = "commonTester"
     private val beforeSaveEmail = "commonTester@naver.com"
 
     @BeforeEach
@@ -33,7 +32,6 @@ class CommonControllerTest(
         developerService.saveDeveloper(
             Developer(
                 id = null,
-                userId = beforeSaveUserId,
                 email = beforeSaveEmail,
                 pwd = "aa12345^",
                 name = "commonTester",
@@ -55,7 +53,7 @@ class CommonControllerTest(
         mockMvc.perform(
             RestDocumentationRequestBuilders.get("$uri/refreshtoken")
                 .header(
-                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeSaveUserId)
+                    JwtTokenProvider.ACCESS_TOKEN_NAME, jwtTokenProvider.buildAccessToken(beforeSaveEmail)
                 )
         )
             .andExpect(SecurityMockMvcResultMatchers.authenticated())
@@ -64,7 +62,6 @@ class CommonControllerTest(
                 document(
                     "refreshtoken",
                     responseFields(
-                        fieldWithPath("userId").description("유저아이디"),
                         fieldWithPath("email").description("이메일"),
                         fieldWithPath("name").description("이름"),
                         fieldWithPath("introduction").description("소개"),
