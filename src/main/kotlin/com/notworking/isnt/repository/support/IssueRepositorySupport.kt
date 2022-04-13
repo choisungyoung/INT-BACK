@@ -104,6 +104,29 @@ class IssueRepositorySupport(
         return PageImpl(result.results, pageable, result.total)
     }
 
+    fun findAllIssuePageByEmail(pageable: Pageable, email: String?): Page<Tuple> {
+        val builder = BooleanBuilder()
+
+        if (email != null) {
+            builder.and(issue.developer.email.eq(email))
+        }
+
+        var result = query.selectDistinct(
+            issue,
+            select(solution.id.count()).from(solution).where(solution.issue.eq(issue)),
+            select(solution.id.count()).from(solution).where(solution.issue.eq(issue).and(solution.adoptYn.isTrue)),
+        )
+            .from(issue)
+            .where(builder)
+            .orderBy(issue.createdDate.desc())
+            .offset(pageable.offset)
+            .limit(pageable.pageSize.toLong())
+            .fetchResults()
+
+        return PageImpl(result.results, pageable, result.total)
+    }
+
+    /*
     fun findAllIssuePageByUserId(pageable: Pageable, userId: String?): Page<Tuple> {
         val builder = BooleanBuilder()
 
@@ -125,5 +148,5 @@ class IssueRepositorySupport(
 
         return PageImpl(result.results, pageable, result.total)
     }
-
+     */
 }

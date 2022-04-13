@@ -11,7 +11,6 @@ import com.notworking.isnt.support.util.ResponseUtil
 import org.springframework.core.env.Environment
 import org.springframework.security.core.Authentication
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler
-import org.springframework.stereotype.Component
 import java.io.IOException
 import javax.servlet.ServletException
 import javax.servlet.http.Cookie
@@ -19,7 +18,7 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 
-@Component
+//@Component
 class CustomAuthenticationSuccessHandler(
     val environment: Environment,
     var developerRepository: DeveloperRepository,
@@ -34,10 +33,9 @@ class CustomAuthenticationSuccessHandler(
         val mapper = ObjectMapper() //JSON 변경용
 
         authentication ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
-        var userId = (authentication.principal as Developer).userId
-        var developerDto = developerRepository.findByUserId(userId)?.let {
+        var email = (authentication.principal as Developer).email
+        var developerDto = developerRepository.findByEmail(email)?.let {
             DeveloperFindResponseDTO(
-                userId = it.userId,
                 email = it.email,
                 name = it.name,
                 introduction = it.introduction,

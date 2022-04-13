@@ -37,10 +37,9 @@ class AuthController(
         val authentication = authenticationManager
             .authenticate(UsernamePasswordAuthenticationToken(dto.username, dto.password))
         authentication ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
-        var userId = (authentication.principal as Developer).userId
-        var developerDto = developerService.findDeveloperByUserId(userId)?.let {
+        var email = (authentication.principal as Developer).email
+        var developerDto = developerService.findDeveloperByEmail(email)?.let {
             AuthLoginResponseDTO(
-                userId = it.userId,
                 email = it.email,
                 name = it.name,
                 introduction = it.introduction,
@@ -66,19 +65,19 @@ class AuthController(
 
 
     /** 인증메일 발송 */
-    @GetMapping("/sendAuthMail/{userId}")
-    fun sendAuthMail(@PathVariable userId: String): ResponseEntity<Void> {
-        mailService.sendAuthMail(userId)
+    @GetMapping("/sendAuthMail/{email}")
+    fun sendAuthMail(@PathVariable email: String): ResponseEntity<Void> {
+        mailService.sendAuthMail(email)
         return ResponseEntity.ok().build()
     }
 
     /** 인증번호 확인 */
-    @GetMapping("/checkAuthNum/{userId}")
+    @GetMapping("/checkAuthNum/{email}")
     fun checkAuthNum(
-        @PathVariable userId: String,
+        @PathVariable email: String,
         @RequestParam authNum: Int
     ): ResponseEntity<AuthChecAuthNumkResponseDTO> {
-        var successYn = developerService.checkAuthNumByUserId(userId, authNum)
+        var successYn = developerService.checkAuthNumByEmail(email, authNum)
         return ResponseEntity.ok().body(
             AuthChecAuthNumkResponseDTO(
                 successYn = successYn
@@ -90,13 +89,13 @@ class AuthController(
     @PutMapping("/password")
     fun updatePassword(@RequestBody dto: AuthUpdatePasswordRequestDTO): ResponseEntity<Void> {
 
-        var successYn = developerService.checkAuthNumByUserId(dto.userId, dto.authNum)
+        var successYn = developerService.checkAuthNumByEmail(dto.email, dto.authNum)
 
         if (!successYn) {   // 인증번호 재확인
             throw BusinessException(Error.AUTH_INVALID_AUTH_NUM)
         }
-        
-        developerService.updatePasswordDeveloper(dto.userId, dto.password)
+
+        developerService.updatePasswordDeveloper(dto.email, dto.password)
 
         return ResponseEntity.ok().build()
     }

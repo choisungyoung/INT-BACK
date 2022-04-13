@@ -5,8 +5,6 @@ import javax.validation.constraints.NotEmpty
 
 data class DeveloperSaveRequestDTO(
     @field:NotEmpty
-    var userId: String,
-    @field:NotEmpty
     var email: String,
     @field:NotEmpty
     var password: String,
@@ -19,7 +17,6 @@ data class DeveloperSaveRequestDTO(
 ) {
     fun toModel(): Developer = Developer(
         id = null,
-        userId = this.userId,
         email = this.email,
         pwd = this.password,
         name = this.name,

@@ -1,7 +1,7 @@
 package com.notworking.isnt.controller.developer.dto
 
 data class DeveloperFindResponseDTO(
-    var userId: String,
+    //var userId: String,
     var email: String,
     var name: String?,
     var introduction: String?,

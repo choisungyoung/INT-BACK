@@ -1,7 +1,7 @@
 package com.notworking.isnt.controller.auth.dto
 
 data class AuthLoginResponseDTO(
-    var userId: String,
+    //var userId: String,
     var email: String,
     var name: String?,
     var introduction: String?,

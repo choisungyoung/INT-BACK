@@ -13,12 +13,14 @@ data class Developer(
     @Id
     @GeneratedValue
     var id: Long?,
+    // @Column(unique = true)
+    // var userId: String,
     @Column(unique = true)
-    var userId: String,
+    var email: String,
     @Column(unique = true)
     var name: String,
     var pwd: String,
-    var email: String,
+
     var introduction: String?,
 
     var gitUrl: String?,
@@ -53,7 +55,7 @@ data class Developer(
 
     /** Spring Security */
     override fun getPassword(): String = pwd
-    override fun getUsername(): String = userId
+    override fun getUsername(): String = email
     override fun isAccountNonExpired(): Boolean = true
     override fun isAccountNonLocked(): Boolean = true
     override fun isCredentialsNonExpired(): Boolean = true

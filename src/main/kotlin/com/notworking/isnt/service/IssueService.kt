@@ -14,17 +14,17 @@ interface IssueService {
 
     fun findAllIssue(pageable: Pageable, query: String?): Page<Tuple>
 
-    fun findAllIssueByUserId(pageable: Pageable, userId: String?): Page<Tuple>
-    
+    fun findAllIssueByEmail(pageable: Pageable, email: String?): Page<Tuple>
+
     fun findAllLatestOrder(): List<Issue>
 
     fun findIssue(id: Long): Issue?
 
-    fun findIssueTemp(userId: String): IssueTemp?
+    fun findIssueTemp(email: String): IssueTemp?
 
     fun saveIssue(issue: Issue, userId: String, hashtags: List<String>?): Issue
 
-    fun saveIssueTemp(issueTemp: IssueTemp, userId: String): IssueTemp?
+    fun saveIssueTemp(issueTemp: IssueTemp, email: String): IssueTemp?
 
     fun updateIssue(issue: Issue, hashtags: List<String>?)
 

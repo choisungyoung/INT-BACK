@@ -31,15 +31,15 @@ class GitOAuth2UserService(
         val delegate = DefaultOAuth2UserService()
         val oAuth2User = delegate.loadUser(userRequest)
         val attributes = oAuth2User.attributes
-        var developer: Developer? = developerRepository.findByUserId(attributes["id"].toString())
+        //var developer: Developer? = developerRepository.findByUserId(attributes["id"].toString())
+        var developer: Developer? = developerRepository.findByEmail(attributes["id"].toString())
 
         if (developer == null) {
             developer = Developer(
                 id = null,
-                userId = attributes["id"].toString(),
+                email = (attributes["email"] ?: "") as String,
                 name = attributes["login"] as String,
                 pwd = "",
-                email = (attributes["email"] ?: "") as String,
                 introduction = (attributes["bio"] ?: "") as String,
                 gitUrl = (attributes["url"] ?: "") as String,
                 webSiteUrl = (attributes["blog"] ?: "") as String,

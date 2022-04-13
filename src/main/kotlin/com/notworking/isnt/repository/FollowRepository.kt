@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository
 interface FollowRepository : JpaRepository<Follow, Long> {
     fun findAllByFromDeveloperAndToDeveloper(fromDeveloper: Developer, toDeveloper: Developer): Follow?
 
-    fun existsByFromDeveloperUserIdAndToDeveloperUserId(fromDeveloperId: String, toDeveloperId: String): Boolean
+    fun existsByFromDeveloperEmailAndToDeveloperEmail(fromDeveloperId: String, toDeveloperId: String): Boolean
 
     fun countByToDeveloper(toDeveloper: Developer): Int
 }

@@ -36,7 +36,7 @@ class IssueController(
     @GetMapping("/{id}")
     fun find(
         @PathVariable id: Long,
-        @RequestHeader("userId") userId: String?
+        @RequestHeader("email") email: String?
     ): ResponseEntity<IssueDetailFindResponseDTO> {
 
         var dto: IssueDetailFindResponseDTO? = issueService.findIssue(id)?.let {
@@ -52,7 +52,6 @@ class IssueController(
                 }.toList(),
                 category = it.category,
                 developer = DeveloperFindIssueResponseDTO(
-                    userId = it.developer.userId,
                     email = it.developer.email,
                     name = it.developer.name,
                     introduction = it.developer.introduction,
@@ -62,7 +61,7 @@ class IssueController(
                     pictureUrl = it.developer.pictureUrl,
                     point = it.developer.point,
                     popularity = it.developer.popularity,
-                    followYn = developerService.existsFollowByUserId(userId, it.developer.userId)
+                    followYn = developerService.existsFollowByEmail(email, it.developer.email)
                 ),
                 solutions = it.solutions.stream().map {
                     SolutionFindResponseDTO(
@@ -72,7 +71,6 @@ class IssueController(
                         docType = it.docType.code,
                         recommendationCount = it.recommendationCount,
                         developer = DeveloperFindResponseDTO(
-                            userId = it.developer.userId,
                             email = it.developer.email,
                             name = it.developer.name,
                             introduction = it.developer.introduction,
@@ -89,7 +87,6 @@ class IssueController(
                                 content = it.content,
                                 modifiedDate = it.getModifiedDate(),
                                 developer = DeveloperFindResponseDTO(
-                                    userId = it.developer.userId,
                                     email = it.developer.email,
                                     name = it.developer.name,
                                     introduction = it.developer.introduction,
@@ -120,13 +117,13 @@ class IssueController(
     @GetMapping("/temp")
     fun findIssueTemp(
         //@PathVariable("userId") pathUserId: String?,
-        @RequestHeader("userId") userId: String?
+        @RequestHeader("email") email: String?
     ): ResponseEntity<IssueTempFindResponseDTO> {
 
         //존재하지 않을 경우 빈값 리턴
-        userId ?: return ResponseEntity.ok().build()
+        email ?: return ResponseEntity.ok().build()
 
-        var dto: IssueTempFindResponseDTO? = issueService.findIssueTemp(userId)?.let {
+        var dto: IssueTempFindResponseDTO? = issueService.findIssueTemp(email)?.let {
             IssueTempFindResponseDTO(
                 id = it.id!!,
                 title = it.title,
@@ -174,7 +171,6 @@ class IssueController(
                 }.toList(),
                 category = issue.category,
                 developer = DeveloperFindResponseDTO(
-                    userId = issue.developer.userId,
                     email = issue.developer.email,
                     name = issue.developer.name,
                     introduction = issue.developer.introduction,
@@ -199,7 +195,7 @@ class IssueController(
     }
 
     /** 사용자별 이슈 최신순 목록 조회 */
-    @GetMapping("/list/developer/{userId}")
+    @GetMapping("/list/developer/{email}")
     fun findListMyIssue(
         @PageableDefault(
             size = 10,
@@ -207,13 +203,13 @@ class IssueController(
             sort = ["createdDate"],
             direction = Sort.Direction.DESC
         ) pageable: Pageable,
-        @PathVariable("userId") userId: String?
+        @PathVariable("email") email: String?
     ): ResponseEntity<Page<IssueFindResponseDTO>> {
 
         //존재하지 않을 경우 빈값 리턴
-        userId ?: throw BusinessException(Error.DEVELOPER_USER_ID_HAS_NOT_HEADER)
+        email ?: throw BusinessException(Error.DEVELOPER_USER_ID_HAS_NOT_HEADER)
 
-        var page: Page<Tuple> = issueService.findAllIssueByUserId(pageable, userId)
+        var page: Page<Tuple> = issueService.findAllIssueByEmail(pageable, email)
         var list: List<IssueFindResponseDTO> = page.map {
             var issue = it.get(0, Issue::class.java)
             var solutionCount = it.get(1, Long::class.java)
@@ -236,7 +232,6 @@ class IssueController(
                 }.toList(),
                 category = issue.category,
                 developer = DeveloperFindResponseDTO(
-                    userId = issue.developer.userId,
                     email = issue.developer.email,
                     name = issue.developer.name,
                     introduction = issue.developer.introduction,

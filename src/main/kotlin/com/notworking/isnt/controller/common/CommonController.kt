@@ -30,9 +30,8 @@ class CommonController(
         var user = SecurityContextHolder.getContext().authentication.principal as User?
         user ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
 
-        var dto: DeveloperFindResponseDTO? = developerService.findDeveloperByUserId(user.username)?.let {
+        var dto: DeveloperFindResponseDTO? = developerService.findDeveloperByEmail(user.username)?.let {
             DeveloperFindResponseDTO(
-                userId = it.userId,
                 email = it.email,
                 name = it.name,
                 introduction = it.introduction,

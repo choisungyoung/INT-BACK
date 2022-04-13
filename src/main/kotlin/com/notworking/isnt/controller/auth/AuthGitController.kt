@@ -30,6 +30,6 @@ class AuthGitController(
         httpSession.getAttribute("user") ?: throw BusinessException(Error.AUTH_FAILED)
         var developer = httpSession.getAttribute("user") as Developer
         httpSession.invalidate()
-        return "redirect:http://$redirectBaseUrl/git/success?token=${jwtTokenProvider.buildAccessToken(developer.userId)}"
+        return "redirect:http://$redirectBaseUrl/git/success?token=${jwtTokenProvider.buildAccessToken(developer.email)}"
     }
 }

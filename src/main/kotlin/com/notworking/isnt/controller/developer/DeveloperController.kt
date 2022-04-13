@@ -22,7 +22,6 @@ class DeveloperController(
     fun find(@PathVariable name: String): ResponseEntity<DeveloperFindDetailResponseDTO> {
         var dto: DeveloperFindDetailResponseDTO? = developerService.findDeveloperByName(name)?.let {
             DeveloperFindDetailResponseDTO(
-                userId = it.userId,
                 email = it.email,
                 name = it.name,
                 introduction = it.introduction,
@@ -32,7 +31,7 @@ class DeveloperController(
                 pictureUrl = it.pictureUrl,
                 point = it.point,
                 popularity = it.popularity,
-                followers = developerService.findFollowersByUserId(it.userId)
+                followers = developerService.findFollowersByEmail(it.email)
             )
         }
         //존재하지 않을 경우 에러처리
@@ -46,7 +45,6 @@ class DeveloperController(
         var list: List<DeveloperFindResponseDTO>? = developerService.findAllDeveloper()?.stream()
             .map { dev ->
                 DeveloperFindResponseDTO(
-                    userId = dev.userId,
                     email = dev.email,
                     name = dev.name,
                     introduction = dev.introduction,
@@ -78,13 +76,12 @@ class DeveloperController(
 
         var user = SecurityContextHolder.getContext().authentication.principal as User?
         user ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
-        if (user.username != dto.userId) {
+        if (user.username != dto.email) {
             throw BusinessException(Error.DEVELOPER_MODIFY_SELF_ONLY)
         }
 
         var dto: DeveloperFindResponseDTO? = developerService.updateDeveloper(dto.toModel())?.let {
             DeveloperFindResponseDTO(
-                userId = it.userId,
                 email = it.email,
                 name = it.name,
                 introduction = it.introduction,
@@ -101,15 +98,15 @@ class DeveloperController(
     }
 
     /** 사용자 삭제 */
-    @DeleteMapping("/{userId}")
-    fun delete(@PathVariable userId: String): ResponseEntity<Void> {
+    @DeleteMapping("/{email}")
+    fun delete(@PathVariable email: String): ResponseEntity<Void> {
 
         var user = SecurityContextHolder.getContext().authentication.principal as User?
         user ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
-        if (user.username != userId) {
+        if (user.username != email) {
             throw BusinessException(Error.DEVELOPER_MODIFY_SELF_ONLY)
         }
-        developerService.deleteDeveloper(userId)
+        developerService.deleteDeveloper(email)
 
         return ResponseEntity.ok().build()
     }
@@ -122,21 +119,21 @@ class DeveloperController(
     }
 
     /** 사용자 아이디 중복체크 */
-    @GetMapping("/checkUserId/{userId}")
-    fun checkUserId(@PathVariable userId: String): ResponseEntity<DeveloperCheckResponseDTO> {
+    @GetMapping("/checkEmail/{email}")
+    fun checkEmail(@PathVariable email: String): ResponseEntity<DeveloperCheckResponseDTO> {
         return ResponseEntity.ok()
-            .body(DeveloperCheckResponseDTO(duplicateYn = developerService.existsDeveloperByUserId(userId)))
+            .body(DeveloperCheckResponseDTO(duplicateYn = developerService.existsDeveloperByEmail(email)))
     }
 
 
     /** 사용자 팔로우 */
-    @PutMapping("/follow/{userId}")
-    fun follow(@PathVariable userId: String): ResponseEntity<Void> {
+    @PutMapping("/follow/{email}")
+    fun follow(@PathVariable email: String): ResponseEntity<Void> {
 
         var user = SecurityContextHolder.getContext().authentication.principal as User?
         user ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
 
-        developerService.followDeveloper(user.username, userId)
+        developerService.followDeveloper(user.username, email)
 
         return ResponseEntity.ok().build()
     }

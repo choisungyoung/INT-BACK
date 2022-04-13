@@ -42,7 +42,6 @@ class CommentController(var commentService: CommentService) {
                     entity.content,
                     entity.getModifiedDate(),
                     DeveloperFindResponseDTO(
-                        userId = entity.developer.userId,
                         email = entity.developer.email,
                         name = entity.developer.name,
                         introduction = entity.developer.introduction,

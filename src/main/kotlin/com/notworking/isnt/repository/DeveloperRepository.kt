@@ -8,9 +8,9 @@ import org.springframework.stereotype.Repository
 interface DeveloperRepository : JpaRepository<Developer, Long> {
     fun findByName(name: String?): Developer?
 
-    fun findByUserId(userId: String?): Developer?
+    fun findByEmail(email: String?): Developer?
 
-    fun existsByUserId(userId: String?): Boolean
+    fun existsByEmail(email: String?): Boolean
 
-    fun existsByName(userId: String?): Boolean
+    fun existsByName(name: String?): Boolean
 }

@@ -68,8 +68,31 @@ class SolutionRepositorySupport(
     }
 
     /**
-     * 최신순 솔루션 조회
+     * 이메일별 솔루션 조회
      * */
+    fun findSolutionByEmail(pageable: Pageable, email: String): Page<Solution> {
+        var result = query.selectFrom(solution)
+            .leftJoin(solution.comments, comment)
+            .fetchJoin()
+            .leftJoin(solution.developer, developer)
+            .fetchJoin()
+            .leftJoin(solution.issue, issue)
+            .fetchJoin()
+            .distinct()
+            .where(solution.developer.email.eq(email))
+            .orderBy(solution.adoptYn.desc(), solution.createdDate.asc())
+            .offset(pageable.offset)
+            .limit(pageable.pageSize.toLong())
+            .fetchResults()
+
+        return PageImpl<Solution>(result.results, pageable, result.total)
+    }
+
+
+    /**
+     * userId별 솔루션 조회
+     * */
+    /*
     fun findSolutionByUserId(pageable: Pageable, userId: String): Page<Solution> {
         var result = query.selectFrom(solution)
             .leftJoin(solution.comments, comment)
@@ -87,6 +110,7 @@ class SolutionRepositorySupport(
 
         return PageImpl<Solution>(result.results, pageable, result.total)
     }
+    */
 
     /**
      * 이슈의 모든 솔루션 조회 (이슈상세에서 솔루션 추가조회시 사용)

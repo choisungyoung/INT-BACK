@@ -10,23 +10,23 @@ interface DeveloperService {
 
     fun findDeveloperByName(name: String): Developer?
 
-    fun findDeveloperByUserId(userId: String): Developer?
+    fun findDeveloperByEmail(email: String): Developer?
 
     fun updateDeveloper(developer: Developer): Developer?
 
-    fun updatePasswordDeveloper(userId: String, password: String)
+    fun updatePasswordDeveloper(email: String, password: String)
 
-    fun deleteDeveloper(userId: String)
+    fun deleteDeveloper(email: String)
 
-    fun existsDeveloperByUserId(userId: String): Boolean
+    fun existsDeveloperByEmail(Email: String): Boolean
 
     fun existsDeveloperByName(name: String): Boolean
 
-    fun followDeveloper(fromUserId: String, toUserId: String)
+    fun followDeveloper(fromEmail: String, toEmail: String)
 
-    fun findFollowersByUserId(userId: String): Int
+    fun findFollowersByEmail(email: String): Int
 
-    fun existsFollowByUserId(fromUserId: String?, toUserId: String?): Boolean
-    
-    fun checkAuthNumByUserId(userId: String, authNum: Int): Boolean
+    fun existsFollowByEmail(fromEmail: String?, toEmail: String?): Boolean
+
+    fun checkAuthNumByEmail(email: String, authNum: Int): Boolean
 }

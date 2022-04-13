@@ -46,7 +46,6 @@ class SolutionController(var solutionService: SolutionService) {
                     e.docType.code,
                     e.recommendationCount,
                     DeveloperFindResponseDTO(
-                        userId = e.developer.userId,
                         email = e.developer.email,
                         name = e.developer.name,
                         introduction = e.developer.introduction,
@@ -63,7 +62,6 @@ class SolutionController(var solutionService: SolutionService) {
                             content = it.content,
                             modifiedDate = it.getModifiedDate(),
                             developer = DeveloperFindResponseDTO(
-                                userId = it.developer.userId,
                                 email = it.developer.email,
                                 name = it.developer.name,
                                 introduction = it.developer.introduction,
@@ -85,7 +83,7 @@ class SolutionController(var solutionService: SolutionService) {
     }
 
     /** 사용자별 솔루션 최신순 목록 조회 */
-    @GetMapping("/list/developer/{userId}")
+    @GetMapping("/list/developer/{email}")
     fun findListMySolution(
         @PageableDefault(
             size = 10,
@@ -93,10 +91,10 @@ class SolutionController(var solutionService: SolutionService) {
             sort = ["createdDate"],
             direction = Sort.Direction.ASC
         ) pageable: Pageable,
-        @PathVariable("userId") userId: String
+        @PathVariable("email") email: String
     ): ResponseEntity<Page<SolutionFindResponseDTO>> {
 
-        var page: Page<Solution> = solutionService.findAllSolutionByUserId(pageable, userId)
+        var page: Page<Solution> = solutionService.findAllSolutionByEmail(pageable, email)
         var list: List<SolutionFindResponseDTO> = page.stream()
             .map { e ->
                 SolutionFindResponseDTO(
@@ -106,7 +104,6 @@ class SolutionController(var solutionService: SolutionService) {
                     e.docType.code,
                     e.recommendationCount,
                     DeveloperFindResponseDTO(
-                        userId = e.developer.userId,
                         email = e.developer.email,
                         name = e.developer.name,
                         introduction = e.developer.introduction,
@@ -123,7 +120,6 @@ class SolutionController(var solutionService: SolutionService) {
                             content = it.content,
                             modifiedDate = it.getModifiedDate(),
                             developer = DeveloperFindResponseDTO(
-                                userId = it.developer.userId,
                                 email = it.developer.email,
                                 name = it.developer.name,
                                 introduction = it.developer.introduction,
@@ -159,7 +155,6 @@ class SolutionController(var solutionService: SolutionService) {
                 solution.docType.code,
                 solution.recommendationCount,
                 DeveloperFindResponseDTO(
-                    userId = solution.developer.userId,
                     email = solution.developer.email,
                     name = solution.developer.name,
                     introduction = solution.developer.introduction,
@@ -176,7 +171,6 @@ class SolutionController(var solutionService: SolutionService) {
                         content = it.content,
                         modifiedDate = it.getModifiedDate(),
                         developer = DeveloperFindResponseDTO(
-                            userId = it.developer.userId,
                             email = it.developer.email,
                             name = it.developer.name,
                             introduction = it.developer.introduction,

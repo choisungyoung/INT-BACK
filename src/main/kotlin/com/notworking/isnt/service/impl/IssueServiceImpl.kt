@@ -44,9 +44,9 @@ class IssueServiceImpl(
         return issueRepositorySupport.findAllIssuePage(pageable, query)
     }
 
-    override fun findAllIssueByUserId(pageable: Pageable, userId: String?): Page<Tuple> {
+    override fun findAllIssueByEmail(pageable: Pageable, email: String?): Page<Tuple> {
 
-        return issueRepositorySupport.findAllIssuePageByUserId(pageable, userId)
+        return issueRepositorySupport.findAllIssuePageByEmail(pageable, email)
     }
 
     override fun findAllLatestOrder(): List<Issue> {
@@ -74,16 +74,16 @@ class IssueServiceImpl(
     }
 
     @Transactional
-    override fun findIssueTemp(userId: String): IssueTemp? {
+    override fun findIssueTemp(email: String): IssueTemp? {
         //이슈 조회
-        var issueTemp = issueTempRepository.findByDeveloperUserId(userId)
+        var issueTemp = issueTempRepository.findByDeveloperEmail(email)
 
         return issueTemp
     }
 
     @Transactional
-    override fun saveIssue(issue: Issue, userId: String, hashtags: List<String>?): Issue {
-        var developer = developerService.findDeveloperByUserId(userId)
+    override fun saveIssue(issue: Issue, email: String, hashtags: List<String>?): Issue {
+        var developer = developerService.findDeveloperByEmail(email)
 
         // 없는 작성자일 경우
         developer ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
@@ -104,8 +104,8 @@ class IssueServiceImpl(
     }
 
     @Transactional
-    override fun saveIssueTemp(issue: IssueTemp, userId: String): IssueTemp {
-        var developer = developerService.findDeveloperByUserId(userId)
+    override fun saveIssueTemp(issue: IssueTemp, email: String): IssueTemp {
+        var developer = developerService.findDeveloperByEmail(email)
 
         // 없는 작성자일 경우
         developer ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)

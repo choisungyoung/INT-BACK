@@ -16,11 +16,13 @@ class MailServiceImpl(
     val developerService: DeveloperService
 ) : MailService {
     @Transactional
-    override fun sendAuthMail(userId: String) {
-        var developer = developerService.findDeveloperByUserId(userId)
+    override fun sendAuthMail(email: String) {
+        
+        var developer = developerService.findDeveloperByEmail(email)
         developer ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
         if (developer.email == "")
             throw BusinessException(Error.AUTH_GIT_HUB)
+
 
         var authNum = (100000..999999).random()
 

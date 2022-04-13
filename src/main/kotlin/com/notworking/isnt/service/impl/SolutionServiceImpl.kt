@@ -47,10 +47,16 @@ class SolutionServiceImpl(
         return solutionRepositorySupport.findSolutionByIssueId(pageable, issueId)
     }
 
+
+    override fun findAllSolutionByEmail(pageable: Pageable, email: String): Page<Solution> {
+        return solutionRepositorySupport.findSolutionByEmail(pageable, email);
+    }
+
+    /*
     override fun findAllSolutionByUserId(pageable: Pageable, userId: String): Page<Solution> {
         return solutionRepositorySupport.findSolutionByUserId(pageable, userId);
     }
-
+    */
     override fun findSolutionCount(issueId: Long): Long {
         return solutionRepositorySupport.findSolutionCount(issueId)
     }
@@ -67,9 +73,9 @@ class SolutionServiceImpl(
     }
 
     @Transactional
-    override fun saveSolution(solution: Solution, userId: String, issueId: Long): Solution {
+    override fun saveSolution(solution: Solution, email: String, issueId: Long): Solution {
         // 사용자 조회
-        var developer = developerService.findDeveloperByUserId(userId)
+        var developer = developerService.findDeveloperByEmail(email)
         // 없는 작성자일 경우
         developer ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
 
@@ -107,13 +113,14 @@ class SolutionServiceImpl(
     }
 
     @Transactional
-    override fun recommendSolution(solutionId: Long, userId: String) {
+    override fun recommendSolution(solutionId: Long, email: String) {
 
         var solution = solutionRepository.findById(solutionId).orElseThrow {
             throw BusinessException(Error.SOLUTION_NOT_FOUND)
         }
+
         var developer =
-            developerService.findDeveloperByUserId(userId) ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
+            developerService.findDeveloperByEmail(email) ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
 
         // 이미 추천한 솔루션인지 체크
         var recommend = recommendRepository.findAllBySolutionAndDeveloper(solution, developer)
@@ -137,7 +144,7 @@ class SolutionServiceImpl(
     }
 
     @Transactional
-    override fun adoptSolution(solutionId: Long, userId: String): Boolean {
+    override fun adoptSolution(solutionId: Long, email: String): Boolean {
 
         var solution = solutionRepository.findById(solutionId).orElseThrow {
             throw BusinessException(Error.SOLUTION_NOT_FOUND)
@@ -145,7 +152,7 @@ class SolutionServiceImpl(
 
         solution.issue ?: throw BusinessException(Error.ISSUE_NOT_FOUND)
 
-        if (solution.issue!!.developer.userId != userId) {
+        if (solution.issue!!.developer.email != email) {
             // 이슈 작성자가 아닐 경우
             throw BusinessException(Error.SOLUTION_NOT_DEVELOPER)
         }

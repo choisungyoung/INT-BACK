@@ -5,14 +5,13 @@ import com.notworking.isnt.support.type.Error
 import com.notworking.isnt.support.util.ResponseUtil
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler
-import org.springframework.stereotype.Component
 import java.io.IOException
 import javax.servlet.ServletException
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 
-@Component
+//@Component
 class CustomAuthenticationFailureHandler : SimpleUrlAuthenticationFailureHandler() {
     @Override
     @Throws(IOException::class, ServletException::class)

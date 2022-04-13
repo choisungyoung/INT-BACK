@@ -22,11 +22,13 @@ class DeveloperServiceImpl(
 ) :
     DeveloperService {
 
+    val withdrawalDeveloperEmail: String = "withdrawalDeveloper@notworking.com";
+
     @Transactional
     override fun saveDeveloper(developer: Developer) {
         developer.let {
             // 아이디 중복 체크
-            if (developerRepository.existsByUserId(developer.userId)) {
+            if (developerRepository.existsByEmail(developer.email)) {
                 throw BusinessException(Error.DEVELOPER_USERID_DUPLICATION)
             }
             // 이름 중복 체크
@@ -46,13 +48,13 @@ class DeveloperServiceImpl(
         return developerRepository.findByName(name)
     }
 
-    override fun findDeveloperByUserId(userId: String): Developer? {
-        return developerRepository.findByUserId(userId)
+    override fun findDeveloperByEmail(email: String): Developer? {
+        return developerRepository.findByEmail(email)
     }
 
     @Transactional
     override fun updateDeveloper(newDeveloper: Developer): Developer? {
-        var developer: Developer? = newDeveloper.userId?.let { developerRepository.findByUserId(it) }
+        var developer: Developer? = newDeveloper.email?.let { developerRepository.findByEmail(it) }
         developer ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
 
         var dupDeveloper = developerRepository.findByName(newDeveloper.name)
@@ -68,8 +70,8 @@ class DeveloperServiceImpl(
     }
 
     @Transactional
-    override fun updatePasswordDeveloper(userId: String, password: String) {
-        var developer: Developer? = developerRepository.findByUserId(userId)
+    override fun updatePasswordDeveloper(email: String, password: String) {
+        var developer: Developer? = developerRepository.findByEmail(email)
 
         // null일 경우 예외처리
         developer ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
@@ -77,9 +79,9 @@ class DeveloperServiceImpl(
     }
 
     @Transactional
-    override fun deleteDeveloper(userId: String) {
-        var developer: Developer? = developerRepository.findByUserId(userId)
-        var withdrawalDeveloper: Developer? = developerRepository.findByUserId("withdrawalDeveloper")
+    override fun deleteDeveloper(email: String) {
+        var developer: Developer? = developerRepository.findByEmail(email)
+        var withdrawalDeveloper: Developer? = developerRepository.findByEmail(withdrawalDeveloperEmail)
         // 삭제할 사용자가 null일 경우 예외처리
         developer ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
         // 탈퇴회원용 사용자가 null일 경우 예외처리
@@ -105,8 +107,8 @@ class DeveloperServiceImpl(
         developerRepository.delete(developer)
     }
 
-    override fun existsDeveloperByUserId(userId: String): Boolean {
-        return developerRepository.existsByUserId(userId)
+    override fun existsDeveloperByEmail(email: String): Boolean {
+        return developerRepository.existsByEmail(email)
     }
 
     override fun existsDeveloperByName(name: String): Boolean {
@@ -114,10 +116,10 @@ class DeveloperServiceImpl(
     }
 
     @Transactional
-    override fun followDeveloper(fromUserId: String, toUserId: String) {
-        if (fromUserId == toUserId) throw BusinessException(Error.DEVELOPER_SELF_FOLLOW)
-        var fromDeveloper = findDeveloperByUserId(fromUserId) ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
-        var toDeveloper = findDeveloperByUserId(toUserId) ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
+    override fun followDeveloper(fromEmail: String, toEmail: String) {
+        if (fromEmail == toEmail) throw BusinessException(Error.DEVELOPER_SELF_FOLLOW)
+        var fromDeveloper = findDeveloperByEmail(fromEmail) ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
+        var toDeveloper = findDeveloperByEmail(toEmail) ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
 
         var follow = followRepository.findAllByFromDeveloperAndToDeveloper(fromDeveloper, toDeveloper)
 
@@ -134,8 +136,8 @@ class DeveloperServiceImpl(
         }
     }
 
-    override fun findFollowersByUserId(userId: String): Int {
-        var developer: Developer? = developerRepository.findByUserId(userId)
+    override fun findFollowersByEmail(email: String): Int {
+        var developer: Developer? = developerRepository.findByEmail(email)
 
         // 사용자가 null일 경우 예외처리
         developer ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
@@ -143,18 +145,18 @@ class DeveloperServiceImpl(
         return followRepository.countByToDeveloper(developer)
     }
 
-    override fun existsFollowByUserId(fromUserId: String?, toUserId: String?): Boolean {
+    override fun existsFollowByEmail(fromEmail: String?, toEmail: String?): Boolean {
 
-        fromUserId ?: return false
-        toUserId ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
+        fromEmail ?: return false
+        toEmail ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
 
-        return followRepository.existsByFromDeveloperUserIdAndToDeveloperUserId(fromUserId, toUserId)
+        return followRepository.existsByFromDeveloperEmailAndToDeveloperEmail(fromEmail, toEmail)
     }
 
     @Transactional
-    override fun checkAuthNumByUserId(userId: String, authNum: Int): Boolean {
+    override fun checkAuthNumByEmail(email: String, authNum: Int): Boolean {
 
-        var developer = findDeveloperByUserId(userId)
+        var developer = findDeveloperByEmail(email)
         developer ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
 
         if (developer.authNum == 0) {

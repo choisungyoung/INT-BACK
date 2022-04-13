@@ -35,7 +35,7 @@ class CommentServiceImpl(
 
     @Transactional
     override fun saveComment(comment: Comment, userId: String, solutionId: Long): Comment {
-        var developer = developerService.findDeveloperByUserId(userId)
+        var developer = developerService.findDeveloperByEmail(userId)
         // 없는 작성자일 경우
         developer ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
 

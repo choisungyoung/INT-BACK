@@ -10,7 +10,9 @@ interface SolutionService {
 
     fun findAllSolution(): List<Solution>
 
-    fun findAllSolutionByUserId(pageable: Pageable, userId: String): Page<Solution>
+    fun findAllSolutionByEmail(pageable: Pageable, email: String): Page<Solution>
+
+    //fun findAllSolutionByUserId(pageable: Pageable, userId: String): Page<Solution>
 
     fun findAllSolutionByIssueId(pageable: Pageable, issueId: Long): Page<Solution>
 
@@ -28,6 +30,6 @@ interface SolutionService {
 
     fun recommendSolution(solutionId: Long, userId: String)
 
-    fun adoptSolution(solutionId: Long, userId: String): Boolean
+    fun adoptSolution(solutionId: Long, email: String): Boolean
 
 }

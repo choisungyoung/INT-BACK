@@ -4,7 +4,7 @@ import javax.validation.constraints.NotEmpty
 
 data class AuthUpdatePasswordRequestDTO(
     @field:NotEmpty
-    var userId: String,
+    var email: String,
     @field:NotEmpty
     var password: String,
     @field:NotEmpty
