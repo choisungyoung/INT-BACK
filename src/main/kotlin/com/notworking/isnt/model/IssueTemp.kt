@@ -14,6 +14,7 @@ data class IssueTemp(
     @Lob
     var content: String,
     var docType: DocType,
+    var category: String?,
 ) : BaseTimeEntity() {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "DEVELOPER_ID")
@@ -23,6 +24,7 @@ data class IssueTemp(
         this.title = issue.title
         this.content = issue.content
         this.docType = issue.docType
+        this.category = issue.category
         return this
     }
 }

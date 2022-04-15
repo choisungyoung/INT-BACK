@@ -39,7 +39,8 @@ internal class IssueRepositorySupportTest(
             PageRequest.of(
                 0,
                 10
-            ), null
+            ), null,
+            null
         )
         System.out.println(issue)
     }
@@ -48,7 +49,7 @@ internal class IssueRepositorySupportTest(
     @Test
     @Transactional
     fun findAllIssuePageTest() {
-        
+
         var issue = issueRepositorySupport.findAllIssuePageTest(
             PageRequest.of(
                 0,

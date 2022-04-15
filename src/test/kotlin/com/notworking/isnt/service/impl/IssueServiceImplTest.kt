@@ -25,7 +25,9 @@ class IssueServiceImplTest(@Autowired var issueService: IssueService) {
             PageRequest.of(
                 0,
                 10
-            ), null
+            ),
+            null,
+            null
         )
 
         log.debug(issues.toString())

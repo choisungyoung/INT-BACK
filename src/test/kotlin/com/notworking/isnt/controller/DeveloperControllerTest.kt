@@ -169,7 +169,7 @@ class DeveloperControllerTest(@Autowired var developerService: DeveloperService)
             .andDo(MockMvcResultHandlers.print())
             .andDo(
                 document(
-                    "follow-developer",
+                    "find-developer",
                     pathParameters(
                         parameterWithName("name").description("유저 이름")
                     ),

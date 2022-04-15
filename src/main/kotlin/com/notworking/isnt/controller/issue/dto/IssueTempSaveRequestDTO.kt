@@ -13,11 +13,13 @@ data class IssueTempSaveRequestDTO(
     var content: String,
     @field:NotEmpty
     var docType: String,
+    var category: String?,
 ) {
     fun toModel(): IssueTemp = IssueTemp(
         id = null,
         title = this.title,
         content = this.content,
         docType = DocType.valueOf(docType),
+        category = this.category
     )
 }

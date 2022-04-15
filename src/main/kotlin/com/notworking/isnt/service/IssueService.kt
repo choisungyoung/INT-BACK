@@ -12,7 +12,7 @@ interface IssueService {
 
     fun findAllIssue(pageable: Pageable): Page<Issue>
 
-    fun findAllIssue(pageable: Pageable, query: String?): Page<Tuple>
+    fun findAllIssue(pageable: Pageable, query: String?, category: String?): Page<Tuple>
 
     fun findAllIssueByEmail(pageable: Pageable, email: String?): Page<Tuple>
 

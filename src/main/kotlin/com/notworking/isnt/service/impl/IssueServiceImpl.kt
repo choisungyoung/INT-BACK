@@ -39,9 +39,9 @@ class IssueServiceImpl(
     }
 
 
-    override fun findAllIssue(pageable: Pageable, query: String?): Page<Tuple> {
+    override fun findAllIssue(pageable: Pageable, query: String?, category: String?): Page<Tuple> {
 
-        return issueRepositorySupport.findAllIssuePage(pageable, query)
+        return issueRepositorySupport.findAllIssuePage(pageable, query, category)
     }
 
     override fun findAllIssueByEmail(pageable: Pageable, email: String?): Page<Tuple> {

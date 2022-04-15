@@ -135,12 +135,12 @@ include::{snippets}/delete-developer/http-response.adoc[]
 [[resources-developer-check-userid]]
 === developer 아이디 중복확인
 
-==== HTTP request
-include::{snippets}/checkUserId-developer/path-parameters.adoc[]
-include::{snippets}/checkUserId-developer/http-request.adoc[]
+==== HTTP request¡
+include::{snippets}/checkEmail-developer/path-parameters.adoc[]
+include::{snippets}/checkEmail-developer/http-request.adoc[]
 
 ==== HTTP response
-include::{snippets}/checkUserId-developer/http-response.adoc[]
+include::{snippets}/checkEmail-developer/http-response.adoc[]
 
 
 [[resources-developer-check-name]]

@@ -58,6 +58,7 @@ class IssueControllerTest(
         title = "Temp Test Title",
         content = "temp test content",
         docType = DocType.TEXT.code,
+        category = "BACK-END"
     )
 
     private val updateDto = IssueUpdateRequestDTO(

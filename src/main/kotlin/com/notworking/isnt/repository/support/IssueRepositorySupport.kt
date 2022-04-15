@@ -57,10 +57,13 @@ class IssueRepositorySupport(
         return PageImpl(result.results, pageable, result.total)
     }
 
-    fun findAllIssuePage(pageable: Pageable, searchQuery: String?): Page<Tuple> {
+    fun findAllIssuePage(pageable: Pageable, searchQuery: String?, category: String?): Page<Tuple> {
         val builder = BooleanBuilder()
         if (searchQuery != null) {
             builder.and(issue.title.contains(searchQuery).or(issue.content.contains(searchQuery)))
+        }
+        if (category != null) {
+            builder.and(issue.category.eq(category))
         }
 
         var result = query.selectDistinct(

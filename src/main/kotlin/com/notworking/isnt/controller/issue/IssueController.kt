@@ -138,7 +138,7 @@ class IssueController(
     }
 
     /** 이슈 최신순 목록 조회 */
-    @GetMapping("/list/latest")
+    @GetMapping("/list")
     fun findList(
         @PageableDefault(
             size = 10,
@@ -147,8 +147,9 @@ class IssueController(
             direction = Sort.Direction.DESC
         ) pageable: Pageable,
         @RequestParam(required = false) query: String?,
+        @RequestParam(required = false) category: String?,
     ): ResponseEntity<Map<String, Object>> {
-        var page: Page<Tuple> = issueService.findAllIssue(pageable, query)
+        var page: Page<Tuple> = issueService.findAllIssue(pageable, query, category)
         var list: List<IssueFindResponseDTO> = page.map {
             var issue = it.get(0, Issue::class.java)
             var solutionCount = it.get(1, Long::class.java)
