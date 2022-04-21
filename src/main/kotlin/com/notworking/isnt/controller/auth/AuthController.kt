@@ -65,9 +65,9 @@ class AuthController(
 
 
     /** 인증메일 발송 */
-    @GetMapping("/sendAuthMail/{email}")
+    @GetMapping("/sendFindPasswordMail/{email}")
     fun sendAuthMail(@PathVariable email: String): ResponseEntity<Void> {
-        mailService.sendAuthMail(email)
+        mailService.sendFindPasswordMail(email);
         return ResponseEntity.ok().build()
     }
 

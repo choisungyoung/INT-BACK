@@ -16,8 +16,8 @@ class MailServiceImpl(
     val developerService: DeveloperService
 ) : MailService {
     @Transactional
-    override fun sendAuthMail(email: String) {
-        
+    override fun sendFindPasswordMail(email: String) {
+
         var developer = developerService.findDeveloperByEmail(email)
         developer ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
         if (developer.email == "")
@@ -29,10 +29,24 @@ class MailServiceImpl(
         var simpleMailMessage = SimpleMailMessage()
         simpleMailMessage.setTo(developer.email)
         simpleMailMessage.setSubject(Message.AUTH_EMAIL_TITLE.message)
-        simpleMailMessage.setText(String.format(Message.AUTH_EMAIL_MESSAGE.message, authNum))
+        simpleMailMessage.setText(String.format(Message.AUTH_FIND_PASSWORD_EMAIL_MESSAGE.message, authNum))
 
         javaMailSender.send(simpleMailMessage)
         developer.authNum = authNum
     }
 
+    @Transactional
+    override fun sendSignUpMail(email: String) {
+        if (email == "")
+            throw BusinessException(Error.AUTH_GIT_HUB)
+
+        var authNum = (100000..999999).random()
+
+        var simpleMailMessage = SimpleMailMessage()
+        simpleMailMessage.setTo(email)
+        simpleMailMessage.setSubject(Message.AUTH_EMAIL_TITLE.message)
+        simpleMailMessage.setText(String.format(Message.AUTH_SIGN_UP_EMAIL_MESSAGE.message, authNum))
+
+        javaMailSender.send(simpleMailMessage)
+    }
 }
