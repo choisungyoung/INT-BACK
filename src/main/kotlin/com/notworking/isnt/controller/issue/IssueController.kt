@@ -129,6 +129,7 @@ class IssueController(
                 title = it.title,
                 content = it.content,
                 docType = it.docType.code,
+                category = it.category
             )
         }
 
@@ -167,9 +168,9 @@ class IssueController(
                 recommendationCount = issue.recommendationCount,
                 solutionCount = solutionCount,
                 adoptYn = adoptYn,
-                hashtags = issue.hashtags.stream().map {
-                    it.name
-                }.toList(),
+//                hashtags = issue.hashtags.stream().map {
+//                    it.name
+//                }.toList(),
                 category = issue.category,
                 developer = DeveloperFindResponseDTO(
                     email = issue.developer.email,
@@ -228,9 +229,9 @@ class IssueController(
                 recommendationCount = issue.recommendationCount,
                 solutionCount = solutionCount,
                 adoptYn = adoptYn,
-                hashtags = issue.hashtags.stream().map {
-                    it.name
-                }.toList(),
+//                hashtags = issue.hashtags.stream().map {
+//                    it.name
+//                }.toList(),
                 category = issue.category,
                 developer = DeveloperFindResponseDTO(
                     email = issue.developer.email,

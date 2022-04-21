@@ -195,6 +195,7 @@ class IssueControllerTest(
                         fieldWithPath("title").description("이슈 제목"),
                         fieldWithPath("content").description("이슈 내용"),
                         fieldWithPath("docType").description("문서유형 ('TEXT', 'MARK_DOWN')"),
+                        fieldWithPath("category").description("카테고리"),
                     )
                 )
 
@@ -215,6 +216,7 @@ class IssueControllerTest(
                         fieldWithPath("title").description("제목"),
                         fieldWithPath("content").description("내용"),
                         fieldWithPath("docType").description("문서유형 ('TEXT', 'MARK_DOWN')"),
+                        fieldWithPath("category").description("카테고리"),
                     )
                 )
 
@@ -240,20 +242,22 @@ class IssueControllerTest(
 
         mockMvc.perform(
             RestDocumentationRequestBuilders
-                .get("$uri/list/latest")
+                .get("$uri/list")
                 .param("page", "0")
                 .param("size", "5")
                 .param("query", "Test")
+                .param("category", "BACK-END")
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andDo(MockMvcResultHandlers.print())
             .andDo(
                 document(
-                    "find-issue-list-latest",
+                    "find-issue-list",
                     requestParameters(
                         parameterWithName("page").description("조회 페이지"),
                         parameterWithName("size").description("조회 페이지 사이즈"),
-                        parameterWithName("query").description("검색어")
+                        parameterWithName("query").description("검색어"),
+                        parameterWithName("category").description("분류")
                     ),
                     responseFields(
                         fieldWithPath("content.[].id").description("고유번호"),
@@ -264,7 +268,7 @@ class IssueControllerTest(
                         fieldWithPath("content.[].recommendationCount").description("추천수"),
                         fieldWithPath("content.[].solutionCount").description("솔루션 수"),
                         fieldWithPath("content.[].adoptYn").description("채택여부"),
-                        fieldWithPath("content.[].hashtags.[]").description("해시태그 리스트"),
+                        //fieldWithPath("content.[].hashtags.[]").description("해시태그 리스트"),
                         fieldWithPath("content.[].category").description("카테고리"),
                         fieldWithPath("content.[].developer.email").description("작성자 이메일"),
                         fieldWithPath("content.[].developer.name").description("작성자 이름"),
@@ -328,7 +332,7 @@ class IssueControllerTest(
             .andDo(MockMvcResultHandlers.print())
             .andDo(
                 document(
-                    "find-issue-list-latest-pagenation",
+                    "find-issue-list-pagenation",
                     responseFields(
                         fieldWithPath("content.[].id").description("고유번호"),
                         fieldWithPath("content.[].title").description("제목"),
@@ -338,7 +342,7 @@ class IssueControllerTest(
                         fieldWithPath("content.[].recommendationCount").description("추천수"),
                         fieldWithPath("content.[].solutionCount").description("솔루션 수"),
                         fieldWithPath("content.[].adoptYn").description("채택여부"),
-                        fieldWithPath("content.[].hashtags.[]").description("해시태그 리스트"),
+                        //fieldWithPath("content.[].hashtags.[]").description("해시태그 리스트"),
                         fieldWithPath("content.[].category").description("카테고리"),
                         fieldWithPath("content.[].developer.email").description("작성자 이메일"),
                         fieldWithPath("content.[].developer.name").description("작성자 이름"),
@@ -368,7 +372,7 @@ class IssueControllerTest(
     fun testValidFindList() {
         mockMvc.perform(
             MockMvcRequestBuilders
-                .get("$uri/list/latest")
+                .get("$uri/list")
                 .param("page", "2")
                 .param("size", "5")
         )
@@ -403,7 +407,7 @@ class IssueControllerTest(
                         fieldWithPath("content.[].recommendationCount").description("추천수"),
                         fieldWithPath("content.[].solutionCount").description("솔루션 수"),
                         fieldWithPath("content.[].adoptYn").description("채택여부"),
-                        fieldWithPath("content.[].hashtags.[]").description("해시태그 리스트"),
+                        //fieldWithPath("content.[].hashtags.[]").description("해시태그 리스트"),
                         fieldWithPath("content.[].category").description("카테고리"),
                         fieldWithPath("content.[].developer.email").description("작성자 이메일"),
                         fieldWithPath("content.[].developer.name").description("작성자 이름"),

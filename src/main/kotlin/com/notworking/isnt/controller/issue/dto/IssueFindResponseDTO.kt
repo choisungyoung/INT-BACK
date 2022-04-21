@@ -12,7 +12,7 @@ data class IssueFindResponseDTO(
     var recommendationCount: Long,
     var solutionCount: Long,
     var adoptYn: Boolean,
-    var hashtags: List<String>,
+    //var hashtags: List<String>,
     var category: String?,
 
     var developer: DeveloperFindResponseDTO,

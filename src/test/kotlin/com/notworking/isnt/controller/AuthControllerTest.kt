@@ -57,7 +57,7 @@ class AuthControllerTest() : CommonMvcTest() {
         developerService.saveDeveloper(
             Developer(
                 id = null,
-                email = loginDto.username,
+                email = loginDto.email,
                 pwd = loginDto.password,
                 name = "loginTester",
                 introduction = "안녕하세요",

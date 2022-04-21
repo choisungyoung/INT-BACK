@@ -4,7 +4,7 @@ import javax.validation.constraints.NotNull
 
 data class AuthLoginRequestDTO(
     @field:NotNull
-    var username: String,
+    var email: String,
     @field:NotNull
     var password: String,
 )

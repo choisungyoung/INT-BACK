@@ -35,7 +35,7 @@ class AuthController(
     ): ResponseEntity<AuthLoginResponseDTO> {
 
         val authentication = authenticationManager
-            .authenticate(UsernamePasswordAuthenticationToken(dto.username, dto.password))
+            .authenticate(UsernamePasswordAuthenticationToken(dto.email, dto.password))
         authentication ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
         var email = (authentication.principal as Developer).email
         var developerDto = developerService.findDeveloperByEmail(email)?.let {

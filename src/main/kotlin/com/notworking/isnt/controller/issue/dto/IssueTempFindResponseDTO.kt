@@ -6,5 +6,6 @@ data class IssueTempFindResponseDTO(
     var title: String,
     var content: String,
     var docType: String,
+    var category: String?,
 ) {
 }
