@@ -153,6 +153,7 @@ class DeveloperServiceImpl(
         return followRepository.existsByFromDeveloperEmailAndToDeveloperEmail(fromEmail, toEmail)
     }
 
+    /*
     @Transactional
     override fun checkAuthNumByEmail(email: String, authNum: Int): Boolean {
 
@@ -169,4 +170,5 @@ class DeveloperServiceImpl(
 
         return false
     }
+     */
 }

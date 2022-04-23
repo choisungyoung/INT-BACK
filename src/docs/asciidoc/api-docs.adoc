@@ -42,13 +42,13 @@ include::{snippets}/refreshtoken/http-response.adoc[]
 include::{snippets}/refreshtoken/response-fields.adoc[]
 
 [[resources-authentication-request-authnum]]
-=== 인증번호 요청
+=== 패스워드 변경 인증번호 요청
 ==== HTTP request
-include::{snippets}/auth-request-authNum/http-request.adoc[]
-include::{snippets}/auth-request-authNum/path-parameters.adoc[]
+include::{snippets}/auth-request-find-password-authNum/http-request.adoc[]
+include::{snippets}/auth-request-find-password-authNum/path-parameters.adoc[]
 
 ==== HTTP response
-include::{snippets}/auth-request-authNum/http-response.adoc[]
+include::{snippets}/auth-request-find-password-authNum/http-response.adoc[]
 
 
 [[resources-authentication-check-authnum]]
@@ -180,13 +180,13 @@ include::{snippets}/save-issue/http-response.adoc[]
 [[resources-issue-list-find-latest]]
 === issue 목록조회 (최신순)
 ==== HTTP request
-include::{snippets}/find-issue-list-latest/http-request.adoc[]
-include::{snippets}/find-issue-list-latest/request-parameters.adoc[]
+include::{snippets}/find-issue-list/http-request.adoc[]
+include::{snippets}/find-issue-list/request-parameters.adoc[]
 
 ==== HTTP response
-include::{snippets}/find-issue-list-latest/response-fields.adoc[]
-include::{snippets}/find-issue-list-latest/response-body.adoc[]
-include::{snippets}/find-issue-list-latest/http-response.adoc[]
+include::{snippets}/find-issue-list/response-fields.adoc[]
+include::{snippets}/find-issue-list/response-body.adoc[]
+include::{snippets}/find-issue-list/http-response.adoc[]
 
 
 [[resources-issue-list-find-myissue]]

@@ -28,5 +28,5 @@ interface DeveloperService {
 
     fun existsFollowByEmail(fromEmail: String?, toEmail: String?): Boolean
 
-    fun checkAuthNumByEmail(email: String, authNum: Int): Boolean
+    // fun checkAuthNumByEmail(email: String, authNum: Int): Boolean
 }

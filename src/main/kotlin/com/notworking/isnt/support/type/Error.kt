@@ -18,7 +18,9 @@ enum class Error(
     AUTH_INVALID_TOKEN(HttpStatus.UNAUTHORIZED.value(), "ATH003", "인증 토큰이 유효하지 않습니다."),
     AUTH_NOT_FOUND_TOKEN(HttpStatus.UNAUTHORIZED.value(), "ATH004", "인증 토큰이 존재하지 않습니다."),
     AUTH_GIT_HUB(HttpStatus.UNAUTHORIZED.value(), "ATH005", "GitHub인증 사용자입니다."),
-    AUTH_INVALID_AUTH_NUM(HttpStatus.UNAUTHORIZED.value(), "ATH003", "인증 번호가 유효하지 않습니다."),
+    AUTH_INVALID_AUTH_NUM(HttpStatus.UNAUTHORIZED.value(), "ATH006", "인증 번호가 유효하지 않습니다."),
+    AUTH_NOT_FOUND_AUTH_NUM(HttpStatus.UNAUTHORIZED.value(), "ATH007", "발급된 인증번호가 없습니다."),
+    AUTH_NOT_AUTH_AUTH_NUM(HttpStatus.UNAUTHORIZED.value(), "ATH008", "인증되지 않은 인증정보입니다."),
 
     // Developer
     DEVELOPER_INPUT_INVALID(HttpStatus.BAD_REQUEST.value(), "DEV001", "사용자 정보가 유효하지 않습니다."),

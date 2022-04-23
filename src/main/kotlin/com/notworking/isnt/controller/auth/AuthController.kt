@@ -6,6 +6,7 @@ import com.notworking.isnt.controller.auth.dto.AuthUpdatePasswordRequestDTO
 import com.notworking.isnt.controller.issue.dto.AuthLoginRequestDTO
 import com.notworking.isnt.model.Developer
 import com.notworking.isnt.service.DeveloperService
+import com.notworking.isnt.service.EmailAuthService
 import com.notworking.isnt.service.MailService
 import com.notworking.isnt.support.exception.BusinessException
 import com.notworking.isnt.support.provider.JwtTokenProvider
@@ -25,7 +26,8 @@ class AuthController(
     var developerService: DeveloperService,
     var authenticationManager: AuthenticationManager,
     var jwtTokenProvider: JwtTokenProvider,
-    var mailService: MailService
+    var mailService: MailService,
+    var emailAuthService: EmailAuthService,
 ) {
     /** refresh token 사용자 조회 */
     @PostMapping("/login")
@@ -64,10 +66,17 @@ class AuthController(
     }
 
 
-    /** 인증메일 발송 */
+    /** 패스워드 변경 인증메일 발송 */
     @GetMapping("/sendFindPasswordMail/{email}")
-    fun sendAuthMail(@PathVariable email: String): ResponseEntity<Void> {
+    fun sendFindPasswordAuthMail(@PathVariable email: String): ResponseEntity<Void> {
         mailService.sendFindPasswordMail(email);
+        return ResponseEntity.ok().build()
+    }
+
+    /** 회원가입 인증메일 발송 */
+    @GetMapping("/sendSignUpMail/{email}")
+    fun sendSignUpAuthMail(@PathVariable email: String): ResponseEntity<Void> {
+        mailService.sendSignUpMail(email);
         return ResponseEntity.ok().build()
     }
 
@@ -77,7 +86,7 @@ class AuthController(
         @PathVariable email: String,
         @RequestParam authNum: Int
     ): ResponseEntity<AuthChecAuthNumkResponseDTO> {
-        var successYn = developerService.checkAuthNumByEmail(email, authNum)
+        var successYn = emailAuthService.checkAuthNum(email, authNum)
         return ResponseEntity.ok().body(
             AuthChecAuthNumkResponseDTO(
                 successYn = successYn
@@ -85,12 +94,12 @@ class AuthController(
         )
     }
 
+
     /** 사용자 패스워드 수정 */
     @PutMapping("/password")
     fun updatePassword(@RequestBody dto: AuthUpdatePasswordRequestDTO): ResponseEntity<Void> {
 
-        var successYn = developerService.checkAuthNumByEmail(dto.email, dto.authNum)
-
+        var successYn = emailAuthService.recheckAuthNum(dto.email, dto.authNum)
         if (!successYn) {   // 인증번호 재확인
             throw BusinessException(Error.AUTH_INVALID_AUTH_NUM)
         }

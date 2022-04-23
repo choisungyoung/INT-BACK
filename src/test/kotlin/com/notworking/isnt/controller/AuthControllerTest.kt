@@ -6,8 +6,6 @@ import com.notworking.isnt.controller.auth.dto.AuthUpdatePasswordRequestDTO
 import com.notworking.isnt.controller.issue.dto.AuthLoginRequestDTO
 import com.notworking.isnt.model.Developer
 import com.notworking.isnt.service.DeveloperService
-import com.notworking.isnt.support.exception.BusinessException
-import com.notworking.isnt.support.type.Error
 import mu.KotlinLogging
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.MethodOrderer
@@ -48,7 +46,9 @@ class AuthControllerTest() : CommonMvcTest() {
     )
 
     val uri: String = "/api/auth"
-    var email = "tjddud117@naver.com"
+    var sendTestEmail = "tjddud117@naver.com"
+    var checkTestEmail = "test@naver.com"
+    var testAuthNum = 123456;
 
     @BeforeEach
     fun beforeEach() {
@@ -114,17 +114,36 @@ class AuthControllerTest() : CommonMvcTest() {
     }
 
     @Test
-    fun testSendAuthmail() {
+    fun testSendFindPasswordAuthmail() {
 
         mockMvc.perform(
-            RestDocumentationRequestBuilders.get("$uri/sendAuthMail/{email}", email)
+            RestDocumentationRequestBuilders.get("$uri/sendFindPasswordMail/{email}", sendTestEmail)
 
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andDo(MockMvcResultHandlers.print())
             .andDo(
                 document(
-                    "auth-request-authNum",
+                    "auth-request-find-password-authNum",
+                    pathParameters(
+                        parameterWithName("email").description("유저이메일")
+                    ),
+                )
+            )
+    }
+
+    @Test
+    fun testSendSignUpAuthmail() {
+
+        mockMvc.perform(
+            RestDocumentationRequestBuilders.get("$uri/sendSignUpMail/{email}", sendTestEmail)
+
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andDo(MockMvcResultHandlers.print())
+            .andDo(
+                document(
+                    "auth-request-sign-up-authNum",
                     pathParameters(
                         parameterWithName("email").description("유저이메일")
                     ),
@@ -135,12 +154,9 @@ class AuthControllerTest() : CommonMvcTest() {
     @Test
     fun testCheckAuthNum() {
 
-        var developer = developerService.findDeveloperByEmail(email)
-        developer ?: throw BusinessException(Error.DEVELOPER_NOT_FOUND)
-
         mockMvc.perform(
-            RestDocumentationRequestBuilders.get("$uri/checkAuthNum/{email}", email)
-                .param("authNum", developer.authNum.toString())
+            RestDocumentationRequestBuilders.get("$uri/checkAuthNum/{email}", checkTestEmail)
+                .param("authNum", testAuthNum.toString())
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andDo(MockMvcResultHandlers.print())
@@ -164,7 +180,7 @@ class AuthControllerTest() : CommonMvcTest() {
 
     private val updatePasswordDTO: AuthUpdatePasswordRequestDTO =
         AuthUpdatePasswordRequestDTO(
-            email = email,
+            email = checkTestEmail,
             password = "2",
             authNum = 123456
         )
